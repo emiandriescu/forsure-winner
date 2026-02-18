@@ -11,8 +11,7 @@
     <style>
         :root {
             --primary-blue: #1e3a8a; 
-            --accent-blue: #3b82f6; 
-            --bg-overlay: rgba(30, 58, 138, 0.95); /* Overlay puternic albastru */
+            --accent-blue: #2563eb; 
             --light-gray: #f8fafc;
             --text-dark: #1e293b;
         }
@@ -33,215 +32,189 @@
 
         /* --- NAVIGATIE --- */
         nav {
-            position: absolute;
-            top: 0;
-            width: 100%;
-            padding: 20px 50px;
-            display: flex;
-            justify-content: flex-end; 
-            align-items: center;
-            z-index: 100;
+            position: absolute; top: 0; width: 100%; padding: 20px 50px;
+            display: flex; justify-content: flex-end; align-items: center; z-index: 100;
         }
-
         .nav-links { display: flex; gap: 40px; list-style: none; }
         .nav-links a { 
-            color: rgba(255,255,255,0.9); /* Linkuri albe pe fundal albastru */
-            text-decoration: none; 
-            font-weight: 700; 
-            font-size: 0.9rem; 
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            transition: all 0.3s; 
+            color: var(--primary-blue); /* Navigatie albastra pe fond alb */
+            text-decoration: none; font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1.5px; transition: all 0.3s; 
         }
-        .nav-links a:hover { color: white; transform: translateY(-2px); text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        .nav-links a:hover { color: var(--accent-blue); transform: translateY(-2px); }
 
-        /* --- HERO SECTION (ALBASTRU CU OVERLAP) --- */
+        /* --- SECTIUNEA 1: HERO (ALB - POZA DREAPTA) --- */
         .hero {
-            min-height: 110vh; /* Inaltime mare pentru overlap */
-            /* Imagine de fundal tehnica cu overlay albastru */
-            background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), 
-                        url('https://images.unsplash.com/photo-1635329199951-351563542964?auto=format&fit=crop&q=80&w=1920') no-repeat center center/cover;
-            padding: 150px 5% 250px 5%; /* Padding mare jos pentru suprapunere */
-            display: flex;
-            align-items: center; 
-            position: relative;
-        }
-
-        /* Linia alba de continuitate */
-        .hero::after {
-            content: ''; position: absolute; bottom: 0; left: 50%; width: 2px; height: 150px; 
-            background: linear-gradient(to bottom, transparent, white); transform: translateX(-50%); z-index: 5;
+            min-height: 90vh;
+            background-color: #ffffff; /* FUNDAL ALB */
+            padding: 120px 5% 150px 5%;
+            display: flex; align-items: center; justify-content: center;
+            position: relative; z-index: 2;
         }
 
         .hero-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* 2 Coloane: Text Stanga, Poza Dreapta */
-            gap: 60px;
-            align-items: center;
+            max-width: 1400px; margin: 0 auto; width: 100%;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
         }
 
-        /* Coloana Stanga (Text) */
-        .hero-text-side { color: white; }
-
-        .logo-box {
-            background-color: white; padding: 25px 35px; border-radius: 15px; display: inline-block;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3); margin-bottom: 40px;
-        }
-        .hero-logo { width: 300px; max-width: 100%; height: auto; display: block; }
-
+        /* Stanga: Text */
+        .hero-text-side { padding-right: 20px; }
+        .hero-logo { width: 350px; max-width: 80%; height: auto; display: block; margin-bottom: 30px; }
         .hero-content h1 {
-            font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 25px; text-transform: uppercase; color: white;
+            font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 25px; text-transform: uppercase; color: var(--primary-blue);
         }
         .hero-content p {
-            font-size: 1.25rem; margin-bottom: 40px; color: rgba(255,255,255,0.9); max-width: 650px; font-weight: 400;
+            font-size: 1.2rem; margin-bottom: 40px; color: #444; max-width: 600px; font-weight: 500;
             border-left: 4px solid var(--accent-blue); padding-left: 20px;
         }
+
+        /* Dreapta: Poza Santier 1 */
+        .hero-image-side { position: relative; }
+        .hero-image-side img {
+            width: 100%; height: auto; border-radius: 20px;
+            box-shadow: 20px 20px 0px rgba(30, 58, 138, 0.1); /* Efect relief simplu */
+            transform: rotate(2deg); /* Usoara inclinare pentru dinamism */
+            transition: transform 0.3s ease;
+        }
+        .hero-image-side img:hover { transform: rotate(0deg) scale(1.02); }
 
         .cta-buttons { display: flex; gap: 20px; }
         .btn {
             padding: 16px 40px; border-radius: 4px; text-decoration: none; font-weight: 700; transition: all 0.3s ease; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; cursor: pointer; border: none;
         }
-        .btn-primary { background-color: var(--accent-blue); color: white; border: 2px solid var(--accent-blue); }
-        .btn-outline { background-color: transparent; border: 2px solid rgba(255,255,255,0.5); color: white; }
-        .btn:hover { transform: translateY(-3px); }
-        .btn-primary:hover { background-color: #2563eb; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4); }
-        .btn-outline:hover { border-color: white; background-color: white; color: var(--primary-blue); }
-
-        /* Coloana Dreapta (Imagine Hero) */
-        .hero-image-side img {
-            width: 100%; height: auto; border-radius: 20px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.4); /* Umbra puternica pentru relief */
-            transform: perspective(1000px) rotateY(-5deg); /* Usoara rotire 3D */
-            transition: transform 0.5s ease;
-        }
-        .hero-image-side img:hover { transform: perspective(1000px) rotateY(0deg) scale(1.02); }
+        .btn-primary { background-color: var(--primary-blue); color: white; border: 2px solid var(--primary-blue); }
+        .btn-outline { background-color: white; border: 2px solid var(--primary-blue); color: var(--primary-blue); }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .btn-primary:hover { background-color: var(--accent-blue); border-color: var(--accent-blue); }
+        .btn-outline:hover { background-color: #f0f4ff; }
 
 
-        /* --- INFO & STATS (OVERLAP + IMAGINE STANGA) --- */
-        .info-wrapper {
-            position: relative; z-index: 10; padding: 0 20px; margin-bottom: 100px;
-            margin-top: -180px; /* MARGINE NEGATIVA PENTRU SUPRAPUNERE */
+        /* --- SECTIUNEA 2: INFO (ALBASTRU - POZA STANGA - OVERLAP) --- */
+        .info-section {
+            background-color: var(--primary-blue); /* FUNDAL ALBASTRU */
+            color: white;
+            padding: 150px 5% 100px 5%;
+            margin-top: -80px; /* OVERLAP: Urca peste sectiunea alba */
+            position: relative; z-index: 1;
+            /* Forma curba sus pentru tranzitie fluida (optional, dar arata bine) */
+            clip-path: polygon(0 50px, 100% 0, 100% 100%, 0% 100%); 
         }
 
-        .info-card {
-            max-width: 1400px; margin: 0 auto; background: white; border-radius: 20px;
-            box-shadow: 0 30px 70px rgba(0,0,0,0.15); 
-            display: grid; grid-template-columns: 1fr 1.5fr; /* Stanga Poza, Dreapta Text */
-            overflow: hidden; border-top: 5px solid white; 
+        .info-container {
+            max-width: 1400px; margin: 0 auto; width: 100%;
+            display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: center;
         }
 
-        /* Stanga: Imagine */
-        .info-image-side {
-            position: relative; min-height: 400px;
-        }
+        /* Stanga: Poza Santier 2 */
         .info-image-side img {
-            width: 100%; height: 100%; object-fit: cover;
+            width: 100%; height: auto; border-radius: 20px;
+            box-shadow: -20px 20px 0px rgba(255, 255, 255, 0.1); /* Relief alb */
+            border: 5px solid rgba(255,255,255,0.2);
         }
 
-        /* Dreapta: Continut */
-        .info-content-side {
-            display: grid; grid-template-columns: 1.2fr 1fr; /* Text si Stats */
+        /* Dreapta: Text Alb */
+        .info-text-side h2 { font-size: 2.5rem; margin-bottom: 30px; font-weight: 800; line-height: 1.2; }
+        .info-text-side p { font-size: 1.1rem; margin-bottom: 30px; color: rgba(255,255,255,0.9); }
+        
+        .info-list { list-style: none; margin-bottom: 40px; }
+        .info-list li { margin-bottom: 15px; padding-left: 30px; position: relative; font-weight: 600; }
+        .info-list li::before { content: '✓'; position: absolute; left: 0; color: var(--accent-blue); font-size: 1.2rem; background: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
+
+        /* Statistici pe fundal albastru */
+        .stats-row { display: flex; gap: 50px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 30px; }
+        .stat-item h3 { font-size: 2.5rem; font-weight: 800; color: var(--accent-blue); margin-bottom: 5px; }
+        .stat-item p { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
+
+
+        /* --- SERVICII (ICONS CA IN POZA) --- */
+        .services-section { padding: 100px 20px; background-color: #ffffff; }
+        .section-title { text-align: center; font-size: 2.5rem; color: var(--primary-blue); margin-bottom: 70px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .services-grid { 
+            max-width: 1400px; margin: 0 auto; 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; 
         }
-
-        .info-text-part { padding: 60px; display: flex; flex-direction: column; justify-content: center; }
-        .info-text-part h2 { font-size: 2.2rem; color: var(--primary-blue); margin-bottom: 20px; line-height: 1.2; font-weight: 800; }
-        .info-text-part p { color: #555; margin-bottom: 20px; font-size: 1.05rem; }
-        .info-list { list-style: none; margin-top: 20px; }
-        .info-list li { margin-bottom: 15px; padding-left: 25px; position: relative; font-weight: 600; color: var(--text-dark); }
-        .info-list li::before { content: '✓'; position: absolute; left: 0; color: var(--accent-blue); font-weight: bold; }
-
-        .stats-grid-part { display: grid; grid-template-columns: 1fr 1fr; background: #f8fafc; border-left: 1px solid #eee; }
-        .stat-box {
-            padding: 30px; border-bottom: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; transition: background 0.3s;
-        }
-        .stat-box:hover { background: #eff6ff; }
-        .stat-number { font-size: 2.2rem; font-weight: 800; color: var(--primary-blue); margin-bottom: 5px; line-height: 1; }
-        .stat-label { font-size: 0.85rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* --- SERVICII (STIL NOU: ICON ALB PE CERC ALBASTRU) --- */
-        .services-section { padding: 50px 20px 80px 20px; background-color: #ffffff; }
-        .section-title { text-align: center; font-size: 2.5rem; color: var(--primary-blue); margin-bottom: 70px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; position: relative; }
-        .section-title::after { content: ''; display: block; width: 60px; height: 4px; background: var(--accent-blue); margin: 20px auto 0; }
-
-        .services-grid { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        
         .service-card {
-            background: #fff; padding: 40px 30px; text-align: center; transition: all 0.3s ease; border: 1px solid #eee; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            background: #fff; padding: 40px 30px; text-align: center; transition: all 0.3s ease; 
+            border: 1px solid #eee; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03);
         }
         .service-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(30, 58, 138, 0.15); border-color: var(--accent-blue); }
         
-        /* STIL NOU ICONITA */
-        .service-icon-circle {
-            width: 80px; height: 80px;
-            background: var(--primary-blue); /* Cerc Albastru */
-            border-radius: 50%;
+        /* CERC ALBASTRU PENTRU ICON */
+        .icon-circle {
+            width: 90px; height: 90px;
+            background-color: var(--primary-blue); /* Cerc Albastru */
+            border-radius: 20px; /* Usor rotunjit ca o aplicatie, nu perfect rotund */
             display: flex; align-items: center; justify-content: center;
             margin: 0 auto 25px auto;
-            box-shadow: 0 10px 20px rgba(30, 58, 138, 0.2);
-            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(30, 58, 138, 0.3);
         }
-        .service-card:hover .service-icon-circle { background: var(--accent-blue); transform: scale(1.1); }
+        .service-card:hover .icon-circle { background-color: var(--accent-blue); transform: scale(1.05); transition: 0.3s; }
 
-        .service-icon { 
-            width: 40px; height: 40px; 
-            color: white; /* Iconita Alba */
-        }
+        /* ICONITE ALBE */
+        .service-svg { width: 50px; height: 50px; fill: white; } /* Fill white pentru soliditate */
         
         .service-card h3 { color: var(--primary-blue); margin-bottom: 15px; font-size: 1.25rem; font-weight: 700; }
         .service-card p { font-size: 0.95rem; color: #666; line-height: 1.6; }
 
-        /* --- DOMENII --- */
-        .domains-section { padding: 100px 20px; background-color: var(--primary-blue); color: white; text-align: center; }
-        .domains-title { color: white; font-size: 2.5rem; margin-bottom: 60px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; position: relative; }
-        .domains-title::after { content: ''; display: block; width: 60px; height: 4px; background: var(--accent-blue); margin: 20px auto 0; }
-        .domains-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
-        .domain-card {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); padding: 25px; border-radius: 8px; font-size: 1.1rem; font-weight: 600; transition: all 0.3s ease; cursor: default;
+
+        /* --- DOMENII (3x3 FIX) --- */
+        .domains-section { 
+            padding: 100px 20px; background-color: var(--light-gray); text-align: center; 
         }
-        .domain-card:hover { background: white; color: var(--primary-blue); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); border-color: white; }
+        .domains-grid { 
+            max-width: 1200px; margin: 0 auto; 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); /* FIX 3 COLOANE */
+            gap: 30px; 
+        }
+        .domain-card {
+            background: white; padding: 30px; border-radius: 8px; font-size: 1.1rem; font-weight: 700; color: var(--primary-blue);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: all 0.3s; cursor: default; border-left: 5px solid var(--accent-blue);
+        }
+        .domain-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(30, 58, 138, 0.1); background: var(--primary-blue); color: white; border-left-color: white; }
+
 
         /* --- CONTACT --- */
-        .contact-section { padding: 100px 20px; background: var(--light-gray); }
+        .contact-section { padding: 100px 20px; background: white; }
         .contact-container {
-            max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+            max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; 
+            background: var(--light-gray); border-radius: 20px; overflow: hidden;
         }
-        .contact-form-wrapper { padding: 50px; background: white; }
+        .contact-form-wrapper { padding: 50px; }
         .contact-form-wrapper h3 { font-size: 1.8rem; color: var(--primary-blue); margin-bottom: 10px; }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #444; }
         .form-group input, .form-group textarea {
-            width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; font-size: 1rem; transition: border 0.3s; background: #f9f9f9;
+            width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; font-size: 1rem; background: white;
         }
-        .form-group input:focus, .form-group textarea:focus { border-color: var(--accent-blue); outline: none; background: white; }
         .submit-btn {
-            width: 100%; padding: 15px; background: var(--primary-blue); color: white; border: none; font-weight: 700; border-radius: 6px; cursor: pointer; transition: background 0.3s; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px;
+            width: 100%; padding: 15px; background: var(--primary-blue); color: white; border: none; font-weight: 700; border-radius: 6px; cursor: pointer; transition: background 0.3s;
         }
         .contact-info-wrapper { background: var(--primary-blue); color: white; padding: 50px; display: flex; flex-direction: column; justify-content: center; }
         .info-item { margin-bottom: 30px; display: flex; align-items: flex-start; gap: 15px; }
-        .info-text h4 { font-size: 0.9rem; color: rgba(255,255,255,0.6); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
-        .info-text p { font-size: 1.1rem; font-weight: 600; line-height: 1.4; }
-        .info-text a { color: white; text-decoration: none; border-bottom: 1px dotted rgba(255,255,255,0.5); }
+        .info-text h4 { font-size: 0.9rem; opacity: 0.7; margin-bottom: 5px; text-transform: uppercase; }
+        .info-text p, .info-text a { font-size: 1.1rem; font-weight: 600; color: white; text-decoration: none; }
 
-        footer { background: #0f172a; color: #64748b; padding: 30px 20px; text-align: center; font-size: 0.9rem; font-family: 'Montserrat', sans-serif; border-top: 1px solid #1e293b; }
+        footer { background: #0f172a; color: #64748b; padding: 30px 20px; text-align: center; font-size: 0.9rem; font-family: 'Montserrat', sans-serif; }
 
-        /* --- RESPONSIVE --- */
+        /* RESPONSIVE */
         @media (max-width: 1000px) {
-            .hero { padding-top: 120px; padding-bottom: 100px; min-height: auto; }
             .hero-container { grid-template-columns: 1fr; text-align: center; }
-            .hero-content p { border: none; padding: 0; }
+            .hero-text-side { padding-right: 0; }
+            .hero-logo { margin: 0 auto 30px auto; }
+            .hero-content p { margin: 0 auto 30px auto; border: none; padding: 0; }
             .cta-buttons { justify-content: center; }
-            .hero-image-side { display: none; /* Ascundem poza hero pe mobil */ }
+            /* Pe mobil poza hero vine sub text */
+            .hero-image-side { margin-top: 40px; }
             
-            .info-wrapper { margin-top: -50px; }
-            .info-card { grid-template-columns: 1fr; }
-            .info-image-side { min-height: 250px; } /* Poza mai mica pe mobil */
-            .info-content-side { grid-template-columns: 1fr; }
-            .stats-grid-part { grid-template-columns: 1fr 1fr; border-left: none; border-top: 1px solid #eee; }
-
+            .info-section { clip-path: none; margin-top: 0; padding-top: 80px; }
+            .info-container { grid-template-columns: 1fr; }
+            .info-image-side { order: 2; } /* Poza sub text pe mobil */
+            
+            .domains-grid { grid-template-columns: 1fr; } /* 1 col pe mobil */
+            .contact-container { grid-template-columns: 1fr; }
             nav { justify-content: center; } .nav-links { display: none; }
-            .contact-container, .domains-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -258,11 +231,9 @@
     <section class="hero" id="home">
         <div class="hero-container">
             <div class="hero-text-side">
-                <div class="logo-box">
-                    <img src="logo.png" alt="SOWILO SRL Logo" class="hero-logo">
-                </div>
+                <img src="logo.png" alt="SOWILO SRL Logo" class="hero-logo">
                 <div class="hero-content">
-                    <h4 style="color:var(--accent-blue); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px; font-weight: 700;">Inginerie & Proiectare MEP</h4>
+                    <h4>Inginerie & Proiectare MEP</h4>
                     <h1>Soluții tehnice pentru clădiri sigure.</h1>
                     <p>Cu o abordare pragmatică și focus pe respectarea normativelor, SOWILO SRL livrează proiecte complete de instalații, optimizate pentru eficiență și conformitate.</p>
                     <div class="cta-buttons">
@@ -272,119 +243,118 @@
                 </div>
             </div>
             <div class="hero-image-side">
-                <img src="https://images.unsplash.com/photo-1581092335397-9583eb92d232?auto=format&fit=crop&q=80&w=800" alt="Proiectare Instalatii">
+                <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80&w=800" alt="Santier Constructii">
             </div>
         </div>
     </section>
 
-    <div class="info-wrapper">
-        <div class="info-card">
+    <section class="info-section">
+        <div class="info-container">
             <div class="info-image-side">
-                <img src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&q=80&w=800" alt="Tablou Electric Industrial">
+                <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=800" alt="Instalatii Tehnice">
             </div>
-            <div class="info-content-side">
-                <div class="info-text-part">
-                    <h2>Proiectare instalații tehnice, de la concept la autorizare</h2>
-                    <p>La SOWILO SRL oferim servicii complete de proiectare instalații termice, sanitare, electrice și de stingere a incendiilor.</p>
-                    <ul class="info-list">
-                        <li>Analiză tehnică a necesităților</li>
-                        <li>Proiectare conformă normativelor ISU</li>
-                        <li>Asistență tehnică la execuție</li>
-                    </ul>
-                    <p style="margin-top: 15px; font-weight: bold; color: var(--primary-blue);">Eficiență. Siguranță. Conformitate.</p>
-                </div>
-                <div class="stats-grid-part">
-                    <div class="stat-box"><span class="stat-number">200+</span><span class="stat-label">Proiecte Finalizate</span></div>
-                    <div class="stat-box"><span class="stat-number">Național</span><span class="stat-label">Acoperire</span></div>
-                    <div class="stat-box"><span class="stat-number">Clienți</span><span class="stat-label">Recurenți</span></div>
-                    <div class="stat-box"><span class="stat-number">Suport</span><span class="stat-label">Tehnic Dedicat</span></div>
+            
+            <div class="info-text-side">
+                <h2>Proiectare de la concept la autorizare</h2>
+                <p>Oferim servicii complete de proiectare instalații termice, sanitare, electrice și de stingere a incendiilor. Ne ocupăm de tot procesul tehnic:</p>
+                <ul class="info-list">
+                    <li>Analiză tehnică și consultanță</li>
+                    <li>Proiectare conformă normativelor ISU</li>
+                    <li>Asistență tehnică pe șantier</li>
+                </ul>
+                
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <h3>200+</h3>
+                        <p>Proiecte</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>Național</h3>
+                        <p>Acoperire</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>100%</h3>
+                        <p>Suport</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
     <section class="services-section" id="servicii">
         <h2 class="section-title">Serviciile Noastre</h2>
         <div class="services-grid">
+            
             <div class="service-card">
-                <div class="service-icon-circle">
-                    <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M6 7v-3"></path><path d="M10 7v-3"></path><path d="M2 7h12l-2 10h4l-6 6v-6h-4l2 -10"></path>
-                        <path d="M15 4h5l1 5c0 1.657 -1.343 3 -3 3s-3 -1.343 -3 -3l1 -5z"></path>
+                <div class="icon-circle">
+                    <svg class="service-svg" viewBox="0 0 24 24" stroke="currentColor" stroke-width="0" fill="white">
+                        <path d="M9 20C9 21.1 9.9 22 11 22H13C14.1 22 15 21.1 15 20V19H9V20ZM12 2C8.13 2 5 5.13 5 9C5 11.38 6.19 13.47 8 14.74V17C8 17.55 8.45 18 9 18H15C15.55 18 16 17.55 16 17V14.74C17.81 13.47 19 11.38 19 9C19 5.13 15.87 2 12 2Z"/>
                     </svg>
                 </div>
                 <h3>Instalații Electrice</h3>
-                <p>Iluminat inteligent, curenți slabi și sisteme fotovoltaice pentru eficiență maximă.</p>
+                <p>Iluminat inteligent, curenți slabi și sisteme fotovoltaice.</p>
             </div>
             
             <div class="service-card">
-                <div class="service-icon-circle">
-                    <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M19 13h-2v-6h-10v6h-2"></path><path d="M5 13a3 3 0 0 0 3 3h8a3 3 0 0 0 3 -3"></path>
-                        <path d="M12 7v-4"></path><path d="M9 3h6"></path><path d="M12 16v6"></path>
+                <div class="icon-circle">
+                    <svg class="service-svg" viewBox="0 0 24 24" fill="white">
+                        <path d="M19,13H17V7H7V13H5V7C5,5.9 5.9,5 7,5H17C18.1,5 19,5.9 19,7V13M12,16C12,17.66 10.66,19 9,19H7V22H9C12.31,22 15,19.31 15,16V13H12V16M2,10H6V12H2V10M17,1H19V4H17V1Z"/>
                     </svg>
                 </div>
                 <h3>Instalații Sanitare</h3>
-                <p>Alimentare cu apă și rețele de canalizare proiectate durabil și igienic.</p>
+                <p>Alimentare cu apă și rețele de canalizare proiectate durabil.</p>
             </div>
 
             <div class="service-card">
-                <div class="service-icon-circle">
-                    <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 7h4v10h-4z"></path><path d="M7 7h4v10h-4z"></path><path d="M11 7h4v10h-4z"></path><path d="M3 10h12"></path><path d="M3 14h12"></path>
-                        <path d="M20 3c0 5 -2 7 -2 10c0 3.5 2.5 6 5.5 6c1.5 0 3 -1 3 -3c0 -4 -2.5 -6 -4.5 -9c-1.5 -2 -2 -4 -2 -4z"></path>
+                <div class="icon-circle">
+                    <svg class="service-svg" viewBox="0 0 24 24" fill="white">
+                        <path d="M19,3H5C3.9,3 3,3.9 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.9 20.1,3 19,3M8,17H6V7H8V17M12,17H10V7H12V17M16,17H14V7H16V17Z"/>
+                        <path d="M18,9C18,7 16.5,6.5 16.5,6.5C16.5,6.5 17,8 16,9C15,10 16.5,12 16.5,12C16.5,12 18,11 18,9Z" transform="translate(2,-4)"/> 
                     </svg>
                 </div>
-                <h3>Instalații HVAC</h3>
-                <p>Soluții de încălzire, ventilație și climatizare pentru confort termic optim.</p>
+                <h3>Instalații Termice</h3>
+                <p>Soluții HVAC și încălzire pentru un confort termic optim.</p>
             </div>
             
             <div class="service-card">
-                <div class="service-icon-circle">
-                    <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M14 3v4a1 1 0 0 0 1 1h4"></path><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
-                        <path d="M9 15l2 2l4 -4"></path>
-                        <path d="M3 20l2 -2l-2 -2"></path><path d="M21 20l-2 -2l2 -2"></path>
+                <div class="icon-circle">
+                    <svg class="service-svg" viewBox="0 0 24 24" fill="white">
+                        <path d="M14,2H6C4.9,2 4,2.9 4,4V20C4,21.1 4.9,22 6,22H18C19.1,22 20,21.1 20,20V8L14,2M13,16H11V14H13V16M13,12H11V8H13V12M15.5,20C15.5,20 16,19 16,18.5C16,17.5 15,17 15,16C15,16 14,17 14,18C14,19 15.5,20 15.5,20Z"/>
                     </svg>
                 </div>
                 <h3>Autorizări ISU</h3>
-                <p>Consultanță și documentație completă pentru obținerea avizelor de securitate.</p>
+                <p>Consultanță și documentație completă pentru obținerea avizelor.</p>
             </div>
             
             <div class="service-card">
-                <div class="service-icon-circle">
-                    <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 3a8 8 0 0 1 8 8v10h-16v-10a8 8 0 0 1 8 -8z"></path>
-                        <path d="M12 15m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
-                        <path d="M4 13c1.5 1 3 .5 4.5 -0.5c1.5 -1 3 -.5 4.5 0.5s3 .5 4.5 -0.5c1.5 -1 3 -.5 4.5 0.5"></path>
+                <div class="icon-circle">
+                    <svg class="service-svg" viewBox="0 0 24 24" fill="white">
+                        <path d="M12,2A7,7 0 0,0 5,9C5,11.23 6.05,13.21 7.7,14.5C7.26,15.5 7,16.5 7,18A1,1 0 0,0 8,19H16A1,1 0 0,0 17,18C17,16.5 16.74,15.5 16.3,14.5C17.95,13.21 19,11.23 19,9A7,7 0 0,0 12,2M12,5A1,1 0 0,1 13,6A1,1 0 0,1 12,7A1,1 0 0,1 11,6A1,1 0 0,1 12,5M9,13V11H15V13H9Z"/>
                     </svg>
                 </div>
                 <h3>Detecție Incendiu</h3>
-                <p>Sisteme de alarmare și alertare integrate pentru siguranța ocupanților.</p>
+                <p>Sisteme de alarmare și alertare integrate.</p>
             </div>
             
             <div class="service-card">
-                <div class="service-icon-circle">
-                    <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 7a4 4 0 0 1 4 4v9a1 1 0 0 1 -1 1h-6a1 1 0 0 1 -1 -1v-9a4 4 0 0 1 4 -4z"></path>
-                        <path d="M9 16h6"></path><path d="M12 7v-3"></path><path d="M16 5l-4 -1l-4 1"></path>
+                <div class="icon-circle">
+                    <svg class="service-svg" viewBox="0 0 24 24" fill="white">
+                        <path d="M10.5,7H11.5L12.5,4H16V2H8V4H11.5L10.5,7M17,10V22H7V10H17M17,8H7C5.9,8 5,8.9 5,10V22C5,23.1 5.9,24 7,24H17C18.1,24 19,23.1 19,22V10C19,8.9 18.1,8 17,8Z"/>
                     </svg>
                 </div>
                 <h3>Stingere Incendiu</h3>
-                <p>Instalații cu hidranți, sprinklere și gaze inerte conform normativelor.</p>
+                <p>Instalații cu hidranți, sprinklere și gaze inerte.</p>
             </div>
             
              <div class="service-card">
-                <div class="service-icon-circle">
-                    <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="2" width="16" height="16" rx="2"></rect>
-                        <circle cx="10" cy="10" r="5"></circle>
-                        <path d="M10 10l3 -2"></path><path d="M10 10l-2 3"></path><path d="M10 10l-3 -2"></path><path d="M10 10l2 -3"></path>
-                        <path d="M21 5c1.5 1 3 .5 4.5 -0.5"></path><path d="M21 10c1.5 1 3 .5 4.5 -0.5"></path><path d="M21 15c1.5 1 3 .5 4.5 -0.5"></path>
+                <div class="icon-circle">
+                    <svg class="service-svg" viewBox="0 0 24 24" fill="white">
+                        <path d="M12,11L14.5,6.5L16.5,8L13.5,12L17,15.5L15.5,17.5L12,13.5L8.5,17.5L7,15.5L10.5,12L7.5,8L9.5,6.5L12,11M4,4H20V20H4V4M22,2H2V22H22V2Z"/>
+                        <path d="M23,10H25V14H23V10M23,6H25V8H23V6M23,16H25V18H23V16Z"/>
                     </svg>
                 </div>
                 <h3>Desfumare</h3>
-                <p>Sisteme mecanice și naturale pentru evacuarea fumului în caz de urgență.</p>
+                <p>Sisteme mecanice și naturale pentru evacuare fum.</p>
             </div>
         </div>
     </section>
@@ -397,10 +367,9 @@
             <div class="domain-card">Monumente Istorice</div>
             <div class="domain-card">Centre Comerciale</div>
             <div class="domain-card">Obiective Industriale</div>
-            <div class="domain-card">Facilități pentru Sport</div>
+            <div class="domain-card">Hale Depozitare</div> <div class="domain-card">Facilități pentru Sport</div>
             <div class="domain-card">Instituții de Învățământ</div>
-            <div class="domain-card">Spitale</div>
-            <div class="domain-card">Hoteluri</div>
+            <div class="domain-card">Spitale & Clinici</div>
         </div>
     </section>
 
