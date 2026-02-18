@@ -12,7 +12,8 @@
         :root {
             --primary-blue: #1e3a8a; 
             --accent-blue: #3b82f6; 
-            --bg-overlay: rgba(30, 58, 138, 0.92); /* Overlay putin mai opac pentru contrast */
+            --bg-overlay: rgba(30, 58, 138, 0.92); 
+            --light-gray: #f8fafc;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
@@ -27,63 +28,64 @@
             font-family: 'Montserrat', sans-serif;
         }
 
-        /* --- NAVIGATIE (Doar Link-uri) --- */
+        /* --- NAVIGATIE --- */
         nav {
             position: absolute;
             top: 0;
             width: 100%;
-            padding: 30px 50px;
+            padding: 20px 50px;
             display: flex;
-            justify-content: flex-end; /* Mutam meniul in dreapta */
+            justify-content: flex-end; 
             align-items: center;
             z-index: 100;
         }
 
         .nav-links { display: flex; gap: 40px; list-style: none; }
         .nav-links a { 
-            color: rgba(255,255,255,0.8); 
+            color: rgba(255,255,255,0.85); 
             text-decoration: none; 
             font-weight: 600; 
             font-size: 0.9rem; 
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
             transition: all 0.3s; 
         }
-        .nav-links a:hover { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        .nav-links a:hover { color: #fff; transform: translateY(-2px); }
 
         /* --- HERO SECTION --- */
         .hero {
-            height: 100vh;
+            min-height: 100vh;
             background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), 
                         url('https://images.unsplash.com/photo-1635329199951-351563542964?auto=format&fit=crop&q=80&w=1920') no-repeat center center/cover;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: flex-start; /* Aliniere la stanga */
+            justify-content: center; /* Centrat vertical */
+            align-items: flex-start;
             text-align: left;
             color: white;
-            padding: 0 10% 0 80px; /* Mai mult spatiu in stanga */
+            padding: 80px 10% 40px 80px; /* Padding ajustat */
         }
 
-        /* STIL NOU PENTRU LOGO MARE */
+        /* LOGO - Pozitionat mai sus */
         .hero-logo-container {
-            margin-bottom: 30px;
+            margin-bottom: 25px; /* Spatiu sub logo */
+            margin-top: -20px; /* Il tragem putin mai sus */
             animation: fadeInDown 1s ease-out;
         }
         
         .hero-logo {
-            width: 220px; /* Dimensiune mare */
+            width: 200px; /* Dimensiune optima */
             height: auto;
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); /* Umbra pentru profunzime */
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
         }
 
         .hero-content {
             max-width: 900px;
-            animation: fadeInUp 1s ease-out 0.3s backwards; /* Animatie usoara */
+            animation: fadeInUp 1s ease-out 0.3s backwards;
         }
 
         .hero-content h1 {
-            font-size: 4.5rem; /* Titlu foarte mare */
+            font-size: 4rem; 
             font-weight: 800;
             line-height: 1.1;
             margin-bottom: 25px;
@@ -91,8 +93,8 @@
         }
 
         .hero-content p {
-            font-size: 1.3rem;
-            margin-bottom: 50px;
+            font-size: 1.2rem;
+            margin-bottom: 40px;
             color: rgba(255,255,255,0.9);
             max-width: 700px;
             font-weight: 400;
@@ -100,20 +102,22 @@
             padding-left: 20px;
         }
 
-        /* Animatii simple */
+        /* Animatii */
         @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         .cta-buttons { display: flex; gap: 20px; }
         .btn {
-            padding: 18px 45px;
+            padding: 16px 40px;
             border-radius: 4px;
             text-decoration: none;
             font-weight: 700;
             transition: all 0.3s ease;
             text-transform: uppercase;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             letter-spacing: 1px;
+            cursor: pointer;
+            border: none;
         }
         .btn-primary { 
             background-color: var(--accent-blue); 
@@ -122,7 +126,7 @@
         }
         .btn-outline { 
             background-color: transparent; 
-            border: 2px solid rgba(255,255,255,0.3); 
+            border: 2px solid rgba(255,255,255,0.4); 
             color: white; 
         }
         .btn:hover { transform: translateY(-3px); }
@@ -131,15 +135,15 @@
 
         /* --- SERVICII --- */
         .services-section {
-            padding: 120px 20px;
+            padding: 100px 20px;
             background-color: #ffffff;
         }
 
         .section-title {
             text-align: center;
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             color: var(--primary-blue);
-            margin-bottom: 80px;
+            margin-bottom: 70px;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -159,94 +163,137 @@
             max-width: 1400px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
         }
 
         .service-card {
             background: #fff;
-            padding: 40px 30px;
+            padding: 35px 25px;
             text-align: center;
-            transition: all 0.4s ease;
+            transition: all 0.3s ease;
             border: 1px solid #eee;
-            border-radius: 8px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
         }
 
         .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(30, 58, 138, 0.1);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(30, 58, 138, 0.1);
             border-color: var(--accent-blue);
         }
 
-        .service-icon { width: 70px; height: 70px; margin-bottom: 25px; }
-        .service-card h3 { color: var(--primary-blue); margin-bottom: 15px; font-size: 1.3rem; font-weight: 700; }
-        .service-card p { font-size: 1rem; color: #666; line-height: 1.7; }
+        .service-icon { width: 60px; height: 60px; margin-bottom: 20px; }
+        .service-card h3 { color: var(--primary-blue); margin-bottom: 15px; font-size: 1.25rem; font-weight: 700; }
+        .service-card p { font-size: 0.95rem; color: #666; line-height: 1.6; }
 
-        /* --- CONTACT --- */
+        /* --- CONTACT SECTION (NOU) --- */
         .contact-section {
             padding: 100px 20px;
-            background: #f8fafc;
-            text-align: center;
+            background: var(--light-gray);
         }
 
-        .legal-info {
-            max-width: 1100px;
+        .contact-container {
+            max-width: 1200px;
             margin: 0 auto;
-            text-align: left;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 50px;
-            padding-top: 40px;
-        }
-
-        .legal-item {
-            padding: 15px;
-            border-left: 4px solid var(--accent-blue);
-            padding-left: 25px;
+            grid-template-columns: 1fr 1fr; /* Doua coloane: Formular stanga, Date dreapta */
+            gap: 60px;
             background: white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
-            border-radius: 0 10px 10px 0;
-            transition: transform 0.3s;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
         }
-        
-        .legal-item:hover { transform: translateX(10px); }
 
-        .legal-item h4 { 
-            color: #94a3b8; 
-            font-size: 0.8rem; 
-            text-transform: uppercase; 
-            margin-bottom: 8px; 
-            letter-spacing: 1.5px; 
-            font-weight: 700;
+        /* Coloana Stanga: Formular */
+        .contact-form-wrapper {
+            padding: 50px;
+            background: white;
+        }
+
+        .contact-form-wrapper h3 {
+            font-size: 1.8rem;
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+        }
+
+        .contact-form-wrapper p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #444; }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border 0.3s;
+            background: #f9f9f9;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--accent-blue);
+            outline: none;
+            background: white;
         }
         
-        .legal-item p { 
-            font-weight: 600; 
-            color: var(--primary-blue); 
-            font-size: 1.15rem; 
-            font-family: 'Open Sans', sans-serif;
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
+        .submit-btn:hover { background: #152c6e; }
+
+        /* Coloana Dreapta: Date Firma */
+        .contact-info-wrapper {
+            background: var(--primary-blue);
+            color: white;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .contact-info-wrapper h3 { font-size: 1.8rem; margin-bottom: 30px; color: white; }
+
+        .info-item { margin-bottom: 30px; display: flex; align-items: flex-start; gap: 15px; }
+        .info-icon { width: 24px; height: 24px; min-width: 24px; margin-top: 3px; }
+        .info-text h4 { font-size: 0.9rem; color: rgba(255,255,255,0.6); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .info-text p { font-size: 1.1rem; font-weight: 600; line-height: 1.4; }
+        .info-text a { color: white; text-decoration: none; border-bottom: 1px dotted rgba(255,255,255,0.5); }
+        .info-text a:hover { color: var(--accent-blue); border-bottom-color: var(--accent-blue); }
 
         footer {
             background: #0f172a;
-            color: #94a3b8;
-            padding: 50px 20px;
+            color: #64748b;
+            padding: 30px 20px;
             text-align: center;
             font-size: 0.9rem;
             font-family: 'Montserrat', sans-serif;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            border-top: 1px solid #1e293b;
         }
 
-        @media (max-width: 768px) {
-            nav { padding: 20px; justify-content: center; }
-            .nav-links { display: none; } /* Ascundem meniul pe mobil */
-            .hero { padding: 0 20px; align-items: center; text-align: center; }
-            .hero-content p { border-left: none; padding-left: 0; }
+        @media (max-width: 900px) {
+            .contact-container { grid-template-columns: 1fr; }
             .hero-content h1 { font-size: 2.8rem; }
-            .hero-logo { width: 180px; } /* Logo putin mai mic pe mobil */
+            nav { justify-content: center; padding: 20px; }
+            .nav-links { display: none; }
+            .hero { padding: 40px 20px; align-items: center; text-align: center; }
+            .hero-content p { border-left: none; padding-left: 0; }
+            .hero-logo { width: 160px; margin-top: 0; }
             .cta-buttons { flex-direction: column; width: 100%; }
-            .btn { width: 100%; }
-            .legal-info { grid-template-columns: 1fr; gap: 20px; }
         }
     </style>
 </head>
@@ -269,10 +316,10 @@
         <div class="hero-content">
             <h4 style="color:var(--accent-blue); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px; font-weight: 700;">Inginerie & Proiectare MEP</h4>
             <h1>Dăm viață clădirilor inteligente.</h1>
-            <p>SOWILO SRL transformă viziunea arhitecturală în realitate tehnică funcțională. Proiectare instalații electrice, sanitare și termice la cele mai înalte standarde de calitate și siguranță.</p>
+            <p>SOWILO SRL transformă viziunea arhitecturală în realitate tehnică funcțională. Proiectare instalații electrice, sanitare, termice și ISU la cele mai înalte standarde.</p>
             <div class="cta-buttons">
-                <a href="#servicii" class="btn btn-primary">VEZI SERVICIILE</a>
-                <a href="#contact" class="btn btn-outline">CONTACTEAZĂ-NE</a>
+                <a href="#servicii" class="btn btn-primary">Vezi Serviciile</a>
+                <a href="#contact" class="btn btn-outline">Contactează-ne</a>
             </div>
         </div>
     </section>
@@ -303,4 +350,93 @@
             <div class="service-card">
                 <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
                 <h3>Detecție Incendiu</h3>
-                <p>Sisteme de alarmare și alertare
+                <p>Sisteme de alarmare și alertare integrate pentru siguranța ocupanților.</p>
+            </div>
+            <div class="service-card">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="1.5"><path d="M12 12c1.6 0 3-1.4 3-3s-1.4-3-3-3-3 1.4-3 3 1.4 3 3 3z"/><path d="M4.5 12.5L9 17l6-6 6.5 6.5"/></svg>
+                <h3>Stingere Incendiu</h3>
+                <p>Instalații cu hidranți, sprinklere și gaze inerte conform normativelor.</p>
+            </div>
+            <div class="service-card">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="1.5"><path d="M12 3v9m0 0l4-4m-4 4L8 8m4 13v-9"/><path d="M5 12H2v4h3v4h4v-4h3v-4H9V8H5v4z"/></svg>
+                <h3>Desfumare</h3>
+                <p>Sisteme mecanice și naturale pentru evacuarea fumului în caz de urgență.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact-section" id="contact">
+        <h2 class="section-title">Contactează-ne</h2>
+        
+        <div class="contact-container">
+            
+            <div class="contact-form-wrapper">
+                <h3>Scrie-ne un mesaj</h3>
+                <p>Ai un proiect în plan? Completează formularul și te vom contacta în cel mai scurt timp.</p>
+                
+                <form action="mailto:office@sowilo.ro" method="post" enctype="text/plain">
+                    <div class="form-group">
+                        <label for="name">Numele dumneavoastră</label>
+                        <input type="text" id="name" name="Nume" required placeholder="Ex: Popescu Ion">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Adresa de Email</label>
+                        <input type="email" id="email" name="Email" required placeholder="email@exemplu.ro">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Mesaj / Detalii Proiect</label>
+                        <textarea id="message" name="Mesaj" rows="4" required placeholder="Doresc o ofertă pentru..."></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Trimite Mesaj</button>
+                </form>
+            </div>
+
+            <div class="contact-info-wrapper">
+                <h3>Informații Contact</h3>
+                
+                <div class="info-item">
+                    <div class="info-text">
+                        <h4>Denumire Firmă</h4>
+                        <p>SOWILO SRL</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-text">
+                        <h4>Cod Unic de Înregistrare</h4>
+                        <p>RO49056896</p>
+                        <p style="font-size: 0.9rem; margin-top:5px; opacity:0.8;">J33 / 1885 / 2023</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-text">
+                        <h4>Sediu Social</h4>
+                        <p>Com. Bunești, Sat Uncești, Str. Prosie, Nr. 10, Județul Suceava</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-text">
+                        <h4>Telefon</h4>
+                        <p><a href="tel:0748635346">0748 635 346</a></p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-text">
+                        <h4>Email</h4>
+                        <p><a href="mailto:office@sowilo.ro">office@sowilo.ro</a></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 SOWILO SRL. Inginerie & Proiectare MEP. Toate drepturile rezervate.</p>
+    </footer>
+
+</body>
+</html>
