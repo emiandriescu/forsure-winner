@@ -309,4 +309,225 @@
         .form-group input, .form-group textarea {
             width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; font-size: 1rem; transition: border 0.3s; background: #f9f9f9;
         }
-        .form-group input:focus, .form-group textarea:focus { border-color: var(--accent-blue); outline
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--accent-blue); outline: none; background: white; }
+        
+        .submit-btn {
+            width: 100%; padding: 15px; background: var(--primary-blue); color: white; border: none; font-weight: 700; border-radius: 6px; cursor: pointer; transition: background 0.3s; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .submit-btn:hover { background: #152c6e; }
+
+        .contact-info-wrapper {
+            background: var(--primary-blue); color: white; padding: 50px; display: flex; flex-direction: column; justify-content: center;
+        }
+        .contact-info-wrapper h3 { font-size: 1.8rem; margin-bottom: 30px; color: white; }
+        .info-item { margin-bottom: 30px; display: flex; align-items: flex-start; gap: 15px; }
+        .info-text h4 { font-size: 0.9rem; color: rgba(255,255,255,0.6); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .info-text p { font-size: 1.1rem; font-weight: 600; line-height: 1.4; }
+        .info-text a { color: white; text-decoration: none; border-bottom: 1px dotted rgba(255,255,255,0.5); }
+
+        footer {
+            background: #0f172a; color: #64748b; padding: 30px 20px; text-align: center; font-size: 0.9rem; font-family: 'Montserrat', sans-serif; border-top: 1px solid #1e293b;
+        }
+
+        /* Animatii */
+        @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* RESPONSIVE */
+        @media (max-width: 1000px) {
+            .hero-container { grid-template-columns: 1fr; }
+            .hero { padding-top: 120px; min-height: auto; padding-bottom: 80px; }
+            .hero-left { margin-top: 0; text-align: center; }
+            .hero-logo { margin: 0 auto 30px auto; width: 250px; }
+            .hero-content p { margin: 0 auto 30px auto; border: none; padding: 0; }
+            .cta-buttons { justify-content: center; flex-direction: column; }
+            
+            .info-wrapper { margin-top: 0; margin-bottom: 60px; }
+            .info-card { grid-template-columns: 1fr; }
+            .stats-grid-side { grid-template-columns: 1fr; } /* Pe mobil o singura coloana de stats */
+            .stat-box { border-right: none; text-align: center; align-items: center; }
+            
+            nav { justify-content: center; }
+            .nav-links { display: none; }
+            .contact-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <ul class="nav-links">
+            <li><a href="#home">Acasă</a></li>
+            <li><a href="#servicii">Servicii</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="hero-container">
+            <div class="hero-left">
+                <img src="logo.png" alt="SOWILO SRL Logo" class="hero-logo">
+
+                <div class="hero-content">
+                    <h4 style="color:var(--accent-blue); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px; font-weight: 700;">Inginerie & Proiectare MEP</h4>
+                    <h1>Dăm viață clădirilor inteligente.</h1>
+                    <p>SOWILO SRL transformă viziunea arhitecturală în realitate tehnică funcțională. Expertiză completă în instalații pentru performanță și siguranță.</p>
+                    <div class="cta-buttons">
+                        <a href="#servicii" class="btn btn-primary">Vezi Serviciile</a>
+                        <a href="#contact" class="btn btn-outline">Contactează-ne</a>
+                    </div>
+                </div>
+            </div>
+            </div>
+    </section>
+
+    <div class="info-wrapper">
+        <div class="info-card">
+            
+            <div class="info-text-side">
+                <h2>Proiectare instalații tehnice, de la concept la autorizare</h2>
+                <p>La SOWILO SRL oferim servicii complete de proiectare instalații termice, sanitare, electrice și de stingere a incendiilor, adaptate fiecărui tip de clădire – rezidențială, comercială sau industrială.</p>
+                <p>Ne ocupăm de tot procesul tehnic pentru ca tu să construiești în siguranță:</p>
+                <ul class="info-list">
+                    <li>Consultanță personalizată și evaluarea nevoilor</li>
+                    <li>Elaborarea documentației tehnice complete</li>
+                    <li>Obținerea avizelor și autorizațiilor ISU</li>
+                    <li>Optimizarea soluțiilor pentru eficiență energetică</li>
+                </ul>
+                <p style="margin-top: 20px; font-weight: bold; color: var(--primary-blue);">De ce să lucrezi cu noi?</p>
+                <ul class="info-list">
+                    <li>Soluții adaptate bugetului tău</li>
+                    <li>Respectarea strictă a normativelor în vigoare</li>
+                    <li>Comunicare clară și termene respectate</li>
+                </ul>
+            </div>
+
+            <div class="stats-grid-side">
+                <div class="stat-box">
+                    <span class="stat-number">200+</span>
+                    <span class="stat-label">Proiecte Finalizate</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Rată Avizare ISU</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">2023</span>
+                    <span class="stat-label">Anul Înființării</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number">RO</span>
+                    <span class="stat-label">Acoperire Națională</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <section class="services-section" id="servicii">
+        <h2 class="section-title">Serviciile Noastre</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14H12L11 22L21 10H12L13 2Z"/></svg>
+                <h3>Instalații Electrice</h3>
+                <p>Iluminat inteligent, curenți slabi și sisteme fotovoltaice pentru eficiență maximă.</p>
+            </div>
+            <div class="service-card">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="9" r="3"/></svg>
+                <h3>Instalații Sanitare</h3>
+                <p>Alimentare cu apă și rețele de canalizare proiectate durabil și igienic.</p>
+            </div>
+            <div class="service-card">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20m-4-16s1.5 1.5 1.5 4-2.5 4-2.5 4m9-8s-1.5 1.5-1.5 4 2.5 4 2.5 4"/></svg>
+                <h3>Instalații Termice</h3>
+                <p>Soluții HVAC și încălzire pentru un confort termic optim în orice sezon.</p>
+            </div>
+            <div class="service-card">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                <h3>Autorizări ISU</h3>
+                <p>Consultanță și documentație completă pentru obținerea avizelor de securitate.</p>
+            </div>
+            <div class="service-card">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+                <h3>Detecție Incendiu</h3>
+                <p>Sisteme de alarmare și alertare integrate pentru siguranța ocupanților.</p>
+            </div>
+            <div class="service-card">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="1.5"><path d="M12 12c1.6 0 3-1.4 3-3s-1.4-3-3-3-3 1.4-3 3 1.4 3 3 3z"/><path d="M4.5 12.5L9 17l6-6 6.5 6.5"/></svg>
+                <h3>Stingere Incendiu</h3>
+                <p>Instalații cu hidranți, sprinklere și gaze inerte conform normativelor.</p>
+            </div>
+             <div class="service-card">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="1.5"><path d="M12 3v9m0 0l4-4m-4 4L8 8m4 13v-9"/><path d="M5 12H2v4h3v4h4v-4h3v-4H9V8H5v4z"/></svg>
+                <h3>Desfumare</h3>
+                <p>Sisteme mecanice și naturale pentru evacuarea fumului în caz de urgență.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact-section" id="contact">
+        <h2 class="section-title">Contactează-ne</h2>
+        
+        <div class="contact-container">
+            <div class="contact-form-wrapper">
+                <h3>Scrie-ne un mesaj</h3>
+                <p>Ai un proiect în plan? Completează formularul și te vom contacta în cel mai scurt timp.</p>
+                <form action="mailto:office@sowilo.ro" method="post" enctype="text/plain">
+                    <div class="form-group">
+                        <label for="name">Numele dumneavoastră</label>
+                        <input type="text" id="name" name="Nume" required placeholder="Ex: Popescu Ion">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Adresa de Email</label>
+                        <input type="email" id="email" name="Email" required placeholder="email@exemplu.ro">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Mesaj / Detalii Proiect</label>
+                        <textarea id="message" name="Mesaj" rows="4" required placeholder="Doresc o ofertă pentru..."></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Trimite Mesaj</button>
+                </form>
+            </div>
+
+            <div class="contact-info-wrapper">
+                <h3>Informații Contact</h3>
+                <div class="info-item">
+                    <div class="info-text">
+                        <h4>Denumire Firmă</h4>
+                        <p>SOWILO SRL</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-text">
+                        <h4>Cod Unic de Înregistrare</h4>
+                        <p>RO49056896</p>
+                        <p style="font-size: 0.9rem; margin-top:5px; opacity:0.8;">J33 / 1885 / 2023</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-text">
+                        <h4>Sediu Social</h4>
+                        <p>Com. Bunești, Sat Uncești, Str. Prosie, Nr. 10, Județul Suceava</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-text">
+                        <h4>Telefon</h4>
+                        <p><a href="tel:0748635346">0748 635 346</a></p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-text">
+                        <h4>Email</h4>
+                        <p><a href="mailto:office@sowilo.ro">office@sowilo.ro</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 SOWILO SRL. Inginerie & Proiectare MEP. Toate drepturile rezervate.</p>
+    </footer>
+
+</body>
+</html>
