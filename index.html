@@ -12,7 +12,7 @@
         :root {
             --primary-blue: #1e3a8a; 
             --accent-blue: #3b82f6; 
-            --bg-overlay: rgba(30, 58, 138, 0.92); 
+            --bg-overlay: rgba(30, 58, 138, 0.94); /* Fundal si mai solid */
             --light-gray: #f8fafc;
         }
 
@@ -22,6 +22,7 @@
             font-family: 'Open Sans', sans-serif; 
             line-height: 1.6; 
             color: #333; 
+            overflow-x: hidden; /* Previne scroll orizontal */
         }
 
         h1, h2, h3, h4, .nav-links a, .btn {
@@ -50,65 +51,70 @@
             letter-spacing: 1.5px;
             transition: all 0.3s; 
         }
-        .nav-links a:hover { color: #fff; transform: translateY(-2px); }
+        .nav-links a:hover { color: #fff; transform: translateY(-2px); text-shadow: 0 0 10px rgba(255,255,255,0.3); }
 
-        /* --- HERO SECTION --- */
+        /* --- HERO SECTION (2 COLOANE) --- */
         .hero {
             min-height: 100vh;
             background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), 
                         url('https://images.unsplash.com/photo-1635329199951-351563542964?auto=format&fit=crop&q=80&w=1920') no-repeat center center/cover;
+            padding: 100px 5% 40px 5%; /* Padding lateral procentual */
             display: flex;
-            flex-direction: column;
-            justify-content: center; /* Centrat vertical */
-            align-items: flex-start;
-            text-align: left;
-            color: white;
-            padding: 80px 10% 40px 80px; /* Padding ajustat */
+            align-items: center; /* Centreaza vertical */
         }
 
-        /* LOGO - Pozitionat mai sus */
+        .hero-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr; /* Stanga mai lat (Text), Dreapta mai ingust (Poza) */
+            gap: 50px;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* COLOANA STANGA (Text + Logo) */
+        .hero-left {
+            padding-right: 20px;
+            /* Il tragem in sus folosind margin negativ daca e nevoie, sau transform */
+            transform: translateY(-20px); 
+        }
+
+        /* LOGO MARE */
         .hero-logo-container {
-            margin-bottom: 25px; /* Spatiu sub logo */
-            margin-top: -20px; /* Il tragem putin mai sus */
-            animation: fadeInDown 1s ease-out;
+            margin-bottom: 30px;
+            animation: fadeInLeft 1s ease-out;
         }
         
         .hero-logo {
-            width: 200px; /* Dimensiune optima */
+            width: 300px; /* MULT MAI MARE */
             height: auto;
             filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
         }
 
-        .hero-content {
-            max-width: 900px;
-            animation: fadeInUp 1s ease-out 0.3s backwards;
-        }
-
         .hero-content h1 {
-            font-size: 4rem; 
+            font-size: 3.8rem; 
             font-weight: 800;
             line-height: 1.1;
             margin-bottom: 25px;
             text-transform: uppercase;
+            color: white;
         }
 
         .hero-content p {
             font-size: 1.2rem;
             margin-bottom: 40px;
             color: rgba(255,255,255,0.9);
-            max-width: 700px;
+            max-width: 650px;
             font-weight: 400;
             border-left: 4px solid var(--accent-blue);
             padding-left: 20px;
         }
 
-        /* Animatii */
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
+        /* Butoane */
         .cta-buttons { display: flex; gap: 20px; }
         .btn {
-            padding: 16px 40px;
+            padding: 16px 35px;
             border-radius: 4px;
             text-decoration: none;
             font-weight: 700;
@@ -119,19 +125,43 @@
             cursor: pointer;
             border: none;
         }
-        .btn-primary { 
-            background-color: var(--accent-blue); 
-            color: white; 
-            border: 2px solid var(--accent-blue);
-        }
-        .btn-outline { 
-            background-color: transparent; 
-            border: 2px solid rgba(255,255,255,0.4); 
-            color: white; 
-        }
+        .btn-primary { background-color: var(--accent-blue); color: white; border: 2px solid var(--accent-blue); }
+        .btn-outline { background-color: transparent; border: 2px solid rgba(255,255,255,0.4); color: white; }
         .btn:hover { transform: translateY(-3px); }
         .btn-primary:hover { background-color: #2563eb; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4); }
         .btn-outline:hover { border-color: white; background-color: white; color: var(--primary-blue); }
+
+        /* COLOANA DREAPTA (Imaginea 3D) */
+        .hero-right {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeInRight 1s ease-out 0.5s backwards;
+            position: relative;
+        }
+
+        /* Imaginea din dreapta */
+        .hero-image {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            /* Efect de plutire */
+            animation: float 6s ease-in-out infinite;
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4));
+            border-radius: 20px;
+            /* O facem usor transparenta ca sa se integreze bine */
+            opacity: 0.9;
+        }
+
+        /* Animatie plutire */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeInRight { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
 
         /* --- SERVICII --- */
         .services-section {
@@ -187,7 +217,7 @@
         .service-card h3 { color: var(--primary-blue); margin-bottom: 15px; font-size: 1.25rem; font-weight: 700; }
         .service-card p { font-size: 0.95rem; color: #666; line-height: 1.6; }
 
-        /* --- CONTACT SECTION (NOU) --- */
+        /* --- CONTACT SECTION --- */
         .contact-section {
             padding: 100px 20px;
             background: var(--light-gray);
@@ -197,7 +227,7 @@
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 1fr 1fr; /* Doua coloane: Formular stanga, Date dreapta */
+            grid-template-columns: 1fr 1fr;
             gap: 60px;
             background: white;
             border-radius: 20px;
@@ -205,95 +235,48 @@
             box-shadow: 0 20px 50px rgba(0,0,0,0.05);
         }
 
-        /* Coloana Stanga: Formular */
-        .contact-form-wrapper {
-            padding: 50px;
-            background: white;
-        }
-
-        .contact-form-wrapper h3 {
-            font-size: 1.8rem;
-            color: var(--primary-blue);
-            margin-bottom: 10px;
-        }
-
-        .contact-form-wrapper p {
-            color: #666;
-            margin-bottom: 30px;
-        }
+        .contact-form-wrapper { padding: 50px; background: white; }
+        .contact-form-wrapper h3 { font-size: 1.8rem; color: var(--primary-blue); margin-bottom: 10px; }
+        .contact-form-wrapper p { color: #666; margin-bottom: 30px; }
 
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #444; }
         .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-family: inherit;
-            font-size: 1rem;
-            transition: border 0.3s;
-            background: #f9f9f9;
+            width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; font-size: 1rem; transition: border 0.3s; background: #f9f9f9;
         }
-        .form-group input:focus, .form-group textarea:focus {
-            border-color: var(--accent-blue);
-            outline: none;
-            background: white;
-        }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--accent-blue); outline: none; background: white; }
         
         .submit-btn {
-            width: 100%;
-            padding: 15px;
-            background: var(--primary-blue);
-            color: white;
-            border: none;
-            font-weight: 700;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.3s;
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            width: 100%; padding: 15px; background: var(--primary-blue); color: white; border: none; font-weight: 700; border-radius: 6px; cursor: pointer; transition: background 0.3s; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px;
         }
         .submit-btn:hover { background: #152c6e; }
 
-        /* Coloana Dreapta: Date Firma */
         .contact-info-wrapper {
-            background: var(--primary-blue);
-            color: white;
-            padding: 50px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            background: var(--primary-blue); color: white; padding: 50px; display: flex; flex-direction: column; justify-content: center;
         }
-
         .contact-info-wrapper h3 { font-size: 1.8rem; margin-bottom: 30px; color: white; }
-
         .info-item { margin-bottom: 30px; display: flex; align-items: flex-start; gap: 15px; }
-        .info-icon { width: 24px; height: 24px; min-width: 24px; margin-top: 3px; }
         .info-text h4 { font-size: 0.9rem; color: rgba(255,255,255,0.6); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
         .info-text p { font-size: 1.1rem; font-weight: 600; line-height: 1.4; }
         .info-text a { color: white; text-decoration: none; border-bottom: 1px dotted rgba(255,255,255,0.5); }
         .info-text a:hover { color: var(--accent-blue); border-bottom-color: var(--accent-blue); }
 
         footer {
-            background: #0f172a;
-            color: #64748b;
-            padding: 30px 20px;
-            text-align: center;
-            font-size: 0.9rem;
-            font-family: 'Montserrat', sans-serif;
-            border-top: 1px solid #1e293b;
+            background: #0f172a; color: #64748b; padding: 30px 20px; text-align: center; font-size: 0.9rem; font-family: 'Montserrat', sans-serif; border-top: 1px solid #1e293b;
         }
 
-        @media (max-width: 900px) {
-            .contact-container { grid-template-columns: 1fr; }
+        /* RESPONSIVE: Pe mobil coloanele devin una sub alta */
+        @media (max-width: 1000px) {
+            .hero-container { grid-template-columns: 1fr; text-align: center; }
+            .hero { padding-top: 120px; /* Mai mult loc sus pe mobil */ }
+            .hero-left { padding-right: 0; transform: translateY(0); }
             .hero-content h1 { font-size: 2.8rem; }
+            .hero-content p { margin: 0 auto 30px auto; border: none; padding: 0; }
+            .cta-buttons { justify-content: center; }
+            .hero-right { display: none; /* Ascundem imaginea 3D pe mobil ca sa nu aglomereze */ }
+            .contact-container { grid-template-columns: 1fr; }
             nav { justify-content: center; padding: 20px; }
             .nav-links { display: none; }
-            .hero { padding: 40px 20px; align-items: center; text-align: center; }
-            .hero-content p { border-left: none; padding-left: 0; }
-            .hero-logo { width: 160px; margin-top: 0; }
-            .cta-buttons { flex-direction: column; width: 100%; }
         }
     </style>
 </head>
@@ -308,19 +291,28 @@
     </nav>
 
     <section class="hero" id="home">
-        
-        <div class="hero-logo-container">
-            <img src="logo.png" alt="SOWILO SRL Logo" class="hero-logo">
-        </div>
+        <div class="hero-container">
+            
+            <div class="hero-left">
+                <div class="hero-logo-container">
+                    <img src="logo.png" alt="SOWILO SRL Logo" class="hero-logo">
+                </div>
 
-        <div class="hero-content">
-            <h4 style="color:var(--accent-blue); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px; font-weight: 700;">Inginerie & Proiectare MEP</h4>
-            <h1>Dăm viață clădirilor inteligente.</h1>
-            <p>SOWILO SRL transformă viziunea arhitecturală în realitate tehnică funcțională. Proiectare instalații electrice, sanitare, termice și ISU la cele mai înalte standarde.</p>
-            <div class="cta-buttons">
-                <a href="#servicii" class="btn btn-primary">Vezi Serviciile</a>
-                <a href="#contact" class="btn btn-outline">Contactează-ne</a>
+                <div class="hero-content">
+                    <h4 style="color:var(--accent-blue); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px; font-weight: 700;">Inginerie & Proiectare MEP</h4>
+                    <h1>Dăm viață clădirilor inteligente.</h1>
+                    <p>SOWILO SRL transformă viziunea arhitecturală în realitate tehnică funcțională. Proiectare instalații electrice, sanitare, termice și ISU la cele mai înalte standarde.</p>
+                    <div class="cta-buttons">
+                        <a href="#servicii" class="btn btn-primary">Vezi Serviciile</a>
+                        <a href="#contact" class="btn btn-outline">Contactează-ne</a>
+                    </div>
+                </div>
             </div>
+
+            <div class="hero-right">
+                <img src="https://images.unsplash.com/photo-1556156653-e5a7c69cc263?q=80&w=800&auto=format&fit=crop" alt="Cladire Moderna 3D" class="hero-image">
+            </div>
+
         </div>
     </section>
 
@@ -357,7 +349,7 @@
                 <h3>Stingere Incendiu</h3>
                 <p>Instalații cu hidranți, sprinklere și gaze inerte conform normativelor.</p>
             </div>
-            <div class="service-card">
+             <div class="service-card">
                 <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="1.5"><path d="M12 3v9m0 0l4-4m-4 4L8 8m4 13v-9"/><path d="M5 12H2v4h3v4h4v-4h3v-4H9V8H5v4z"/></svg>
                 <h3>Desfumare</h3>
                 <p>Sisteme mecanice și naturale pentru evacuarea fumului în caz de urgență.</p>
@@ -373,7 +365,6 @@
             <div class="contact-form-wrapper">
                 <h3>Scrie-ne un mesaj</h3>
                 <p>Ai un proiect în plan? Completează formularul și te vom contacta în cel mai scurt timp.</p>
-                
                 <form action="mailto:office@sowilo.ro" method="post" enctype="text/plain">
                     <div class="form-group">
                         <label for="name">Numele dumneavoastră</label>
@@ -393,14 +384,12 @@
 
             <div class="contact-info-wrapper">
                 <h3>Informații Contact</h3>
-                
                 <div class="info-item">
                     <div class="info-text">
                         <h4>Denumire Firmă</h4>
                         <p>SOWILO SRL</p>
                     </div>
                 </div>
-
                 <div class="info-item">
                     <div class="info-text">
                         <h4>Cod Unic de Înregistrare</h4>
@@ -408,21 +397,18 @@
                         <p style="font-size: 0.9rem; margin-top:5px; opacity:0.8;">J33 / 1885 / 2023</p>
                     </div>
                 </div>
-
                 <div class="info-item">
                     <div class="info-text">
                         <h4>Sediu Social</h4>
                         <p>Com. Bunești, Sat Uncești, Str. Prosie, Nr. 10, Județul Suceava</p>
                     </div>
                 </div>
-
                 <div class="info-item">
                     <div class="info-text">
                         <h4>Telefon</h4>
                         <p><a href="tel:0748635346">0748 635 346</a></p>
                     </div>
                 </div>
-
                 <div class="info-item">
                     <div class="info-text">
                         <h4>Email</h4>
