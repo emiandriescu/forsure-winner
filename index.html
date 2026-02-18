@@ -4,39 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SOWILO SRL - Proiectare Instalații Tehnice</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            /* Paleta de culori SOWILO */
-            --primary-blue: #1e3a8a; /* Albastrul inchis din servicii */
-            --accent-blue: #3b82f6; /* Un albastru mai deschis pentru accente/butoane */
-            --text-light: #f3f4f6;
-            --bg-overlay: rgba(30, 58, 138, 0.85); /* Overlay albastru pentru Hero */
+            --primary-blue: #1e3a8a; 
+            --accent-blue: #3b82f6; 
+            --bg-overlay: rgba(30, 58, 138, 0.9); 
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
 
-        body { font-family: 'Segoe UI', 'Roboto', Arial, sans-serif; line-height: 1.6; color: #333; }
+        body { 
+            font-family: 'Open Sans', sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+        }
 
-        /* --- NAVIGATIE (Header) --- */
+        h1, h2, h3, h4, .nav-links a, .btn {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* --- NAVIGATIE --- */
         nav {
             position: absolute;
             top: 0;
             width: 100%;
-            padding: 25px 50px;
+            padding: 20px 50px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 100;
         }
 
-        /* Stil pentru Logo */
         .nav-logo img {
-            height: 70px; /* Logo mult mai mare */
+            height: 80px; /* Dimensiune logo */
             width: auto;
-            transition: transform 0.3s ease;
-        }
-        .nav-logo img:hover {
-            transform: scale(1.05);
+            object-fit: contain;
         }
 
         .nav-links { display: flex; gap: 30px; list-style: none; }
@@ -44,68 +50,58 @@
             color: rgba(255,255,255,0.9); 
             text-decoration: none; 
             font-weight: 600; 
-            font-size: 1rem; 
-            transition: color 0.3s; 
+            font-size: 0.9rem; 
             text-transform: uppercase;
             letter-spacing: 1px;
+            transition: color 0.3s; 
         }
         .nav-links a:hover { color: var(--accent-blue); }
 
-        /* --- SECTIUNEA 1: HERO (Prima pagina - ALBASTRU) --- */
+        /* --- HERO SECTION --- */
         .hero {
-            height: 100vh; /* Ocupa tot ecranul */
-            /* Imagine de fundal tehnica cu overlay albastru */
+            height: 100vh;
             background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), 
                         url('https://images.unsplash.com/photo-1635329199951-351563542964?auto=format&fit=crop&q=80&w=1920') no-repeat center center/cover;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: flex-start; /* Aliniere la stanga pentru un look modern */
+            align-items: flex-start;
             text-align: left;
             color: white;
-            padding: 0 10% 0 50px; /* Spatiere laterala */
-        }
-
-        .hero-content { max-width: 800px; }
-
-        .hero-subtitle {
-            color: var(--accent-blue);
-            font-weight: 700;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin-bottom: 15px;
-            display: block;
+            padding: 0 10% 0 50px;
         }
 
         .hero-content h1 {
-            font-size: 3.8rem;
+            font-size: 4rem;
             font-weight: 800;
             line-height: 1.1;
             margin-bottom: 25px;
+            text-transform: uppercase;
         }
 
         .hero-content p {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             margin-bottom: 40px;
             color: rgba(255,255,255,0.9);
             max-width: 700px;
+            font-weight: 400;
         }
 
-        /* Butoane actualizate pe albastru */
         .cta-buttons { display: flex; gap: 20px; }
         .btn {
             padding: 15px 40px;
-            border-radius: 50px; /* Butoane rotunjite moderne */
+            border-radius: 4px;
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 700;
             transition: all 0.3s ease;
-            font-size: 1rem;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
         }
         .btn-primary { 
             background-color: var(--accent-blue); 
             color: white; 
             border: 2px solid var(--accent-blue);
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
         .btn-outline { 
             background-color: transparent; 
@@ -113,105 +109,106 @@
             color: white; 
         }
         .btn:hover { transform: translateY(-3px); }
-        .btn-primary:hover { background-color: #2563eb; box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6); }
+        .btn-primary:hover { background-color: #2563eb; }
         .btn-outline:hover { background-color: white; color: var(--primary-blue); }
 
-        /* --- SECTIUNEA 2: SERVICII (Ramane la fel) --- */
+        /* --- SERVICII --- */
         .services-section {
             padding: 100px 20px;
-            background-color: #f5f7fa;
+            background-color: #ffffff;
         }
 
         .section-title {
             text-align: center;
             font-size: 2.5rem;
             color: var(--primary-blue);
-            margin-bottom: 60px;
+            margin-bottom: 70px;
             font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .services-grid {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
         }
 
         .service-card {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            background: #fff;
+            padding: 30px;
             text-align: center;
             transition: all 0.3s ease;
-            border: 1px solid #e5e7eb;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .service-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 4px;
-            background: var(--primary-blue);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.3s ease;
+            border-bottom: 3px solid #f0f0f0;
         }
 
         .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(30, 58, 138, 0.15);
+            transform: translateY(-5px);
+            border-bottom-color: var(--primary-blue);
         }
-        .service-card:hover::before { transform: scaleX(1); }
 
-        .service-icon { width: 60px; height: 60px; margin-bottom: 25px; }
-        .service-card h3 { color: var(--primary-blue); margin-bottom: 15px; font-size: 1.4rem; }
-        .service-card p { font-size: 1rem; color: #555; line-height: 1.7; }
+        .service-icon { width: 60px; height: 60px; margin-bottom: 20px; }
+        .service-card h3 { color: var(--primary-blue); margin-bottom: 15px; font-size: 1.2rem; font-weight: 700; }
+        .service-card p { font-size: 0.95rem; color: #555; line-height: 1.7; }
 
-        /* --- SECTIUNEA 3: CONTACT --- */
+        /* --- CONTACT --- */
         .contact-section {
             padding: 80px 20px;
-            background: white;
+            background: #f9f9f9;
             text-align: center;
         }
 
         .legal-info {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 40px;
-            background: #f0f4f8; /* Fundal usor albastrui */
-            border-radius: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
             text-align: left;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            box-shadow: 0 5px 20px rgba(30, 58, 138, 0.05);
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            padding-top: 30px;
         }
 
-        .legal-item h4 { color: var(--primary-blue); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
-        .legal-item p { font-weight: 600; color: #333; font-size: 1.05rem; }
+        .legal-item {
+            padding: 10px;
+            border-left: 3px solid var(--accent-blue);
+            padding-left: 20px;
+        }
+
+        .legal-item h4 { 
+            color: #888; 
+            font-size: 0.75rem; 
+            text-transform: uppercase; 
+            margin-bottom: 5px; 
+            letter-spacing: 1.5px; 
+            font-weight: 600;
+        }
+        
+        .legal-item p { 
+            font-weight: 600; 
+            color: var(--primary-blue); 
+            font-size: 1.1rem; 
+            font-family: 'Open Sans', sans-serif;
+        }
 
         footer {
-            background: var(--primary-blue);
-            color: rgba(255,255,255,0.8);
-            padding: 30px;
+            background: #111;
+            color: #888;
+            padding: 40px 20px;
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            font-family: 'Montserrat', sans-serif;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             nav { padding: 15px 20px; }
-            .nav-logo img { height: 50px; } /* Logo mai mic pe mobil */
-            .nav-links { display: none; } /* Meniu ascuns pe mobil */
+            .nav-logo img { height: 50px; }
+            .nav-links { display: none; }
             .hero { padding: 0 20px; align-items: center; text-align: center; }
             .hero-content h1 { font-size: 2.5rem; }
-            .hero-content p { font-size: 1.1rem; }
-            .cta-buttons { flex-direction: column; width: 100%; max-width: 300px; }
-            .btn { width: 100%; }
-            .legal-info { grid-template-columns: 1fr; padding: 25px; }
+            .cta-buttons { flex-direction: column; width: 100%; }
+            .legal-info { grid-template-columns: 1fr; gap: 20px; }
         }
     </style>
 </head>
@@ -219,7 +216,7 @@
 
     <nav>
         <a href="#home" class="nav-logo">
-            <img src="logo-sowilo.png" alt="SOWILO SRL Logo">
+            <img src="logo.png" alt="SOWILO SRL Logo">
         </a>
         
         <ul class="nav-links">
@@ -231,9 +228,9 @@
 
     <section class="hero" id="home">
         <div class="hero-content">
-            <span class="hero-subtitle">Inginerie & Proiectare MEP</span>
+            <h4 style="color:var(--accent-blue); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;">Inginerie & Proiectare MEP</h4>
             <h1>Dăm viață clădirilor inteligente.</h1>
-            <p>SOWILO SRL transformă viziunea arhitecturală în realitate tehnică funcțională. Oferim soluții integrate de proiectare pentru instalații electrice, sanitare, termice și sisteme de securitate la incendiu (ISU), punând accent pe eficiență, siguranță și inovație.</p>
+            <p>SOWILO SRL transformă viziunea arhitecturală în realitate tehnică funcțională. Proiectare instalații electrice, sanitare și termice la cele mai înalte standarde.</p>
             <div class="cta-buttons">
                 <a href="#servicii" class="btn btn-primary">VEZI SERVICIILE</a>
                 <a href="#contact" class="btn btn-outline">CONTACTEAZĂ-NE</a>
@@ -242,42 +239,42 @@
     </section>
 
     <section class="services-section" id="servicii">
-        <h2 class="section-title">Expertiza Noastră Tehnică</h2>
+        <h2 class="section-title">Serviciile Noastre</h2>
         <div class="services-grid">
             <div class="service-card">
-                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14H12L11 22L21 10H12L13 2Z"/></svg>
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14H12L11 22L21 10H12L13 2Z"/></svg>
                 <h3>Instalații Electrice</h3>
-                <p>Proiectare completă pentru curenți tari și slabi, iluminat inteligent, sisteme fotovoltaice și paratrăsnet, adaptate nevoilor energetice actuale.</p>
+                <p>Iluminat inteligent, curenți slabi și sisteme fotovoltaice.</p>
             </div>
             <div class="service-card">
-                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="9" r="3"/></svg>
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="9" r="3"/></svg>
                 <h3>Instalații Sanitare</h3>
-                <p>Soluții eficiente pentru alimentarea cu apă, rețele de canalizare și gestionarea apelor pluviale pentru clădiri rezidențiale și comerciale.</p>
+                <p>Alimentare cu apă și canalizare pentru clădiri eficiente.</p>
             </div>
             <div class="service-card">
-                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20m-4-16s1.5 1.5 1.5 4-2.5 4-2.5 4m9-8s-1.5 1.5-1.5 4 2.5 4 2.5 4"/></svg>
-                <h3>Instalații Termice & HVAC</h3>
-                <p>Sisteme de încălzire (inclusiv în pardoseală), ventilație și climatizare proiectate pentru confort termic optim și eficiență energetică.</p>
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20m-4-16s1.5 1.5 1.5 4-2.5 4-2.5 4m9-8s-1.5 1.5-1.5 4 2.5 4 2.5 4"/></svg>
+                <h3>Instalații Termice</h3>
+                <p>Încălzire și climatizare HVAC pentru confort maxim.</p>
             </div>
             <div class="service-card">
-                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
                 <h3>Autorizări ISU</h3>
-                <p>Consultanță de specialitate și elaborarea documentațiilor complete necesare obținerii avizelor și autorizațiilor de securitate la incendiu.</p>
+                <p>Documentație completă pentru securitate la incendiu.</p>
             </div>
             <div class="service-card">
-                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
-                <h3>Sisteme de Detecție</h3>
-                <p>Proiectare sisteme de semnalizare, alarmare și alertare în caz de incendiu, integrate pentru o reacție rapidă și sigură.</p>
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+                <h3>Detecție</h3>
+                <p>Sisteme automate de alarmare și alertare.</p>
             </div>
             <div class="service-card">
-                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2"><path d="M12 12c1.6 0 3-1.4 3-3s-1.4-3-3-3-3 1.4-3 3 1.4 3 3 3z"/><path d="M4.5 12.5L9 17l6-6 6.5 6.5"/></svg>
-                <h3>Sisteme de Stingere</h3>
-                <p>Soluții tehnice pentru instalații de stingere cu hidranți, sprinklere sau gaze inerte, dimensionate conform normativelor.</p>
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="1.5"><path d="M12 12c1.6 0 3-1.4 3-3s-1.4-3-3-3-3 1.4-3 3 1.4 3 3 3z"/><path d="M4.5 12.5L9 17l6-6 6.5 6.5"/></svg>
+                <h3>Stingere</h3>
+                <p>Hidranți și sprinklere conform normativelor.</p>
             </div>
-            <div class="service-card">
-                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2"><path d="M12 3v9m0 0l4-4m-4 4L8 8m4 13v-9"/><path d="M5 12H2v4h3v4h4v-4h3v-4H9V8H5v4z"/></svg>
-                <h3>Instalații de Desfumare</h3>
-                <p>Proiectare sisteme pentru evacuarea fumului și a gazelor fierbinți (tiraj natural sau mecanic) pentru protecția căilor de evacuare.</p>
+             <div class="service-card">
+                <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="1.5"><path d="M12 3v9m0 0l4-4m-4 4L8 8m4 13v-9"/><path d="M5 12H2v4h3v4h4v-4h3v-4H9V8H5v4z"/></svg>
+                <h3>Desfumare</h3>
+                <p>Evacuarea fumului și a gazelor fierbinți.</p>
             </div>
         </div>
     </section>
@@ -291,7 +288,7 @@
                 <p>SOWILO SRL</p>
             </div>
             <div class="legal-item">
-                <h4>Cod Unic de Înregistrare</h4>
+                <h4>CUI</h4>
                 <p>RO49056896</p>
             </div>
             <div class="legal-item">
@@ -302,19 +299,19 @@
                 <h4>Telefon</h4>
                 <p><a href="tel:0748635346" style="color: inherit; text-decoration: none;">0748 635 346</a></p>
             </div>
-            <div class="legal-item" style="grid-column: span 2;">
+            <div class="legal-item">
+                <h4>Email</h4>
+                <p>office@sowilo.ro</p>
+            </div>
+            <div class="legal-item" style="grid-column: 1 / -1;">
                 <h4>Sediu Social</h4>
                 <p>Com. Bunești, Sat Uncești, Str. Prosie, Nr. 10, Județul Suceava</p>
-            </div>
-            <div class="legal-item" style="grid-column: span 2;">
-                <h4>E-mail</h4>
-                <p><a href="mailto:office@sowilo.ro" style="color: var(--accent-blue); text-decoration: none;">office@sowilo.ro</a></p>
             </div>
         </div>
     </section>
 
     <footer>
-        <p>&copy; 2026 SOWILO SRL. Toate drepturile rezervate. | Inginerie & Proiectare MEP</p>
+        <p>&copy; 2026 SOWILO SRL. Inginerie & Proiectare MEP.</p>
     </footer>
 
 </body>
