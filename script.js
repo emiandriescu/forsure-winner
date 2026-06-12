@@ -136,12 +136,17 @@
             el.textContent = prefix + target + suffix;
         }
     }
-    const counterIO = new IntersectionObserver(entries => {
-        entries.forEach(en => {
-            if (en.isIntersecting) { runCounter(en.target); counterIO.unobserve(en.target); }
-        });
-    }, { threshold: .5 });
-    document.querySelectorAll('.stat-num[data-target]').forEach(el => counterIO.observe(el));
+    if (reduceMotion || !hasGSAP) {
+        // fără animație: valorile finale, direct
+        document.querySelectorAll('.stat-num[data-target]').forEach(runCounter);
+    } else {
+        const counterIO = new IntersectionObserver(entries => {
+            entries.forEach(en => {
+                if (en.isIntersecting) { runCounter(en.target); counterIO.unobserve(en.target); }
+            });
+        }, { threshold: .5 });
+        document.querySelectorAll('.stat-num[data-target]').forEach(el => counterIO.observe(el));
+    }
 
     /* ── Scroll reveals ──────────────────────────── */
     if (hasGSAP && !reduceMotion) {
