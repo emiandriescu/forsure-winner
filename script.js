@@ -8,7 +8,12 @@
     const finePointer  = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
     const hasGSAP      = typeof gsap !== 'undefined';
 
-    if (hasGSAP) gsap.registerPlugin(ScrollTrigger, SplitText);
+    // înregistrează doar plugin-urile încărcate cu succes (CDN-ul poate eșua parțial)
+    if (hasGSAP) {
+        const plugins = [window.ScrollTrigger, window.SplitText].filter(Boolean);
+        if (plugins.length) gsap.registerPlugin(...plugins);
+    }
+    const hasST = hasGSAP && typeof window.ScrollTrigger !== 'undefined';
 
     /* ── Navbar: shadow + hide on scroll down ───── */
     const navbar = document.getElementById('navbar');
@@ -149,7 +154,7 @@
     }
 
     /* ── Scroll reveals ──────────────────────────── */
-    if (hasGSAP && !reduceMotion) {
+    if (hasST && !reduceMotion) {
         gsap.utils.toArray('[data-reveal]').forEach(el => {
             gsap.from(el, {
                 y: 44, autoAlpha: 0, duration: .9, ease: 'power3.out',

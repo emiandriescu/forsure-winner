@@ -350,9 +350,14 @@ img { max-width: 100%; display: block; }
     display: flex; align-items: center; justify-content: center; margin-bottom: 22px;
     transition: background .3s;
 }
-.service-icon svg { width: 25px; height: 25px; fill: var(--blue); transition: fill .3s; }
+.service-icon svg {
+    width: 26px; height: 26px; fill: none;
+    stroke: var(--blue); stroke-width: 1.8;
+    stroke-linecap: round; stroke-linejoin: round;
+    transition: stroke .3s;
+}
 .service-card:hover .service-icon { background: var(--blue); }
-.service-card:hover .service-icon svg { fill: #fff; }
+.service-card:hover .service-icon svg { stroke: #fff; }
 .service-card h3 { font-size: 1.16rem; margin-bottom: 10px; }
 .service-card p { font-size: .92rem; color: var(--muted); }
 

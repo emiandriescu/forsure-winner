@@ -71,46 +71,90 @@ function init() {
     grid.material.opacity = 0.05;
     group.add(grid);
 
-    /* ── Trasee instalații + particule ──────────── */
-    // Fiecare particulă urcă printr-un riser apoi se distribuie orizontal pe un etaj.
+    /* ── Instalații: trasee vizibile pe sisteme ──── */
+    // Trei sisteme colorate ca pe planșe: conducte (albastru), tubulaturi
+    // HVAC (cyan, linie dublă), cabluri electrice (chihlimbar).
+    const SYSTEMS = [
+        { color: 0x2B5CF6, opacity: 0.55, routes: [] },                 // conducte
+        { color: 0x16B3CF, opacity: 0.50, routes: [], double: true },   // tubulaturi
+        { color: 0xF59E0B, opacity: 0.50, routes: [] },                 // cabluri
+    ];
+    const route = pts => pts.map(p => new THREE.Vector3(p[0], p[1], p[2]));
+
+    // conducte: două risere lângă nucleu, ramificații alternate pe etaje
+    const prx = -3.1;
+    SYSTEMS[0].routes.push(route([[prx, 0, 1.05], [prx, TOP - 0.4, 1.05]]));
+    SYSTEMS[0].routes.push(route([[prx, 0, -1.05], [prx, TOP - 0.4, -1.05]]));
+    for (let f = 1; f <= FLOORS; f++) {
+        const y = f * FH - 0.35;
+        if (f % 2 === 1) SYSTEMS[0].routes.push(route([[prx, y, 1.05], [1.8, y, 1.05], [1.8, y, 2.4]]));
+        else             SYSTEMS[0].routes.push(route([[prx, y, -1.05], [2.6, y, -1.05], [2.6, y, -2.3]]));
+    }
+    // tubulaturi: șaht în colț, distribuție sub placă din două în două etaje
+    const dx = 3.35, dz = -2.45;
+    SYSTEMS[1].routes.push(route([[dx, 0, dz], [dx, TOP - 0.5, dz]]));
+    for (let f = 1; f <= FLOORS; f += 2) {
+        const y = f * FH - 0.55;
+        SYSTEMS[1].routes.push(route([[dx, y, dz], [dx, y, 1.9], [-2.2, y, 1.9]]));
+    }
+    // cabluri: pat de cabluri pe perimetru, sub fiecare placă
+    const cx = -3.45, cz = -2.55;
+    SYSTEMS[2].routes.push(route([[cx, 0, cz], [cx, TOP - 0.3, cz]]));
+    for (let f = 1; f <= FLOORS; f++) {
+        const y = f * FH - 0.18;
+        if (f % 2 === 0) SYSTEMS[2].routes.push(route([[cx, y, cz], [3.2, y, cz]]));
+        else             SYSTEMS[2].routes.push(route([[cx, y, cz], [cx, y, 2.3], [0.8, y, 2.3]]));
+    }
+
+    // liniile vizibile ale sistemelor
+    SYSTEMS.forEach(sys => {
+        const pts = [];
+        sys.routes.forEach(r => {
+            for (let i = 1; i < r.length; i++) {
+                pts.push(r[i - 1], r[i]);
+                if (sys.double) {
+                    const off = new THREE.Vector3(0, -0.16, 0);
+                    pts.push(r[i - 1].clone().add(off), r[i].clone().add(off));
+                }
+            }
+        });
+        const g = new THREE.BufferGeometry().setFromPoints(pts);
+        const m = new THREE.LineBasicMaterial({ color: sys.color, transparent: true, opacity: sys.opacity });
+        group.add(new THREE.LineSegments(g, m));
+    });
+
+    /* ── Particule curgând prin sisteme ─────────── */
     const COUNT = isMobile ? 60 : 150;
     const paths = [];
 
-    const risers = [
-        new THREE.Vector2(-W / 4 - 1.1, 0.9),   // lângă nucleu
-        new THREE.Vector2(-W / 4 - 1.1, -0.9),
-        new THREE.Vector2(W / 2 - 0.4, -D / 2 + 0.4),
-        new THREE.Vector2(-W / 2 + 0.4, D / 2 - 0.4),
-    ];
-
     function buildPath() {
-        const r = risers[Math.floor(Math.random() * risers.length)];
-        const floor = 1 + Math.floor(Math.random() * FLOORS);
-        const y = floor * FH - 0.25;
-        const p0 = new THREE.Vector3(r.x, 0, r.y);
-        const p1 = new THREE.Vector3(r.x, y, r.y);
-        // distribuție orizontală: întâi pe x, apoi pe z
-        const tx = (Math.random() - 0.5) * (W - 1);
-        const tz = (Math.random() - 0.5) * (D - 1);
-        const p2 = new THREE.Vector3(tx, y, r.y);
-        const p3 = new THREE.Vector3(tx, y, tz);
-        const pts = [p0, p1, p2, p3];
+        const sys = SYSTEMS[Math.floor(Math.random() * SYSTEMS.length)];
+        const pts = sys.routes[Math.floor(Math.random() * sys.routes.length)];
         let len = 0;
         const cum = [0];
         for (let i = 1; i < pts.length; i++) {
             len += pts[i].distanceTo(pts[i - 1]);
             cum.push(len);
         }
-        return { pts, cum, len, t: Math.random(), speed: 0.04 + Math.random() * 0.05 };
+        // viteză constantă în unități-lume, indiferent de lungimea traseului
+        return { pts, cum, len, t: Math.random(), ws: 1.1 + Math.random() * 1.5, color: sys.color };
     }
     for (let i = 0; i < COUNT; i++) paths.push(buildPath());
 
     const pGeo = new THREE.BufferGeometry();
     const pPos = new Float32Array(COUNT * 3);
+    const pCol = new Float32Array(COUNT * 3);
+    const tmpColor = new THREE.Color();
+    function paintParticle(i) {
+        tmpColor.setHex(paths[i].color);
+        pCol[i * 3] = tmpColor.r; pCol[i * 3 + 1] = tmpColor.g; pCol[i * 3 + 2] = tmpColor.b;
+    }
+    for (let i = 0; i < COUNT; i++) paintParticle(i);
     pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+    pGeo.setAttribute('color', new THREE.BufferAttribute(pCol, 3));
     const pMat = new THREE.PointsMaterial({
-        color: 0x2B5CF6, size: isMobile ? 0.13 : 0.11,
-        transparent: true, opacity: 0.9, sizeAttenuation: true
+        size: isMobile ? 0.14 : 0.12, vertexColors: true,
+        transparent: true, opacity: 0.95, sizeAttenuation: true
     });
     group.add(new THREE.Points(pGeo, pMat));
 
@@ -171,14 +215,21 @@ function init() {
         camera.lookAt(lookTarget);
 
         if (!reduceMotion) {
+            let recolored = false;
             for (let i = 0; i < COUNT; i++) {
                 const p = paths[i];
-                p.t += p.speed * dt * 3;
-                if (p.t >= 1) { paths[i] = buildPath(); paths[i].t = 0; }
+                p.t += (p.ws * dt) / p.len;
+                if (p.t >= 1) {
+                    paths[i] = buildPath();
+                    paths[i].t = 0;
+                    paintParticle(i);
+                    recolored = true;
+                }
                 const v = samplePath(paths[i], paths[i].t);
                 pPos[i * 3] = v.x; pPos[i * 3 + 1] = v.y; pPos[i * 3 + 2] = v.z;
             }
             pGeo.attributes.position.needsUpdate = true;
+            if (recolored) pGeo.attributes.color.needsUpdate = true;
         }
 
         renderer.render(scene, camera);
