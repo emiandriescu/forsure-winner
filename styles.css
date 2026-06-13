@@ -322,14 +322,7 @@ img { max-width: 100%; display: block; }
 /* ── Services ────────────────────────────────── */
 .services-grid {
     display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px;
-    position: relative;
 }
-#icons-canvas {
-    position: absolute; inset: 0; z-index: 2;
-    pointer-events: none;
-}
-.icons-3d .service-icon svg { opacity: 0; }
-.icons-3d .service-card:hover .service-icon { background: var(--blue-pale); }
 .span-2 { grid-column: span 2; }
 .span-3 { grid-column: span 3; }
 .span-4 { grid-column: span 4; }
@@ -353,7 +346,7 @@ img { max-width: 100%; display: block; }
 .service-card:hover::after { transform: scaleX(1); }
 .card-idx { position: absolute; top: 22px; right: 24px; font-size: .7rem; color: var(--muted); }
 .service-icon {
-    width: 72px; height: 72px; border-radius: 18px; background: var(--blue-pale);
+    width: 52px; height: 52px; border-radius: 14px; background: var(--blue-pale);
     display: flex; align-items: center; justify-content: center; margin-bottom: 22px;
     transition: background .3s;
 }
@@ -542,7 +535,7 @@ a.info-row:hover strong { color: var(--blue-soft); }
 
     .hero-fig { display: none; }
     .hero-stats { grid-template-columns: repeat(2, 1fr); gap: 28px 16px; }
-    #hero-canvas { opacity: .22; }
+    #hero-canvas { opacity: .5; }
 }
 
 @media (max-width: 640px) {
