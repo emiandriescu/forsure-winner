@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SOWILO Dimensionare — instalații PSI</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">SD</span><span class="brand-name">SOWILO Dimensionare</span></div>
+      <nav class="tabs">
+        <button class="tab is-active" data-tab="proiecte">Proiecte</button>
+        <button class="tab" data-tab="firma">Firma mea</button>
+      </nav>
+      <div class="topbar-actions">
+        <a href="index.html" class="btn btn-ghost btn-sm">← Prezentare</a>
+        <button id="btn-export" class="btn btn-ghost btn-sm">Export</button>
+        <button id="btn-import" class="btn btn-ghost btn-sm">Import</button>
+        <input type="file" id="import-file" accept="application/json" hidden />
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- PROIECTE -->
+      <section class="panel is-active" data-panel="proiecte">
+        <div id="view-list">
+          <div class="panel-head">
+            <div><h1>Proiecte</h1><p class="muted">Dimensionare instalații de stingere a incendiilor — din date minime de clădire.</p></div>
+            <button id="btn-new" class="btn btn-primary">+ Proiect nou</button>
+          </div>
+          <div id="proj-list" class="cards"></div>
+          <div id="proj-empty" class="empty"><p>Niciun proiect încă.</p>
+            <button class="btn btn-primary" data-action="new">Creează primul proiect</button>
+            <button class="btn btn-ghost" id="btn-demo">Încarcă exemplu (Hotel Sinaia)</button>
+          </div>
+        </div>
+        <!-- REZULTATE (sub-view) -->
+        <div id="view-results" hidden>
+          <button class="back" id="btn-back">← Înapoi la proiecte</button>
+          <div class="panel-head">
+            <div><h1 id="res-title">Rezultate</h1><p class="muted" id="res-sub"></p></div>
+          </div>
+          <div class="res-actions">
+            <button class="btn btn-ghost btn-sm" id="btn-edit">Editează datele</button>
+            <button class="btn btn-accent" id="btn-pdf">Generează memoriu PDF</button>
+          </div>
+          <div id="res-body"></div>
+        </div>
+      </section>
+
+      <!-- FIRMA -->
+      <section class="panel" data-panel="firma">
+        <div class="panel-head"><div><h1>Firma mea</h1><p class="muted">Apar în antetul memoriului tehnic.</p></div></div>
+        <form id="company-form" class="form-grid">
+          <label class="field span-2"><span>Logo</span>
+            <div class="logo-row"><img id="logo-preview" class="logo-preview" alt="" hidden />
+              <input type="file" id="logo-input" accept="image/*" /><button type="button" id="logo-clear" class="btn btn-ghost btn-sm">Șterge logo</button></div></label>
+          <label class="field"><span>Denumire firmă *</span><input name="name" required placeholder="SOWILO SRL" /></label>
+          <label class="field"><span>CUI</span><input name="cui" placeholder="RO49056896" /></label>
+          <label class="field"><span>Proiectant (nume)</span><input name="proiectant" placeholder="ing. ..." /></label>
+          <label class="field"><span>Atestate (separate cu virgulă)</span><input name="atestate" placeholder="ANRE, IDSAI, Stingere, Desfumare" /></label>
+          <label class="field"><span>Telefon</span><input name="phone" placeholder="0748 ..." /></label>
+          <label class="field"><span>Email</span><input name="email" type="email" placeholder="office@sowilo.ro" /></label>
+          <div class="span-2"><button type="submit" class="btn btn-primary">Salvează</button> <span id="company-saved" class="muted" hidden>✓ Salvat</span></div>
+        </form>
+      </section>
+    </main>
+
+    <footer class="appfoot"><span class="muted">Datele se salvează în acest browser. Folosește <b>Export</b> pentru copie de siguranță. Calculele sunt deterministe (P118 / NP 127 / SR EN 12845); valorile AI sunt marcate „de verificat".</span></footer>
+  </div>
+
+  <!-- MODAL PROIECT -->
+  <dialog id="proj-modal" class="modal">
+    <form method="dialog" id="proj-form">
+      <h2 id="proj-modal-title">Proiect nou</h2>
+      <input type="hidden" name="id" />
+      <div class="form-grid">
+        <label class="field"><span>Denumire obiectiv *</span><input name="name" required placeholder="Hotel ****" /></label>
+        <label class="field"><span>Beneficiar</span><input name="beneficiar" /></label>
+        <label class="field span-2"><span>Amplasament</span><input name="adresa" placeholder="Str. ..., localitate, județ" /></label>
+        <label class="field"><span>Funcțiune</span>
+          <select name="functiune"><option>hotel</option><option>birouri</option><option>comercial</option><option>locuințe colective</option><option>industrial</option><option>spital</option><option>învățământ</option></select></label>
+        <label class="field"><span>Data memoriului</span><input name="data" placeholder="Iunie 2026" /></label>
+        <div class="form-row span-2">
+          <label class="field"><span>Locuri cazare (persoane)</span><input name="locuriCazare" type="number" min="0" placeholder="180" /></label>
+          <label class="field"><span>Nr. camere</span><input name="nrCamere" type="number" min="0" placeholder="90" /></label>
+          <label class="field"><span>Niveluri supraterane</span><input name="nrNiveluriSupraterane" type="number" min="0" placeholder="4" /></label>
+        </div>
+        <div class="form-row span-2">
+          <label class="field"><span>Arie construită / nivel (m²)</span><input name="acNivel" type="number" min="0" placeholder="1525" /></label>
+          <label class="field"><span>Înălțime ultim planșeu (m)</span><input name="inaltimeUltimPlanseu" type="number" min="0" step="0.1" placeholder="17" /></label>
+          <label class="field"><span>Nivel stabilitate la foc</span>
+            <select name="nivelStabilitate"><option>I</option><option selected>II</option><option>III</option><option>IV</option><option>V</option></select></label>
+        </div>
+        <div class="form-row span-2">
+          <label class="field"><span>Locuri parcaj subteran</span><input name="parcLocuri" type="number" min="0" placeholder="120" /></label>
+          <label class="field"><span>Arie parcaj protejată (m²)</span><input name="parcArie" type="number" min="0" placeholder="5000" /></label>
+          <label class="field"><span>Volum compartiment (m³)</span><input name="volumCompartiment" type="number" min="0" placeholder="35000" /></label>
+        </div>
+        <div class="form-row span-2">
+          <label class="field"><span>Săli aglomerate (&gt;200 pers)?</span>
+            <select name="saliAglomerate"><option value="true">Da</option><option value="false">Nu</option></select></label>
+          <label class="field"><span>Risc de incendiu</span>
+            <select name="risc"><option value="mic">mic</option><option value="mediu" selected>mediu</option><option value="mare">mare</option></select></label>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:10px">💡 Câmpurile goale primesc valori implicite. Într-o versiune ulterioară, AI propune ipotezele lipsă (de confirmat).</p>
+      <menu class="modal-actions">
+        <button type="button" id="proj-cancel" class="btn btn-ghost">Anulează</button>
+        <button value="save" class="btn btn-primary">Salvează &amp; calculează</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <div id="print-view"></div>
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="normative.js"></script>
+  <script src="calc-stingere.js"></script>
+  <script src="crb.js"></script>
+  <script src="memoriu.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
