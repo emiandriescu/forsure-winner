@@ -3,234 +3,160 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DevizRapid — Oferte și devize pentru firme de instalații</title>
-  <meta name="description" content="Generează oferte și devize PDF profesionale în câteva minute. Catalog de prețuri, șabloane, istoric. Pentru firme de instalații electrice, HVAC, sanitare și PSI." />
-  <link rel="stylesheet" href="style.css" />
+  <title>DevizRapid — Oferte și devize PDF în câteva minute, pentru firme de instalații</title>
+  <meta name="description" content="Aplicația care îți face oferte și devize PDF profesionale, cu prețurile tale, logo-ul tău și diacritice corecte. Pentru firme mici de instalații electrice, HVAC, sanitare și PSI din România. Fără Excel, fără instalare." />
+  <meta property="og:title" content="DevizRapid — oferte profesionale în câteva minute" />
+  <meta property="og:description" content="Făcută de instalatori cu atestate ANRE, pentru firme de instalații. Oferte PDF curate, cu calcul automat și diacritice corecte." />
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="landing.css" />
 </head>
 <body>
-  <!-- ============ APP SHELL ============ -->
-  <div id="app">
-    <header class="topbar">
-      <div class="brand">
-        <span class="brand-mark">DR</span>
-        <span class="brand-name">DevizRapid</span>
+  <!-- ===== NAV ===== -->
+  <header class="nav">
+    <a class="brand" href="#top">
+      <span class="brand-mark">DR</span>
+      <span class="brand-name">DevizRapid</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#functii">Funcții</a>
+      <a href="#cum">Cum funcționează</a>
+      <a href="#pret">Preț</a>
+      <a href="#intrebari">Întrebări</a>
+    </nav>
+    <a class="btn btn-primary nav-cta" href="app.html">Încearcă gratuit</a>
+  </header>
+
+  <main id="top">
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+      <div class="hero-inner">
+        <span class="eyebrow">Pentru firme de instalații electrice · HVAC · sanitare · PSI</span>
+        <h1>Faci o ofertă în câteva minute, nu într-o seară întreagă pe Excel</h1>
+        <p class="lead">DevizRapid e aplicația care îți face oferte și devize PDF profesionale, cu prețurile tale, logo-ul tău și diacritice corecte. Făcută de instalatori cu atestate ANRE, pentru firme mici de instalații electrice, HVAC, sanitare și PSI din România. Direct din browser, fără instalare, fără formule stricate.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary btn-lg" href="app.html">Începe perioada de probă gratuită</a>
+          <a class="btn btn-ghost btn-lg" href="app.html">Vezi cum arată o ofertă →</a>
+        </div>
+        <p class="hero-sub">Fără card la înscriere · Fără instalare · Renunți oricând</p>
       </div>
-      <nav class="tabs">
-        <button class="tab is-active" data-tab="oferte">Oferte</button>
-        <button class="tab" data-tab="catalog">Catalog prețuri</button>
-        <button class="tab" data-tab="firma">Firma mea</button>
-      </nav>
-      <div class="topbar-actions">
-        <button id="btn-export" class="btn btn-ghost" title="Salvează o copie de siguranță (JSON)">Export date</button>
-        <button id="btn-import" class="btn btn-ghost" title="Încarcă o copie de siguranță">Import</button>
-        <input type="file" id="import-file" accept="application/json" hidden />
-      </div>
-    </header>
-
-    <main class="content">
-      <!-- ---------- TAB: OFERTE ---------- -->
-      <section class="panel is-active" data-panel="oferte">
-        <div class="panel-head">
-          <div>
-            <h1>Oferte</h1>
-            <p class="muted">Creează, salvează și exportă oferte PDF profesionale.</p>
-          </div>
-          <button id="btn-new-offer" class="btn btn-primary">+ Ofertă nouă</button>
-        </div>
-        <div id="offers-list" class="cards"></div>
-        <div id="offers-empty" class="empty">
-          <p>Nu ai nicio ofertă încă.</p>
-          <button class="btn btn-primary" data-action="new-offer">Creează prima ofertă</button>
-        </div>
-      </section>
-
-      <!-- ---------- TAB: CATALOG ---------- -->
-      <section class="panel" data-panel="catalog">
-        <div class="panel-head">
-          <div>
-            <h1>Catalog prețuri</h1>
-            <p class="muted">Articolele tale recurente. Le adaugi o dată, le folosești în orice ofertă.</p>
-          </div>
-          <button id="btn-new-item" class="btn btn-primary">+ Articol nou</button>
-        </div>
-        <div class="table-wrap">
-          <table class="grid" id="catalog-table">
-            <thead>
-              <tr><th>Denumire</th><th>Categorie</th><th class="num">U.M.</th><th class="num">Preț unitar</th><th></th></tr>
-            </thead>
-            <tbody id="catalog-body"></tbody>
-          </table>
-        </div>
-        <div id="catalog-empty" class="empty">
-          <p>Catalogul e gol. Adaugă articolele pe care le folosești des (manoperă, materiale, servicii).</p>
-          <button class="btn btn-primary" data-action="new-item">Adaugă primul articol</button>
-          <button class="btn btn-ghost" id="btn-seed-catalog">Încarcă exemple (instalații)</button>
-        </div>
-      </section>
-
-      <!-- ---------- TAB: FIRMA ---------- -->
-      <section class="panel" data-panel="firma">
-        <div class="panel-head">
-          <div>
-            <h1>Firma mea</h1>
-            <p class="muted">Aceste date apar în antetul fiecărei oferte.</p>
-          </div>
-        </div>
-        <form id="company-form" class="form-grid">
-          <label class="field span-2">
-            <span>Logo (apare în PDF)</span>
-            <div class="logo-row">
-              <img id="logo-preview" class="logo-preview" alt="" hidden />
-              <input type="file" id="logo-input" accept="image/*" />
-              <button type="button" id="logo-clear" class="btn btn-ghost">Șterge logo</button>
-            </div>
-          </label>
-          <label class="field"><span>Denumire firmă *</span><input name="name" required placeholder="SOWILO SRL" /></label>
-          <label class="field"><span>CUI / CIF</span><input name="cui" placeholder="RO12345678" /></label>
-          <label class="field"><span>Nr. Reg. Com.</span><input name="regCom" placeholder="J40/1234/2020" /></label>
-          <label class="field"><span>Telefon</span><input name="phone" placeholder="07xx xxx xxx" /></label>
-          <label class="field"><span>Email</span><input name="email" type="email" placeholder="contact@firma.ro" /></label>
-          <label class="field"><span>Website</span><input name="website" placeholder="www.firma.ro" /></label>
-          <label class="field span-2"><span>Adresă</span><input name="address" placeholder="Str. Exemplu nr. 1, București" /></label>
-          <label class="field"><span>IBAN</span><input name="iban" placeholder="RO00 XXXX 0000 0000 0000 0000" /></label>
-          <label class="field"><span>Bancă</span><input name="bank" placeholder="Banca Exemplu" /></label>
-          <div class="form-row span-2">
-            <label class="field">
-              <span>Monedă implicită</span>
-              <select name="currency"><option value="RON">RON (lei)</option><option value="EUR">EUR (€)</option></select>
-            </label>
-            <label class="field">
-              <span>Cotă TVA implicită (%)</span>
-              <select name="tvaRate"><option>21</option><option>19</option><option>11</option><option>9</option><option>5</option><option>0</option></select>
-            </label>
-            <label class="field">
-              <span>Prefix număr ofertă</span>
-              <input name="offerPrefix" placeholder="OF" maxlength="8" />
-            </label>
-          </div>
-          <div class="form-actions span-2">
-            <button type="submit" class="btn btn-primary">Salvează datele firmei</button>
-            <span id="company-saved" class="saved-hint" hidden>✓ Salvat</span>
-          </div>
-        </form>
-      </section>
-    </main>
-
-    <footer class="appfoot">
-      <span class="muted">DevizRapid — datele tale sunt salvate doar în acest browser. Folosește <b>Export date</b> regulat pentru o copie de siguranță.</span>
-    </footer>
-  </div>
-
-  <!-- ============ MODAL: ITEM ============ -->
-  <dialog id="item-modal" class="modal">
-    <form method="dialog" id="item-form">
-      <h2 id="item-modal-title">Articol nou</h2>
-      <input type="hidden" name="id" />
-      <label class="field"><span>Denumire *</span><input name="name" required placeholder="Cablu CYY-F 3x2.5" /></label>
-      <div class="form-row">
-        <label class="field"><span>Categorie</span><input name="category" list="cat-list" placeholder="Materiale" /></label>
-        <label class="field"><span>U.M.</span><input name="unit" list="unit-list" placeholder="buc" /></label>
-        <label class="field"><span>Preț unitar *</span><input name="price" type="number" step="0.01" min="0" required placeholder="0.00" /></label>
-      </div>
-      <menu class="modal-actions">
-        <button value="cancel" class="btn btn-ghost">Anulează</button>
-        <button value="save" class="btn btn-primary" formnovalidate="false">Salvează</button>
-      </menu>
-    </form>
-  </dialog>
-
-  <!-- ============ MODAL: OFFER EDITOR ============ -->
-  <dialog id="offer-modal" class="modal modal-lg">
-    <form method="dialog" id="offer-form">
-      <div class="modal-head">
-        <h2 id="offer-modal-title">Ofertă nouă</h2>
-        <input type="hidden" name="id" />
-      </div>
-
-      <div class="offer-meta">
-        <label class="field"><span>Număr ofertă</span><input name="number" placeholder="OF-0001" /></label>
-        <label class="field"><span>Data</span><input name="date" type="date" /></label>
-        <label class="field"><span>Valabilă până la</span><input name="validUntil" type="date" /></label>
-      </div>
-
-      <fieldset class="client-box">
-        <legend>Client</legend>
-        <div class="form-row">
-          <label class="field span-2"><span>Nume client *</span><input name="clientName" required placeholder="SC Client SRL / Persoană fizică" /></label>
-          <label class="field"><span>CUI/CNP</span><input name="clientCui" /></label>
-        </div>
-        <div class="form-row">
-          <label class="field span-2"><span>Adresă</span><input name="clientAddress" /></label>
-          <label class="field"><span>Contact (tel/email)</span><input name="clientContact" /></label>
-        </div>
-      </fieldset>
-
-      <div class="lines-head">
-        <h3>Articole</h3>
-        <div class="lines-add">
-          <input id="line-search" list="catalog-list" placeholder="Caută în catalog sau scrie denumire nouă…" />
-          <button type="button" id="btn-add-line" class="btn btn-primary btn-sm">+ Adaugă</button>
+      <div class="hero-mock" aria-hidden="true">
+        <div class="mock-doc">
+          <div class="mock-head"><div class="mock-logo">SOWILO SRL</div><div class="mock-title">OFERTĂ<br /><small>OF-0001</small></div></div>
+          <div class="mock-line"><span>Manoperă electrician autorizat</span><b>400,00 lei</b></div>
+          <div class="mock-line"><span>Cablu CYY-F 3x2.5 mmp</span><b>65,00 lei</b></div>
+          <div class="mock-line"><span>Tablou electric 12 module</span><b>120,00 lei</b></div>
+          <div class="mock-line muted2"><span>TVA (21%)</span><b>123,90 lei</b></div>
+          <div class="mock-total"><span>TOTAL</span><b>708,90 lei</b></div>
         </div>
       </div>
+    </section>
 
-      <div class="table-wrap">
-        <table class="grid lines-table">
-          <thead>
-            <tr><th>Denumire</th><th class="num">U.M.</th><th class="num">Cant.</th><th class="num">Preț unitar</th><th class="num">Total</th><th></th></tr>
-          </thead>
-          <tbody id="lines-body"></tbody>
-        </table>
-      </div>
-      <p id="lines-empty" class="muted lines-empty">Niciun articol. Adaugă din catalog sau scrie unul nou.</p>
-
-      <div class="offer-bottom">
-        <label class="field notes"><span>Observații / condiții (apar în PDF)</span><textarea name="notes" rows="4" placeholder="Termen de execuție, condiții de plată, garanție, transport etc."></textarea></label>
-        <div class="totals">
-          <div class="totals-row"><span>Subtotal</span><b id="t-subtotal">0,00</b></div>
-          <div class="totals-row">
-            <span>Discount</span>
-            <span class="disc-input"><input name="discount" type="number" min="0" max="100" step="0.5" value="0" id="discount-input" /> %</span>
-            <b id="t-discount">0,00</b>
-          </div>
-          <div class="totals-row">
-            <span>TVA</span>
-            <span class="disc-input">
-              <select id="tva-select">
-                <option value="21">21%</option><option value="19">19%</option><option value="11">11%</option>
-                <option value="9">9%</option><option value="5">5%</option><option value="0">0%</option>
-              </select>
-            </span>
-            <b id="t-tva">0,00</b>
-          </div>
-          <div class="totals-row grand"><span>TOTAL</span><b id="t-total">0,00</b></div>
+    <!-- ===== PAIN ===== -->
+    <section class="band">
+      <div class="section">
+        <h2 class="center">Recunoști asta?</h2>
+        <div class="pains">
+          <div class="pain">E ora 22:00, ești obosit după o zi pe șantier și abia acum te apuci de oferta pe care ți-a cerut-o clientul. Iar Excelul îți strică formulele, coloanele se mută și TVA-ul îl recalculezi de mână.</div>
+          <div class="pain">Copiezi din oferta veche, ștergi, adaugi, schimbi prețuri și speri că n-ai uitat ceva. La final iese un PDF cu litere stricate, cu „instalatii" și „tevi" în loc de text corect, care arată făcut pe genunchi.</div>
+          <div class="pain">Clientul așteaptă oferta de două zile, fiindcă ești pe șantier toată ziua. Când ajunge târziu și arată neîngrijit, firma cu un PDF curat și clar îți ia lucrarea din mână.</div>
+          <div class="pain">Ai prețurile prin trei fișiere diferite și nu mai știi care e cel actualizat. Refaci aceeași ofertă de la zero, deși ai mai făcut una aproape identică luna trecută și n-o mai găsești.</div>
         </div>
+        <p class="center big">Pierzi ore pe care le-ai putea petrece pe lucrare, cu familia, sau pur și simplu odihnindu-te.</p>
       </div>
+    </section>
 
-      <menu class="modal-actions">
-        <button value="cancel" class="btn btn-ghost">Închide</button>
-        <button type="button" id="btn-save-offer" class="btn btn-primary">Salvează</button>
-        <button type="button" id="btn-save-pdf" class="btn btn-accent">Salvează &amp; generează PDF</button>
-      </menu>
-    </form>
-  </dialog>
+    <!-- ===== FEATURES ===== -->
+    <section class="section" id="functii">
+      <h2 class="center">Tot ce-ți trebuie ca să trimiți oferte care arată profesional</h2>
+      <div class="features">
+        <div class="feature"><div class="fi">📋</div><h3>Catalog de prețuri reutilizabil</h3><p>Îți treci o singură dată manopera, materialele și serviciile cu prețurile tale. De acolo înainte, alegi din listă și gata. Schimbi un preț o dată și e actualizat peste tot.</p></div>
+        <div class="feature"><div class="fi">🏢</div><h3>Datele firmei și logo-ul în antet</h3><p>Pui o dată numele firmei, CUI-ul, contul și logo-ul. Apar automat, frumos, în antetul fiecărei oferte. Clientul vede o firmă serioasă, nu un document anonim.</p></div>
+        <div class="feature"><div class="fi">🧮</div><h3>Discount și TVA configurabil</h3><p>Aplici discount unde vrei și alegi cota de TVA potrivită lucrării. Calculul se face singur, corect, fără să mai scoți calculatorul sau să te chinui cu formule.</p></div>
+        <div class="feature"><div class="fi">✅</div><h3>Calcul automat, fără greșeli</h3><p>Cantități, prețuri, discount, TVA, total. Totul se adună singur și se actualizează pe loc. Gata cu sumele greșite trimise din grabă la client.</p></div>
+        <div class="feature"><div class="fi">📄</div><h3>PDF cu diacritice perfecte</h3><p>Oferta iese curat, cu ă, â, î, ș, ț corecte, aliniat și ușor de citit. Niciun pătrățel ciudat. Un document pe care nu ți-e rușine să-l pui pe masă.</p></div>
+        <div class="feature"><div class="fi">🗂️</div><h3>Istoric și dublare oferte</h3><p>Toate ofertele rămân salvate. Vrei una asemănătoare cu cea de săptămâna trecută? O dublezi, schimbi ce trebuie și ai terminat în câteva minute.</p></div>
+        <div class="feature"><div class="fi">💾</div><h3>Export și import backup</h3><p>Îți salvezi toate datele și prețurile într-un fișier de rezervă și le încarci oricând. Datele tale rămân ale tale, nu rămâi blocat dacă schimbi calculatorul.</p></div>
+        <div class="feature"><div class="fi">🌐</div><h3>Rulează în browser, fără instalare</h3><p>Deschizi aplicația și lucrezi. Nu instalezi nimic, nu cumperi licențe pe fiecare aparat. Merge de pe laptop, de pe calculatorul de la birou, de oriunde ai net.</p></div>
+      </div>
+    </section>
 
-  <!-- datalists -->
-  <datalist id="catalog-list"></datalist>
-  <datalist id="unit-list">
-    <option>buc</option><option>ml</option><option>mp</option><option>mc</option><option>kg</option>
-    <option>set</option><option>oră</option><option>zi</option><option>proiect</option><option>corp</option>
-  </datalist>
-  <datalist id="cat-list">
-    <option>Materiale</option><option>Manoperă</option><option>Echipamente</option>
-    <option>Servicii</option><option>Transport</option><option>Proiectare</option>
-  </datalist>
+    <!-- ===== HOW ===== -->
+    <section class="band" id="cum">
+      <div class="section">
+        <h2 class="center">Cum funcționează — 3 pași</h2>
+        <div class="steps">
+          <div class="step"><span class="step-n">1</span><h3>Îți pui o dată datele firmei și prețurile</h3><p>Adaugi numele firmei, CUI-ul, logo-ul și treci în catalog manopera și materialele cu prețurile tale. Durează puțin la început și nu mai faci niciodată asta de la zero.</p></div>
+          <div class="step"><span class="step-n">2</span><h3>Construiești oferta din câteva clicuri</h3><p>Pentru fiecare lucrare alegi pozițiile din catalog, treci cantitățile, pui discount unde vrei și alegi cota de TVA. Totul se calculează singur, pe loc.</p></div>
+          <div class="step"><span class="step-n">3</span><h3>Descarci PDF-ul și îl trimiți clientului</h3><p>Apeși un buton și ai oferta în PDF, cu logo-ul tău și diacritice corecte. O salvezi în istoric, o trimiți și treci la treaba următoare.</p></div>
+        </div>
+        <div class="center"><a class="btn btn-primary btn-lg" href="app.html">Încearcă acum, gratuit</a></div>
+      </div>
+    </section>
 
-  <!-- ============ PRINT VIEW (PDF) ============ -->
-  <div id="print-view"></div>
+    <!-- ===== PRICING ===== -->
+    <section class="section" id="pret">
+      <h2 class="center">Un preț simplu, fără surprize</h2>
+      <div class="price-card">
+        <div class="price-top">
+          <span class="plan">Abonament DevizRapid</span>
+          <div class="price"><b>200 lei</b><span>pe lună · aprox. 40 €</span></div>
+          <p class="muted">Fără contract pe termen lung.</p>
+        </div>
+        <ul class="price-list">
+          <li>Oferte și devize nelimitate</li>
+          <li>Catalog de prețuri reutilizabil</li>
+          <li>Datele firmei și logo în antet</li>
+          <li>Discount și TVA configurabil</li>
+          <li>PDF cu diacritice perfecte</li>
+          <li>Istoric și dublare oferte</li>
+          <li>Export și import backup</li>
+          <li>Actualizări incluse, fără costuri ascunse</li>
+        </ul>
+        <a class="btn btn-primary btn-lg btn-block" href="app.html">Începe gratuit, plătești după probă</a>
+        <p class="price-note">Începi cu o perioadă de probă gratuită, fără să introduci cardul. Testezi pe lucrările tale reale și te abonezi doar dacă îți este de folos. Poți renunța oricând.</p>
+      </div>
+    </section>
 
-  <!-- toast -->
-  <div id="toast" class="toast" hidden></div>
+    <!-- ===== TRUST ===== -->
+    <section class="band">
+      <div class="section trust">
+        <h2 class="center">De ce să ai încredere</h2>
+        <ul class="trust-list">
+          <li>✓ Construit de o firmă reală de instalații, cu atestate ANRE</li>
+          <li>✓ Făcut de oameni din domeniu, pentru oameni din domeniu</li>
+          <li>✓ Gândit pentru lucrările electrice, HVAC, sanitare și PSI din România</li>
+          <li>✓ Fără instalare, rulează în browser</li>
+          <li>✓ Perioadă de probă gratuită, fără card la înscriere</li>
+          <li>✓ Datele tale rămân ale tale, cu backup prin export/import</li>
+        </ul>
+      </div>
+    </section>
 
-  <script src="app.js"></script>
+    <!-- ===== FAQ ===== -->
+    <section class="section" id="intrebari">
+      <h2 class="center">Întrebări frecvente</h2>
+      <div class="faq">
+        <details><summary>Trebuie să instalez ceva pe calculator?</summary><p>Nu. DevizRapid rulează direct în browser. Deschizi pagina și lucrezi. Merge de pe orice laptop sau calculator cu acces la internet, fără instalare și fără licențe de pus pe fiecare aparat.</p></details>
+        <details><summary>Chiar pot face o ofertă în câteva minute?</summary><p>Da, după ce ți-ai pus o dată catalogul de prețuri și datele firmei. La ofertele următoare doar alegi pozițiile din listă, treci cantitățile, aplici discount și TVA și generezi PDF-ul.</p></details>
+        <details><summary>Chiar ies diacriticele corect în PDF?</summary><p>Da, de fiecare dată. Ofertele ies cu ă, â, î, ș, ț corecte, fără litere stricate sau pătrățele. A fost printre primele lucruri pe care le-am rezolvat, pentru că ne-a deranjat și pe noi în propria firmă.</p></details>
+        <details><summary>Sunt patron, nu sunt om tehnic. Mă descurc?</summary><p>Da. Aplicația e gândită exact pentru patroni de firme mici de instalații, oameni ocupați, nu pentru programatori. Dacă te descurci cu un telefon, te descurci și aici.</p></details>
+        <details><summary>Pot folosi cotele de TVA din România?</summary><p>Da. Alegi cota potrivită fiecărei lucrări și poți aplica și discount. Calculul total se face automat, fără să umbli prin formule în Excel.</p></details>
+        <details><summary>Pot să refolosesc o ofertă veche?</summary><p>Da. Toate ofertele rămân salvate în istoric. Poți dubla orice ofertă, schimbi doar ce e diferit la lucrarea nouă și o ai gata în câteva minute.</p></details>
+        <details><summary>Ce se întâmplă cu datele mele? Le pierd dacă mă opresc?</summary><p>Datele tale rămân ale tale. Poți face oricând un backup complet cu funcția de export și să-l încarci înapoi cu import. Nu rămâi blocat și nu pierzi catalogul de prețuri sau ofertele dacă schimbi calculatorul.</p></details>
+        <details><summary>Cine e în spatele aplicației?</summary><p>DevizRapid e construit de oameni care chiar lucrează în instalații, dintr-o firmă reală cu atestate ANRE. Am pornit de la propriile noastre bătăi de cap cu ofertele în Excel. Suntem la început, dar construim cu cap, pentru oameni ca noi.</p></details>
+      </div>
+    </section>
+
+    <!-- ===== FINAL CTA ===== -->
+    <section class="final">
+      <h2>Următoarea ofertă o faci în câteva minute, nu într-o seară pierdută pe Excel</h2>
+      <a class="btn btn-primary btn-lg" href="app.html">Începe perioada de probă gratuită</a>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="brand"><span class="brand-mark">DR</span><span class="brand-name">DevizRapid</span></div>
+    <p class="muted">Oferte și devize PDF pentru firme de instalații din România. Construit de o firmă cu atestate ANRE.</p>
+  </footer>
 </body>
 </html>

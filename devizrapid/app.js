@@ -46,11 +46,14 @@
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const todayISO = () => new Date().toISOString().slice(0, 10);
   function addDays(iso, days) {
-    const d = iso ? new Date(iso) : new Date();
+    const d = parseLocal(iso);
     d.setDate(d.getDate() + days);
-    return d.toISOString().slice(0, 10);
+    const y = d.getFullYear(), m = String(d.getMonth() + 1).padStart(2, "0"), day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
   }
-  const fmtDate = (iso) => (iso ? new Date(iso).toLocaleDateString("ro-RO") : "—");
+  // parse "YYYY-MM-DD" as LOCAL date (avoids UTC off-by-one in western timezones)
+  const parseLocal = (iso) => (iso ? new Date(iso + "T00:00:00") : new Date());
+  const fmtDate = (iso) => (iso ? parseLocal(iso).toLocaleDateString("ro-RO") : "—");
 
   /* ---------- tabs ---------- */
   $$(".tab").forEach((b) =>
@@ -119,7 +122,7 @@
         tr.innerHTML =
           `<td>${esc(it.name)}</td><td>${esc(it.category || "—")}</td>` +
           `<td class="num">${esc(it.unit || "—")}</td><td class="num">${money(it.price)}</td>` +
-          `<td class="num"><button class="btn-danger" data-edit="${it.id}">Edit</button>` +
+          `<td class="num"><button class="btn btn-ghost btn-sm" data-edit="${it.id}">Editează</button> ` +
           `<button class="btn-danger" data-del="${it.id}">Șterge</button></td>`;
         body.appendChild(tr);
       }
@@ -281,7 +284,7 @@
         `<td class="num cell-w-sm"><input data-i="${i}" data-f="qty" type="number" step="0.01" min="0" value="${l.qty}" /></td>` +
         `<td class="num cell-w-md"><input data-i="${i}" data-f="price" type="number" step="0.01" min="0" value="${l.price}" /></td>` +
         `<td class="num line-total">${money((Number(l.qty) || 0) * (Number(l.price) || 0))}</td>` +
-        `<td class="num"><button type="button" class="btn-danger" data-rm="${i}">✕</button></td>`;
+        `<td class="num"><button type="button" class="btn-danger" data-rm="${i}" aria-label="Șterge linia">✕</button></td>`;
       body.appendChild(tr);
     });
     recalc();
@@ -325,8 +328,13 @@
   });
 
   function recalc() {
-    const draft = readOfferForm();
-    const t = computeTotals(draft);
+    // compute directly from the working lines + current discount/TVA inputs
+    // (avoid readOfferForm here — it would regenerate the offer number on every keystroke)
+    const t = computeTotals({
+      items: lines,
+      discount: parseFloat($("#discount-input").value) || 0,
+      tvaRate: $("#tva-select").value,
+    });
     $("#t-subtotal").textContent = money(t.subtotal);
     $("#t-discount").textContent = "− " + money(t.discount);
     $("#t-tva").textContent = money(t.tva);
@@ -358,6 +366,9 @@
     const draft = readOfferForm();
     if (!draft.client.name) { toast("Completează numele clientului"); offerForm.elements.clientName.focus(); return null; }
     if (!draft.items.length) { toast("Adaugă cel puțin un articol"); return null; }
+    // guard against duplicate offer numbers (e.g. two unsaved duplicates getting the same number)
+    const clash = state.offers.some((o) => o.id !== draft.id && o.number === draft.number);
+    if (clash) { draft.number = nextNumber(); offerForm.elements.number.value = draft.number; }
     if (draft.id) {
       const idx = state.offers.findIndex((o) => o.id === draft.id);
       if (idx >= 0) state.offers[idx] = draft;
@@ -370,6 +381,8 @@
     return draft;
   }
 
+  $("#offer-close").addEventListener("click", () => offerModal.close());
+  $("#item-cancel").addEventListener("click", () => itemModal.close());
   $("#btn-save-offer").addEventListener("click", () => {
     const d = persistOffer();
     if (d) { toast("Ofertă salvată"); offerModal.close(); }
@@ -501,8 +514,9 @@
         toast("Date importate");
       } catch (err) {
         toast("Fișier invalid");
+      } finally {
+        e.target.value = ""; // always reset so re-selecting the same file works
       }
-      e.target.value = "";
     };
     r.readAsText(f);
   });
