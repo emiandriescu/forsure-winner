@@ -1,0 +1,70 @@
+name: MEP doc quarterly refresh
+
+# Reîmprospătează automat docs/tendinte-mep.md o dată pe trimestru și deschide un PR draft.
+# Rulează de pe branch-ul implicit (main) — devine activ după ce acest workflow ajunge în main.
+# Necesită (o singură dată, din partea ta):
+#   1. Secretul CLAUDE_CODE_OAUTH_TOKEN (generat cu `claude setup-token`) —
+#      Settings → Secrets and variables → Actions → New repository secret.
+#   2. Bifa „Allow GitHub Actions to create and approve pull requests" —
+#      Settings → Actions → General → Workflow permissions.
+# Vezi docs/REFRESH.md pentru detalii.
+
+on:
+  schedule:
+    # 06:07 UTC, ziua 1 a lunilor ianuarie / aprilie / iulie / octombrie
+    - cron: '7 6 1 1,4,7,10 *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: mep-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Refresh MEP trends document
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          claude_args: '--max-turns 80 --allowedTools "Read,Edit,Write,Glob,Grep,WebSearch,WebFetch,Bash,Task"'
+          prompt: |
+            Ești într-o sesiune automată de reîmprospătare a documentului `docs/tendinte-mep.md`
+            din acest repo — un radar tehnologic MEP în limba română, organizat pe rubrici de
+            instalație, cu clasificare ✅ matur / 📈 tendință reală / ⚠️ hype. Documentul e de uz
+            intern (SOWILO SRL) — NU publica nimic online; la final deschizi doar un PR DRAFT.
+
+            Urmează exact instrucțiunile din `docs/REFRESH.md` (secțiunea „Promptul de
+            reîmprospătare"). Pe scurt:
+            1. Citește `docs/REFRESH.md` și `docs/tendinte-mep.md`.
+            2. Pentru fiecare rubrică (1–10) și pentru ancorele de reglementare, fă research web
+               (folosește agenți în paralel via Task) pe noutățile apărute de la data „Ultima
+               actualizare" din document până azi. Verifică în special elementele marcate *incert*
+               și declanșatoarele de reglementare cu termen în calendar (EPBD în RO, mandat solar,
+               F-Gas, PFAS/ECHA, P118, scheme PNRR/Fond Modernizare/Casa Verde, ediții noi de
+               normative/SR EN).
+            3. Actualizează documentul: corectează clasificările schimbate, adaugă teme/surse noi,
+               actualizează datele de reglementare, păstrează stilul și legenda. Marchează explicit
+               ce nu se poate confirma din sursă primară. Nu inventa cifre.
+            4. Schimbă „Ultima actualizare" la data curentă și adaugă sub antet un mini-changelog
+               „## Modificări față de ediția anterioară (AAAA-LL-ZZ)"; mută changelog-ul vechi (dacă
+               există) sub un sub-titlu „Istoric".
+            5. Nu atinge codul site-ului (HTML/CSS/JS) — doar `docs/`.
+
+            Apoi publică rezultatul:
+            - Creează un branch nou: `git checkout -b claude/mep-refresh-$(date +%Y-%m)`.
+            - Comite modificările cu un mesaj descriptiv.
+            - Push: `git push -u origin claude/mep-refresh-$(date +%Y-%m)`.
+            - Deschide un PR DRAFT către `main` cu `gh pr create --draft`, rezumând changelog-ul în
+              descriere. NU face merge.
+            Dacă research-ul nu găsește nimic semnificativ de schimbat, spune asta în descrierea
+            PR-ului (sau nu deschide PR) — nu forța modificări cosmetice.
