@@ -45,6 +45,45 @@
     mentenantaInst_pct: 0.015,        // restul instalațiilor
   };
 
+  // Metadate pentru catalogul editabil din UI (etichetă, unitate, grup). pct: valoarea e fracție (afișată în %).
+  const PRETURI_META = [
+    { key: "rezervorBeton_eur_mc", grup: "Stingere incendiu", eticheta: "Rezervor incendiu (beton)", unit: "€/m³" },
+    { key: "grupPompare_eur", grup: "Stingere incendiu", eticheta: "Grup de pompare", unit: "€" },
+    { key: "sprinkler_eur_cap", grup: "Stingere incendiu", eticheta: "Cap sprinkler montat", unit: "€/buc" },
+    { key: "hidrantInterior_eur_buc", grup: "Stingere incendiu", eticheta: "Cutie hidrant interior", unit: "€/buc" },
+    { key: "hidrantExterior_eur_buc", grup: "Stingere incendiu", eticheta: "Hidrant exterior", unit: "€/buc" },
+    { key: "statieAlarmare_eur", grup: "Stingere incendiu", eticheta: "Stație alarmare sprinklere", unit: "€/buc" },
+    { key: "rezervorConsum_eur_mc", grup: "Apă rece", eticheta: "Rezervor de consum", unit: "€/m³" },
+    { key: "hidrofor_eur", grup: "Apă rece", eticheta: "Stație de hidrofor", unit: "€" },
+    { key: "reteleApa_eur_mp", grup: "Apă rece", eticheta: "Rețele apă rece", unit: "€/m²" },
+    { key: "separator_eur", grup: "Canalizare", eticheta: "Separator", unit: "€/buc" },
+    { key: "reteleCanalizare_eur_mp", grup: "Canalizare", eticheta: "Rețele canalizare", unit: "€/m²" },
+    { key: "postTrafo_eur_kva", grup: "Instalații electrice", eticheta: "Post de transformare", unit: "€/kVA" },
+    { key: "grupElectrogen_eur_kva", grup: "Instalații electrice", eticheta: "Grup electrogen", unit: "€/kVA" },
+    { key: "tablouriRetele_eur_mp", grup: "Instalații electrice", eticheta: "Tablouri + distribuție", unit: "€/m²" },
+    { key: "centralaTermica_eur_kw", grup: "Termice & gaze", eticheta: "Centrală termică gaz", unit: "€/kW" },
+    { key: "chiller_eur_kw", grup: "Termice & gaze", eticheta: "Chiller / pompă de căldură", unit: "€/kW frig" },
+    { key: "prm_eur", grup: "Termice & gaze", eticheta: "Post reglare gaz (PRM)", unit: "€" },
+    { key: "cta_eur_mc_h", grup: "Ventilație/climatizare", eticheta: "CTA cu recuperare", unit: "€/(mc/h)" },
+    { key: "ventilatieParcaj_eur_mc_h", grup: "Ventilație/climatizare", eticheta: "Ventilație parcaj", unit: "€/(mc/h)" },
+    { key: "detectieCentrala_eur", grup: "Detecție incendiu", eticheta: "Centrală adresabilă", unit: "€" },
+    { key: "detectie_eur_mp", grup: "Detecție incendiu", eticheta: "Detectoare + cablare", unit: "€/m²" },
+    { key: "ventilatorF400_eur_buc", grup: "Desfumare", eticheta: "Ventilator F400/120", unit: "€/buc" },
+    { key: "presurizare_eur_buc", grup: "Desfumare", eticheta: "Ventilator presurizare", unit: "€/buc" },
+    { key: "mentenantaPSI_pct", grup: "OPEX (mentenanță anuală)", eticheta: "Mentenanță PSI", unit: "%/an", pct: true },
+    { key: "mentenantaInst_pct", grup: "OPEX (mentenanță anuală)", eticheta: "Mentenanță instalații", unit: "%/an", pct: true },
+  ];
+
+  // Catalog implicit suprascris de valorile utilizatorului (doar numerice valide).
+  function mergePreturi(custom) {
+    const out = Object.assign({}, PRETURI);
+    if (custom) Object.keys(PRETURI).forEach((k) => {
+      const v = Number(custom[k]);
+      if (custom[k] != null && custom[k] !== "" && !isNaN(v) && v >= 0) out[k] = v;
+    });
+    return out;
+  }
+
   const GRUPURI = ["Stingere incendiu", "Apă rece", "Canalizare", "Instalații electrice",
     "Termice & gaze", "Ventilație/climatizare", "Detecție incendiu", "Desfumare"];
   const GRUPURI_PSI = ["Stingere incendiu", "Detecție incendiu", "Desfumare"];
@@ -203,7 +242,7 @@
     return { cost, risc: matriceRisc(bundle), beneficiu: beneficii(bundle), sinteza: sinteza(cost) };
   }
 
-  const api = { PRETURI, GRUPURI, nivelRisc, estimareCost, matriceRisc, beneficii, sinteza, analizaExtinsa };
+  const api = { PRETURI, PRETURI_META, mergePreturi, GRUPURI, nivelRisc, estimareCost, matriceRisc, beneficii, sinteza, analizaExtinsa };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.CRB = api;
 })(typeof globalThis !== "undefined" ? globalThis : this);

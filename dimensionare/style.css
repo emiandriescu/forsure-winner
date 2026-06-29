@@ -122,3 +122,9 @@ h1{font-size:1.45rem;margin:0 0 2px}h2{font-size:1.15rem;margin:0 0 12px}h3{font
 .lvl-ridicat{color:#c2410c;background:#fff7ed}
 .lvl-critic{color:#b91c1c;background:#fef2f2}
 .crb-cost tr.grp td{background:#f3f0fa;font-weight:600;border-top:1px solid #d8cdee}
+
+/* ----- Catalog de prețuri ----- */
+.pret-grup{margin:6px 0 14px}
+.pret-grup h4{margin:8px 0 6px;color:#6b46c1;font-size:13px;font-weight:600}
+.pret-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.pret-grid .field span small{font-weight:400}

@@ -12,6 +12,7 @@ Modulul curent: **Stingere incendiu** (sprinklere, hidranți interiori/exteriori
 - **Încadrare în obligativitate** (când e necesar fiecare sistem, cu temei normativ).
 - **Rezervor de incendiu** (cumul scenariu cel mai defavorabil) și **grup de pompare**.
 - **Cost · Risc · Beneficiu extins** — CAPEX pe toate specialitățile (grupat pe trade), cost specific €/m², OPEX (mentenanță) anual, matrice de risc (probabilitate × impact → nivel + măsură) și beneficii cuantificate.
+- **Catalog de prețuri editabil** (tab „Firma mea") — ajustezi tarifele la valorile tale; se aplică tuturor proiectelor și se salvează în browser (`sowilo_preturi`).
 - **Memoriu tehnic PDF** (print-to-PDF, diacritice perfecte), cu logo și atestate.
 - **Export/Import** JSON.
 

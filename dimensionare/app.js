@@ -73,6 +73,50 @@
     });
   }
 
+  /* ---------- CATALOG DE PREȚURI ---------- */
+  function loadPreturiOverrides() { try { return JSON.parse(localStorage.getItem("sowilo_preturi") || "{}"); } catch (e) { return {}; } }
+  function currentPreturi() { return CRB.mergePreturi(loadPreturiOverrides()); }
+  const pretform = $("#pret-form");
+  function fillPreturi() {
+    const cont = $("#pret-fields"); if (!cont || typeof CRB === "undefined") return;
+    const pr = currentPreturi();
+    const grupuri = [];
+    CRB.PRETURI_META.forEach((m) => { if (!grupuri.includes(m.grup)) grupuri.push(m.grup); });
+    cont.innerHTML = grupuri.map((g) => {
+      const fields = CRB.PRETURI_META.filter((m) => m.grup === g).map((m) => {
+        const val = m.pct ? Math.round(pr[m.key] * 1000) / 10 : pr[m.key];
+        return `<label class="field"><span>${esc(m.eticheta)} <small class="muted">${esc(m.unit)}</small></span>
+          <input name="${esc(m.key)}" type="number" min="0" step="any" value="${val}" /></label>`;
+      }).join("");
+      return `<div class="pret-grup"><h4>${esc(g)}</h4><div class="pret-grid">${fields}</div></div>`;
+    }).join("");
+  }
+  function recomputeAll() {
+    state.projects.forEach((p) => computeProject(p));
+    save();
+    if (currentId && !$("#view-results").hidden) { const p = state.projects.find((x) => x.id === currentId); if (p) $("#res-body").innerHTML = renderResults(p); }
+    renderList();
+  }
+  if (pretform) {
+    pretform.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const obj = {};
+      CRB.PRETURI_META.forEach((m) => {
+        const el = pretform.elements[m.key]; if (!el) return;
+        let v = parseFloat(el.value); if (isNaN(v) || v < 0) return;
+        if (m.pct) v = v / 100;
+        obj[m.key] = v;
+      });
+      try { localStorage.setItem("sowilo_preturi", JSON.stringify(obj)); } catch (err) {}
+      recomputeAll();
+      const h = $("#pret-saved"); h.hidden = false; setTimeout(() => (h.hidden = true), 1800); toast("Catalog salvat — proiectele au fost recalculate");
+    });
+    $("#pret-reset").addEventListener("click", () => {
+      try { localStorage.removeItem("sowilo_preturi"); } catch (err) {}
+      fillPreturi(); recomputeAll(); toast("Catalog resetat la valorile implicite");
+    });
+  }
+
   /* ---------- PROJECTS ---------- */
   const modal = $("#proj-modal");
   const pform = $("#proj-form");
@@ -215,8 +259,8 @@
     p.electrice = (typeof ELECTRICE !== "undefined") ? ELECTRICE.dimensionareElectrice(profile) : null;
     p.gaze = (typeof GAZE !== "undefined") ? GAZE.dimensionareGaze(profile) : null;
     p.sisteme = (typeof SISTEME !== "undefined") ? SISTEME.dimensionareSisteme(profile) : null;
-    // Cost-risc-beneficiu pe TOATE specialitățile (după ce toate sunt calculate)
-    p.crb = CRB.analizaExtinsa({ profile, dim, apa: p.apa, canalizare: p.canalizare, electrice: p.electrice, gaze: p.gaze, sisteme: p.sisteme });
+    // Cost-risc-beneficiu pe TOATE specialitățile (după ce toate sunt calculate), cu catalogul utilizatorului
+    p.crb = CRB.analizaExtinsa({ profile, dim, apa: p.apa, canalizare: p.canalizare, electrice: p.electrice, gaze: p.gaze, sisteme: p.sisteme }, currentPreturi());
     return p;
   }
 
@@ -449,6 +493,6 @@
   });
 
   /* init */
-  function renderAll() { fillCompany(); fillAI(); renderList(); showList(); }
+  function renderAll() { fillCompany(); fillAI(); fillPreturi(); renderList(); showList(); }
   renderAll();
 })();

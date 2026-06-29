@@ -62,5 +62,19 @@ ok("beneficii nevide", a.beneficiu.length >= 4, a.beneficiu.length);
 ok("beneficiu recuperare ≥75% cuantificat", a.beneficiu.some((b) => /recuperare ≥ 75/.test(b.cuantificare || "")), "ok");
 ok("beneficiu grup electrogen prezent", a.beneficiu.some((b) => /grup electrogen/i.test(b.text)), "ok");
 
+// --- CATALOG editabil ---
+ok("PRETURI_META acoperă toate cheile din PRETURI",
+  Object.keys(CRB.PRETURI).every((k) => CRB.PRETURI_META.some((m) => m.key === k)) &&
+  CRB.PRETURI_META.every((m) => m.key in CRB.PRETURI), "ok");
+ok("mergePreturi({}) = valorile implicite", CRB.mergePreturi({}).rezervorBeton_eur_mc === CRB.PRETURI.rezervorBeton_eur_mc, "ok");
+ok("mergePreturi suprascrie cheia validă", CRB.mergePreturi({ rezervorBeton_eur_mc: 500 }).rezervorBeton_eur_mc === 500, "ok");
+ok("mergePreturi ignoră gol/negativ/invalid", (() => {
+  const m = CRB.mergePreturi({ rezervorBeton_eur_mc: "", hidrofor_eur: -5, prm_eur: "abc" });
+  return m.rezervorBeton_eur_mc === CRB.PRETURI.rezervorBeton_eur_mc && m.hidrofor_eur === CRB.PRETURI.hidrofor_eur && m.prm_eur === CRB.PRETURI.prm_eur;
+})(), "ok");
+const aScump = CRB.analizaExtinsa(bundle, CRB.mergePreturi({ rezervorBeton_eur_mc: 700 }));
+ok("catalog modificat schimbă CAPEX (rezervor 350→700 €/m³)",
+  aScump.cost.total === a.cost.total + 210 * 350, `+${aScump.cost.total - a.cost.total} €`);
+
 console.log(`\n${pass} trecute, ${fail} eșuate`);
 process.exit(fail ? 1 : 0);
