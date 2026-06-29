@@ -78,12 +78,11 @@
 
 ## 5. Stingere incendiu
 
-- ⚠️📜 **P118/2-2013 — status de confirmat.** Sursele publice pe care le-am verificat îl arată **încă în vigoare**,
-  modificat prin **Ordin 6026/2018** (doar Partea I a fost reeditată în 2025). **Input de pe teren (Emi) indică
-  abrogarea** — neconfirmată din sursă oficială. **De stabilit definitiv** ce act îl abrogă / ce se aplică în loc,
-  înainte de a-l folosi într-un proiect ștampilat.
-  — [OAR — ce rămâne/ce se schimbă](https://oar.archi/stiri/normativul-p118-1-2025-8-mai-2025-ce-se-schimba/) ·
-  [Ordin 6026/2018 (Lege5)](https://lege5.ro/gratuit/gmydsnrsg44a/ordinul-nr-6026-2018-pentru-modificarea-si-completarea-reglementarii-tehnice-normativ-privind-securitatea-la-incendiu-a-constructiilor-partea-a-ii-a-instalatii-de-stingere-indicativ-p-118-2-2013-aprob)
+- 📜 **P118/2-2013, actualizat prin Ordin 6026/2018 — în vigoare.** Partea a II-a (instalații de stingere) rămâne
+  ediția **2013**, **cu modificările și completările aduse de Ordin 6026/2018**. NU este abrogat și NU există o
+  ediție 2025 (doar Partea I a fost reeditată în 2025); cele trei părți se aplică cumulativ. Referă SR EN 12845
+  (sprinklere) ș.a.
+  — [Ordin 6026/2018 (Lege5)](https://lege5.ro/gratuit/gmydsnrsg44a/ordinul-nr-6026-2018-pentru-modificarea-si-completarea-reglementarii-tehnice-normativ-privind-securitatea-la-incendiu-a-constructiilor-partea-a-ii-a-instalatii-de-stingere-indicativ-p-118-2-2013-aprob)
 - 🆕📜 **2026 — restricția PFAS (REACH/ECHA) avansează → FK-5-1-12 / Novec 1230 devin pariu riscant.** 3M a oprit
   toată producția de PFAS la final 2025; FK-5-1-12 e clasificat PFAS și intră în restricție (tranziție 18 luni +
   derogare 12 ani propuse). Pentru active noi de lungă durată → preferă **gaz inert** sau **ceață de apă**.
@@ -127,8 +126,6 @@
 
 ## De verificat / urmărit
 
-- ⚠️ **P118/2-2013** — abrogat sau nu? Sursele publice îl arată în vigoare (mod. Ordin 6026/2018); input de pe
-  teren indică abrogarea. De stabilit actul exact și ce se aplică în loc.
 - **Transpunerea corpului principal EPBD în RO** — de verificat în Monitorul Oficial (cel mai important).
 - **Casa Verde Baterii** — sume/eligibilitate, după publicarea Ghidului în MO (iul.–aug. 2026).
 - **CPR (UE) 2024/3110** — apariția standardelor noi în OJEU (marcaj CE detecție/stingere).
