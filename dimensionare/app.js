@@ -50,6 +50,29 @@
   });
   $("#logo-clear").addEventListener("click", () => { state.company.logo = ""; $("#logo-preview").hidden = true; $("#logo-input").value = ""; save(); });
 
+  /* ---------- SETĂRI AI ---------- */
+  const aiform = $("#ai-form");
+  function fillAI() {
+    if (!aiform) return;
+    aiform.elements.proxy.value = (function () { try { return localStorage.getItem("sowilo_ai_proxy") || ""; } catch (e) { return ""; } })();
+    aiform.elements.key.value = (function () { try { return localStorage.getItem("sowilo_anthropic_key") || ""; } catch (e) { return ""; } })();
+  }
+  if (aiform) {
+    aiform.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const proxy = aiform.elements.proxy.value.trim(), key = aiform.elements.key.value.trim();
+      try {
+        if (proxy) localStorage.setItem("sowilo_ai_proxy", proxy); else localStorage.removeItem("sowilo_ai_proxy");
+        if (key) localStorage.setItem("sowilo_anthropic_key", key); else localStorage.removeItem("sowilo_anthropic_key");
+      } catch (err) {}
+      const h = $("#ai-saved"); h.hidden = false; setTimeout(() => (h.hidden = true), 1600); toast("Setări AI salvate");
+    });
+    $("#ai-clear").addEventListener("click", () => {
+      try { localStorage.removeItem("sowilo_ai_proxy"); localStorage.removeItem("sowilo_anthropic_key"); } catch (err) {}
+      aiform.reset(); toast("Setări AI șterse");
+    });
+  }
+
   /* ---------- PROJECTS ---------- */
   const modal = $("#proj-modal");
   const pform = $("#proj-form");
@@ -118,6 +141,7 @@
       .forEach((k) => { if (pform.elements[k]) pform.elements[k].value = p[k] != null ? p[k] : ""; });
     pform.elements.saliAglomerate.value = String(p.saliAglomerate !== false && p.saliAglomerate !== "false");
     pform.elements.officeAre.value = String(p.officeAre === true || p.officeAre === "true");
+    const note = $("#ai-ipoteze-note"); if (note) { note.hidden = true; note.innerHTML = ""; }
     onFunctiuneChange(); toggleOffice();
     modal.showModal();
   }
@@ -301,7 +325,13 @@
       crb.cost.lines.map((l) => `<tr><td>${esc(l.eticheta)}</td><td class="num">${l.qty} ${esc(l.unit)}</td><td class="num">${eur(l.pretUnit)}</td><td class="num">${eur(l.total)}</td></tr>`).join("")
     }<tr class="grand"><td>TOTAL</td><td></td><td></td><td class="num">${eur(crb.cost.total)}</td></tr></tbody></table>`;
 
+    const aiBlock = p.aiText ? `<div class="ai-note"><b>✨ Narativ AI (în memoriul PDF):</b>
+      <p>${esc(p.aiText.descriere || "")}</p>
+      <p>${esc(p.aiText.solutii || "")}</p>
+      <p>${esc(p.aiText.concluzii || "")}</p></div>` : "";
+
     return `${big}
+      ${aiBlock}
       ${renderApa(p.apa)}
       ${renderCanalizare(p.canalizare)}
       ${renderElectrice(p.electrice)}
@@ -320,9 +350,51 @@
       <h3 style="margin:14px 0 4px">Beneficii</h3><ul class="crb-list">${crb.beneficiu.map((x) => `<li>${esc(x.text)}</li>`).join("")}</ul>`;
   }
 
+  /* ---------- AI: propune ipoteze (în formular) ---------- */
+  async function aiPropuneIpoteze() {
+    if (typeof AI === "undefined") return;
+    if (!AI.configured()) { toast("Setează proxy-ul sau cheia AI în „Firma mea”."); return; }
+    const btn = $("#btn-ai-ipoteze"); const old = btn.textContent; btn.disabled = true; btn.textContent = "Se gândește…";
+    try {
+      const known = readProjectForm();
+      const raw = {};
+      AI.CANDIDATE_FIELDS.forEach((c) => { if (pform.elements[c.camp]) raw[c.camp] = pform.elements[c.camp].value; });
+      const candidates = AI.CANDIDATE_FIELDS.filter((c) => { const v = raw[c.camp]; return v == null || v === "" || v === "0"; });
+      if (!candidates.length) { toast("Toate câmpurile relevante sunt completate."); return; }
+      const ipoteze = await AI.proposeIpoteze(known, candidates);
+      const { merged, applied } = AI.mergeIpoteze(raw, ipoteze, false);
+      applied.forEach((ip) => { if (pform.elements[ip.camp]) pform.elements[ip.camp].value = merged[ip.camp]; });
+      onFunctiuneChange(); toggleOffice();
+      const note = $("#ai-ipoteze-note");
+      if (applied.length) {
+        note.hidden = false;
+        note.innerHTML = `<b>✨ Ipoteze propuse (de confirmat):</b><ul>` +
+          applied.map((ip) => `<li><b>${esc(ip.eticheta || ip.camp)}:</b> ${esc(ip.valoare)} <span class="muted">— ${esc(ip.motivare || "")}${ip.incredere ? " · încredere " + esc(ip.incredere) : ""}</span></li>`).join("") + `</ul>`;
+        toast(`${applied.length} ipoteze propuse — verifică-le înainte de calcul.`);
+      } else { note.hidden = true; toast("AI nu a propus ipoteze noi."); }
+    } catch (e) { toast("Eroare AI: " + (e && e.message || e)); }
+    finally { btn.disabled = false; btn.textContent = old; }
+  }
+
+  /* ---------- AI: redactează narativul memoriului ---------- */
+  async function aiNarativ() {
+    if (typeof AI === "undefined") return;
+    if (!AI.configured()) { toast("Setează proxy-ul sau cheia AI în „Firma mea”."); return; }
+    const p = state.projects.find((x) => x.id === currentId); if (!p) return;
+    if (!p.dim) computeProject(p);
+    const btn = $("#btn-ai-narativ"); const old = btn.textContent; btn.disabled = true; btn.textContent = "Se redactează…";
+    try {
+      p.aiText = await AI.redacteaza(AI.computedSummary(p));
+      save();
+      $("#res-body").innerHTML = renderResults(p);
+      toast("Narativ AI adăugat — apare în memoriul PDF.");
+    } catch (e) { toast("Eroare AI: " + (e && e.message || e)); }
+    finally { btn.disabled = false; btn.textContent = old; }
+  }
+
   function printMemoriu(p) {
     if (!p.dim) computeProject(p);
-    $("#print-view").innerHTML = MEMORIU.buildMemoriu({ company: state.company, project: p, dim: p.dim, crb: p.crb, apa: p.apa, canalizare: p.canalizare, electrice: p.electrice, gaze: p.gaze, sisteme: p.sisteme });
+    $("#print-view").innerHTML = MEMORIU.buildMemoriu({ company: state.company, project: p, dim: p.dim, crb: p.crb, apa: p.apa, canalizare: p.canalizare, electrice: p.electrice, gaze: p.gaze, sisteme: p.sisteme, aiText: p.aiText });
     const t = document.title; document.title = `Memoriu - ${p.name}`;
     window.print(); setTimeout(() => (document.title = t), 500);
   }
@@ -332,6 +404,8 @@
   $("#btn-back").addEventListener("click", () => { showList(); renderList(); });
   $("#btn-edit").addEventListener("click", () => { const p = state.projects.find((x) => x.id === currentId); if (p) openProjectForm(p); });
   $("#btn-pdf").addEventListener("click", () => { const p = state.projects.find((x) => x.id === currentId); if (p) printMemoriu(p); });
+  $("#btn-ai-ipoteze").addEventListener("click", aiPropuneIpoteze);
+  $("#btn-ai-narativ").addEventListener("click", aiNarativ);
   $("#proj-list").addEventListener("click", (e) => {
     const t = e.target.dataset;
     if (t.open) openResults(t.open);
@@ -354,6 +428,6 @@
   });
 
   /* init */
-  function renderAll() { fillCompany(); renderList(); showList(); }
+  function renderAll() { fillCompany(); fillAI(); renderList(); showList(); }
   renderAll();
 })();

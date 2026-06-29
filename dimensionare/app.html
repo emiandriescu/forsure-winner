@@ -43,6 +43,7 @@
           </div>
           <div class="res-actions">
             <button class="btn btn-ghost btn-sm" id="btn-edit">Editează datele</button>
+            <button class="btn btn-ghost btn-sm" id="btn-ai-narativ">✨ Adaugă narativ (AI)</button>
             <button class="btn btn-accent" id="btn-pdf">Generează memoriu PDF</button>
           </div>
           <div id="res-body"></div>
@@ -63,6 +64,19 @@
           <label class="field"><span>Telefon</span><input name="phone" placeholder="0748 ..." /></label>
           <label class="field"><span>Email</span><input name="email" type="email" placeholder="office@sowilo.ro" /></label>
           <div class="span-2"><button type="submit" class="btn btn-primary">Salvează</button> <span id="company-saved" class="muted" hidden>✓ Salvat</span></div>
+        </form>
+
+        <div class="panel-head" style="margin-top:28px"><div><h1>Asistent AI (opțional)</h1><p class="muted">AI propune ipotezele lipsă și redactează narativul memoriului. Cifrele de dimensionare rămân deterministe — AI nu le modifică.</p></div></div>
+        <form id="ai-form" class="form-grid">
+          <label class="field span-2"><span>URL proxy serverless (recomandat)</span>
+            <input name="proxy" placeholder="/.netlify/functions/claude" />
+            <small class="muted">Proxy-ul ține cheia API. Gol = se folosește calea implicită pe Netlify.</small></label>
+          <label class="field span-2"><span>Cheie API Anthropic — doar pentru testul tău local</span>
+            <input name="key" type="password" placeholder="sk-ant-... (nu o pune pe site public!)" autocomplete="off" />
+            <small class="muted">Dacă e completată, apelurile pleacă direct din browser cu cheia ta. Folosește doar pe calculatorul tău; pe site public lasă gol și folosește proxy-ul.</small></label>
+          <div class="span-2"><button type="submit" class="btn btn-primary">Salvează setările AI</button>
+            <button type="button" id="ai-clear" class="btn btn-ghost">Șterge</button>
+            <span id="ai-saved" class="muted" hidden>✓ Salvat</span></div>
         </form>
       </section>
     </main>
@@ -135,9 +149,11 @@
           <label class="field"><span>Irigații (mc/zi)</span><input name="d_irigatii" type="number" min="0" step="0.1" placeholder="0" /></label>
         </div>
       </div>
-      <p class="muted" style="margin-top:10px">💡 Câmpurile goale primesc valori implicite. Într-o versiune ulterioară, AI propune ipotezele lipsă (de confirmat).</p>
+      <p class="muted" style="margin-top:10px">💡 Câmpurile goale primesc valori implicite. AI poate propune ipoteze pentru câmpurile lipsă — de confirmat de proiectant.</p>
+      <div id="ai-ipoteze-note" class="ai-note" hidden></div>
       <menu class="modal-actions">
         <button type="button" id="proj-cancel" class="btn btn-ghost">Anulează</button>
+        <button type="button" id="btn-ai-ipoteze" class="btn btn-ghost">✨ Propune ipoteze (AI)</button>
         <button value="save" class="btn btn-primary">Salvează &amp; calculează</button>
       </menu>
     </form>
@@ -154,6 +170,7 @@
   <script src="calc-gaze.js"></script>
   <script src="calc-sisteme.js"></script>
   <script src="crb.js"></script>
+  <script src="ai.js"></script>
   <script src="memoriu.js"></script>
   <script src="app.js"></script>
 </body>

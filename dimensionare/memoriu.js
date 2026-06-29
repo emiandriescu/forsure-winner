@@ -6,8 +6,10 @@
   "use strict";
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
   const eur = (n) => Number(n || 0).toLocaleString("ro-RO") + " €";
+  // text AI → paragrafe escape-uite (pe linii goale)
+  const para = (s) => String(s || "").split(/\n{2,}/).map((x) => x.trim()).filter(Boolean).map((x) => `<p>${esc(x).replace(/\n/g, "<br/>")}</p>`).join("");
 
-  function buildMemoriu({ company, project, dim, crb, apa, canalizare, electrice, gaze, sisteme }) {
+  function buildMemoriu({ company, project, dim, crb, apa, canalizare, electrice, gaze, sisteme, aiText }) {
     const c = company || {};
     const p = project || {};
     const prof = dim.profile;
@@ -118,6 +120,8 @@
           <p>${esc(p.name || "Obiectiv")}</p><p>${esc(p.data || "")}</p></div>
       </div>
 
+      ${aiText && (aiText.descriere || aiText.solutii) ? `<div class="doc-intro">${para(aiText.descriere)}${para(aiText.solutii)}</div>` : ""}
+
       <h3>1. Date generale ale obiectivului</h3>
       <table class="kv">
         <tr><td>Denumire obiectiv</td><td>${esc(p.name || "—")}</td></tr>
@@ -164,6 +168,7 @@
       <h4>7.3. Beneficii</h4><ul class="breviar">${benItems}</ul>
 
       <h3>8. Concluzii</h3>
+      ${aiText && aiText.concluzii ? para(aiText.concluzii) : ""}
       <p>Soluția de stingere a fost dimensionată conform normativelor în vigoare. Rezerva intangibilă adoptată este de <b>${rez.adoptat} m³</b>, asigurată dintr-un rezervor propriu și un grup de pompare atestat IGSU. Dimensionările au caracter preliminar (faza DTAC); calculul hidraulic complet și numărul exact de capete sprinkler se confirmă la faza Proiect Tehnic.</p>
 
       <div class="doc-sign"><div class="sig">Întocmit,<br/>${esc(c.name || "SOWILO SRL")}${c.proiectant ? "<br/>" + esc(c.proiectant) : ""}</div><div class="sig">Verificat</div></div>

@@ -41,16 +41,24 @@ Toate cele 15 verificări trec: sprinklere 15 l/s & rezervă 54 m³, hidranți i
 | `normative.js` | normative curente + praguri de obligativitate |
 | `crb.js` | cost · risc · beneficiu |
 | `memoriu.js` | construire memoriu tehnic (print-view → PDF) |
-| `ai.js` + `netlify/functions/claude.js` | **stratul AI (faza 4)** — completare ipoteze + redactare memoriu (vezi mai jos) |
+| `ai.js` (+ `.test.js`) + `netlify/functions/claude.js` | **stratul AI** — propunere ipoteze + redactare narativ memoriu (vezi mai jos) |
 
-## Stratul AI (faza 4 — opțional, pregătit)
+## Stratul AI (opțional — integrat în UI)
 
-Aplicația funcționează 100% fără AI. Pentru completarea ipotezelor lipsă și redactarea memoriului în limbaj natural, se folosește Claude (`claude-opus-4-8`):
+Aplicația funcționează 100% fără AI. Activat, AI face **două** lucruri, folosind Claude (`claude-opus-4-8`):
 
-- **Calculele numerice rămân deterministe** (în `calc-stingere.js`). AI doar propune ipoteze (marcate „de confirmat") și redactează text — nu inventează cifre.
-- Cheia API **nu poate sta în browser** → proxy serverless `netlify/functions/claude.js` ține `ANTHROPIC_API_KEY` ca variabilă de mediu.
-  - Deploy gratuit pe Netlify: drag & drop folderul; setează `ANTHROPIC_API_KEY` în Site settings → Environment variables.
-- **Mod test local (doar pentru tine):** pune cheia ta în consola browserului — `localStorage.setItem('anthropic_key','sk-ant-...')` — și `ai.js` apelează direct API-ul. NU folosi acest mod în producție.
+1. **Propune ipoteze** (buton „✨ Propune ipoteze (AI)" în formularul de proiect) — pentru câmpurile lipsă (nivel stabilitate, volum compartiment, intensitate ploaie, dotări etc.), AI propune valori de pornire cu motivare și nivel de încredere, **marcate „de confirmat"**. Se completează doar câmpurile goale; proiectantul verifică înainte de calcul.
+2. **Redactează narativul** (buton „✨ Adaugă narativ (AI)" în rezultate) — pe baza **cifrelor deterministe deja calculate**, AI scrie proza memoriului (descriere, justificarea soluțiilor, concluzii), care apare în PDF.
+
+**REGULĂ ABSOLUTĂ:** AI nu modifică și nu inventează nicio cifră de dimensionare — toate valorile vin din motoarele deterministe. Ieșirile sunt structurate (`output_config.format`, JSON schema), nu text liber.
+
+### Configurare (tab „Firma mea" → „Asistent AI")
+
+- **Proxy serverless (recomandat, pentru site public):** cheia API **nu poate sta în browser** → `netlify/functions/claude.js` ține `ANTHROPIC_API_KEY` ca variabilă de mediu și redirecționează cererile.
+  - Deploy gratuit pe Netlify: drag & drop folderul `dimensionare`; setează `ANTHROPIC_API_KEY` în Site settings → Environment variables. Funcția e **zero-dependențe** (Node 18+, `fetch` nativ — fără `npm install`). Endpoint: `/.netlify/functions/claude` (implicit). `netlify.toml` din folder configurează publish + functions.
+- **Mod test local (doar pentru tine):** completează cheia ta în câmpul „Cheie API Anthropic". `ai.js` apelează atunci direct API-ul din browser (cu `anthropic-dangerous-direct-browser-access`). **Nu pune cheia pe un site public** — folosește proxy-ul.
+
+Cheile se salvează în `localStorage` (`sowilo_ai_proxy`, `sowilo_anthropic_key`).
 
 ## Roadmap module (până la memoriul complet ca Hotel Sinaia)
 
@@ -58,13 +66,14 @@ Toate specialitățile MEP sunt acum implementate, același tipar determinist (c
 
 Stingere ✓ · **Apă ✓** · **Canalizare ✓** · **Electrice ✓** · **Gaze ✓** · **Termice/HVAC ✓** · **Ventilație ✓** · **Detecție incendiu ✓** · **Desfumare ✓** — compuse într-un memoriu unic de racordare utilități + dimensionare instalații.
 
-Toate testele de regresie (49 verificări) trec:
+Toate testele de regresie (76 verificări) trec:
 
 ```
 node dimensionare/calc-stingere.test.js   # 20/20 — sprinklere, hidranți, rezervor 210 m³
 node dimensionare/calc-apa.test.js        # 11/11 — Qzi,med 74,5; Qmax,orar 8,7 mc/h; rezervor 110 mc; hidrofor 57 mCA
 node dimensionare/calc-utilitati.test.js  #  9/9  — canalizare, electrice (trafo 1250, GE 550 kVA), gaze (PRM 200)
 node dimensionare/calc-sisteme.test.js    #  9/9  — termice 904/600 kW, ventilație 5400 mc/h, detecție, desfumare 72000 mc/h
+node dimensionare/ai.test.js              # 27/27 — strat AI: cereri valide (opus-4-8, fără temperature/budget_tokens), merge ipoteze, rezumat determinist
 ```
 
 ## Limitări conștiente (faza curentă)
