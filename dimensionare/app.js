@@ -104,6 +104,7 @@
   function blankProject() {
     return { id: "", name: "", beneficiar: "", adresa: "", functiune: "hotel", data: "",
       unitate: "", secundar: "", nrNiveluriSupraterane: "", acNivel: "", inaltimeUltimPlanseu: "",
+      arieDesfasurata: "", arieAcoperis: "", i_ploaie: "",
       nivelStabilitate: "II", parcLocuri: "", nrNiveluriParcare: "", parcArie: "", volumCompartiment: "",
       saliAglomerate: "true", risc: "mediu", officeAre: "false", officeArie: "", officePersoane: "",
       d_mese: "", d_personal: "", d_bucatarie: "", d_piscina: "", d_spa: "", d_spalatorie: "", d_irigatii: "" };
@@ -113,7 +114,7 @@
     p = p || blankProject();
     $("#proj-modal-title").textContent = p.id ? "Editează proiect" : "Proiect nou";
     pform.elements.id.value = p.id;
-    ["name","beneficiar","adresa","functiune","data","unitate","secundar","nrNiveluriSupraterane","acNivel","inaltimeUltimPlanseu","nivelStabilitate","parcLocuri","nrNiveluriParcare","parcArie","volumCompartiment","risc","officeArie","officePersoane","d_mese","d_personal","d_bucatarie","d_piscina","d_spa","d_spalatorie","d_irigatii"]
+    ["name","beneficiar","adresa","functiune","data","unitate","secundar","nrNiveluriSupraterane","acNivel","inaltimeUltimPlanseu","arieDesfasurata","arieAcoperis","i_ploaie","nivelStabilitate","parcLocuri","nrNiveluriParcare","parcArie","volumCompartiment","risc","officeArie","officePersoane","d_mese","d_personal","d_bucatarie","d_piscina","d_spa","d_spalatorie","d_irigatii"]
       .forEach((k) => { if (pform.elements[k]) pform.elements[k].value = p[k] != null ? p[k] : ""; });
     pform.elements.saliAglomerate.value = String(p.saliAglomerate !== false && p.saliAglomerate !== "false");
     pform.elements.officeAre.value = String(p.officeAre === true || p.officeAre === "true");
@@ -129,6 +130,7 @@
       functiune: g("functiune"), data: g("data").trim(),
       unitate: num("unitate"), secundar: num("secundar"), nrNiveluriSupraterane: num("nrNiveluriSupraterane"),
       acNivel: num("acNivel"), inaltimeUltimPlanseu: num("inaltimeUltimPlanseu"),
+      arieDesfasurata: num("arieDesfasurata"), arieAcoperis: num("arieAcoperis"), i_ploaie: num("i_ploaie"),
       nivelStabilitate: g("nivelStabilitate"), parcLocuri: num("parcLocuri"), nrNiveluriParcare: num("nrNiveluriParcare"),
       parcArie: num("parcArie"), volumCompartiment: num("volumCompartiment") || 30000,
       saliAglomerate: g("saliAglomerate") === "true", risc: g("risc"),
@@ -171,6 +173,8 @@
       functiune: p.functiune, tip: conf.tip, etichetaUnit, valoareUnit,
       locuriCazare, persoane, nrApartamente, nrCamere: conf.tip === "turism" ? unitate : 0,
       acNivel: p.acNivel, nrNiveluriSupraterane: p.nrNiveluriSupraterane, inaltimeUltimPlanseu: p.inaltimeUltimPlanseu,
+      arieDesfasurata: p.arieDesfasurata || (p.acNivel * p.nrNiveluriSupraterane) || 0,
+      arieAcoperis: p.arieAcoperis || 0, i_ploaie: p.i_ploaie || 130,
       cotaGeodezica: p.inaltimeUltimPlanseu || 0,
       saliAglomerate, nivelStabilitate: p.nivelStabilitate, volumCompartiment: p.volumCompartiment, risc,
       office, dotari,
@@ -184,6 +188,9 @@
     const crb = CRB.costRiscBeneficiu(dim);
     p.dim = dim; p.crb = crb;
     p.apa = (typeof APA !== "undefined") ? APA.dimensionareApa(profile) : null;
+    p.canalizare = (typeof CANALIZARE !== "undefined") ? CANALIZARE.dimensionareCanalizare(profile, p.apa && p.apa.debite) : null;
+    p.electrice = (typeof ELECTRICE !== "undefined") ? ELECTRICE.dimensionareElectrice(profile) : null;
+    p.gaze = (typeof GAZE !== "undefined") ? GAZE.dimensionareGaze(profile) : null;
     return p;
   }
 
@@ -233,6 +240,28 @@
         <ul>${st.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ul></div>`;
   }
 
+  const sysCard = (titlu, normativ, params, steps) =>
+    `<div class="sys-card"><h4>${esc(titlu)} <span class="nrm">(${esc(normativ || "")})</span></h4>` +
+    (params ? `<p class="params">${esc(params)}</p>` : "") +
+    `<ul>${(steps || []).map((s) => `<li>${esc(s)}</li>`).join("")}</ul></div>`;
+
+  function renderCanalizare(c) {
+    if (!c) return "";
+    let out = `<h2>Canalizare</h2>`;
+    out += sysCard(c.menajera.sistem, c.menajera.normativ, `Qu = ${c.menajera.Qu_zi} mc/zi · ${c.menajera.Qu_orar_ls} l/s · racord ${c.menajera.dn}`, c.menajera.steps);
+    if (c.pluviala.necesar) out += sysCard(c.pluviala.sistem, c.pluviala.normativ, `Q = ${c.pluviala.Q} l/s · racord ${c.pluviala.dn}`, c.pluviala.steps);
+    if (c.separatoare.length) out += `<div class="sys-card"><h4>Separatoare</h4><ul>${c.separatoare.map((s) => `<li>${esc(s.tip)} — ${esc(s.normativ)}</li>`).join("")}</ul></div>`;
+    return out;
+  }
+  function renderElectrice(e) {
+    if (!e) return "";
+    return `<h2>Instalații electrice</h2>` + sysCard(e.sistem, e.normativ, `Pi = ${e.Pi} kW · Pa = ${e.Pa} kW · S = ${e.S} kVA · trafo ${e.trafo} · GE ${e.ge}`, e.steps);
+  }
+  function renderGaze(g) {
+    if (!g) return "";
+    return `<h2>Instalații gaze naturale</h2>` + sysCard(g.sistem, g.normativ, `P = ${g.P_total} kW · q = ${g.q} mc/h · PRM ${g.prm} mc/h`, g.steps);
+  }
+
   function renderResults(p) {
     const dim = p.dim, crb = p.crb;
     const oblig = `<table class="oblig"><thead><tr><th>Sistem</th><th>Obligatoriu</th><th>Temei normativ</th></tr></thead><tbody>${
@@ -263,6 +292,9 @@
 
     return `${big}
       ${renderApa(p.apa)}
+      ${renderCanalizare(p.canalizare)}
+      ${renderElectrice(p.electrice)}
+      ${renderGaze(p.gaze)}
       <h2>Stingere incendiu — încadrare în obligativitate</h2>${oblig}
       <h2>Sisteme dimensionate (breviar de calcul)</h2>${sisteme}
       <h2>Rezervor de incendiu</h2>
@@ -278,7 +310,7 @@
 
   function printMemoriu(p) {
     if (!p.dim) computeProject(p);
-    $("#print-view").innerHTML = MEMORIU.buildMemoriu({ company: state.company, project: p, dim: p.dim, crb: p.crb, apa: p.apa });
+    $("#print-view").innerHTML = MEMORIU.buildMemoriu({ company: state.company, project: p, dim: p.dim, crb: p.crb, apa: p.apa, canalizare: p.canalizare, electrice: p.electrice, gaze: p.gaze });
     const t = document.title; document.title = `Memoriu - ${p.name}`;
     window.print(); setTimeout(() => (document.title = t), 500);
   }
@@ -296,15 +328,6 @@
   });
   document.addEventListener("click", (e) => { if (e.target.dataset.action === "new") openProjectForm(null); });
 
-  /* demo Hotel Sinaia */
-  $("#btn-demo").addEventListener("click", () => {
-    const demo = { id: uid(), name: "Hotel **** Sinaia", beneficiar: "Conform contract", adresa: "Str. Mănăstirii nr. 7, Sinaia, jud. Prahova",
-      functiune: "hotel", data: "Iunie 2026", unitate: 90, secundar: 180, nrNiveluriSupraterane: 4, acNivel: 1525,
-      inaltimeUltimPlanseu: 17, nivelStabilitate: "II", parcLocuri: 120, nrNiveluriParcare: 2, parcArie: 5000,
-      volumCompartiment: 35000, saliAglomerate: true, risc: "mediu", officeAre: false, officeArie: 0, officePersoane: 0,
-      d_mese: 200, d_personal: 60, d_bucatarie: 5, d_piscina: 6, d_spa: 3, d_spalatorie: 8, d_irigatii: 5 };
-    state.projects.push(computeProject(demo)); save(); renderList(); openResults(demo.id); toast("Exemplu Hotel Sinaia încărcat");
-  });
 
   /* export / import */
   $("#btn-export").addEventListener("click", () => {

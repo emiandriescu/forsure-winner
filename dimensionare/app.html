@@ -33,7 +33,6 @@
           <div id="proj-list" class="cards"></div>
           <div id="proj-empty" class="empty"><p>Niciun proiect încă.</p>
             <button class="btn btn-primary" data-action="new">Creează primul proiect</button>
-            <button class="btn btn-ghost" id="btn-demo">Încarcă exemplu (Hotel Sinaia)</button>
           </div>
         </div>
         <!-- REZULTATE (sub-view) -->
@@ -95,6 +94,11 @@
             <select name="nivelStabilitate"><option>I</option><option selected>II</option><option>III</option><option>IV</option><option>V</option></select></label>
         </div>
         <div class="form-row span-2">
+          <label class="field"><span>Arie desfășurată totală (m²)</span><input name="arieDesfasurata" type="number" min="0" placeholder="11300" /></label>
+          <label class="field"><span>Arie acoperiș + platforme (m²)</span><input name="arieAcoperis" type="number" min="0" placeholder="7500" /></label>
+          <label class="field"><span>Intensitate ploaie i (l/s/ha)</span><input name="i_ploaie" type="number" min="0" placeholder="130" /></label>
+        </div>
+        <div class="form-row span-2">
           <label class="field"><span>Locuri parcaj subteran</span><input name="parcLocuri" type="number" min="0" placeholder="120" /></label>
           <label class="field"><span>Niveluri parcare</span><input name="nrNiveluriParcare" type="number" min="0" placeholder="2" /></label>
           <label class="field"><span>Arie parcaj protejată (m²)</span><input name="parcArie" type="number" min="0" placeholder="5000" /></label>
@@ -145,6 +149,9 @@
   <script src="normative.js"></script>
   <script src="calc-stingere.js"></script>
   <script src="calc-apa.js"></script>
+  <script src="calc-canalizare.js"></script>
+  <script src="calc-electrice.js"></script>
+  <script src="calc-gaze.js"></script>
   <script src="crb.js"></script>
   <script src="memoriu.js"></script>
   <script src="app.js"></script>

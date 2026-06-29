@@ -7,7 +7,7 @@
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
   const eur = (n) => Number(n || 0).toLocaleString("ro-RO") + " €";
 
-  function buildMemoriu({ company, project, dim, crb, apa }) {
+  function buildMemoriu({ company, project, dim, crb, apa, canalizare, electrice, gaze }) {
     const c = company || {};
     const p = project || {};
     const prof = dim.profile;
@@ -49,27 +49,47 @@
     const riscItems = crb.risc.map((x) => `<li>${esc(x.text)}</li>`).join("");
     const benItems = crb.beneficiu.map((x) => `<li>${esc(x.text)}</li>`).join("");
 
-    // ---- Capitol APĂ (dacă există) ----
-    let apaHtml = "";
-    if (apa) {
-      const ad = apa.debite, ar = apa.rezervor, as = apa.statie;
-      const consRows = ad.consumatori.map((c) => `<tr><td>${esc(c.nume)}</td><td class="num">${c.cantitate} ${esc(c.unit)}</td><td class="num">${c.specific_l ? c.specific_l + " l" : "—"}</td><td class="num">${c.Q} mc/zi</td></tr>`).join("");
-      apaHtml = `
-      <h3>2. Cerințe de racordare — apă rece</h3>
-      <table class="grid"><thead><tr><th>Consumator</th><th class="num">Cantitate</th><th class="num">Consum specific</th><th class="num">Q</th></tr></thead>
-        <tbody>${consRows}<tr class="grand"><td>Q zilnic mediu</td><td></td><td></td><td class="num">${ad.Qzi_med} mc/zi</td></tr></tbody></table>
-      <div class="sys"><h4>Debite de calcul <span class="nrm">(${esc(ad.normativ)})</span></h4>
-        <p class="params">Qzi,med = ${ad.Qzi_med} mc/zi · Qmax,zi = ${ad.Qmax_zi} mc/zi · Qmax,orar = ${ad.Qmax_orar_mc} mc/h (${ad.Qmax_orar_ls} l/s)</p>
-        <ul class="breviar">${ad.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ul></div>
-      <p class="note"><b>Solicitare către operator (apă rece):</b> debit nominal ≈ ${ad.Qnominal_ls} l/s, ${esc(ad.dn)} (PEID PE100), presiune la limita proprietății ≥ ${ad.presiune_bar} bar, apometru cu transmisie la distanță.</p>
+    // ---- Capitol RACORDARE UTILITĂȚI (apă + canalizare + electrice + gaze) ----
+    const sysDoc = (titlu, normativ, params, steps) =>
+      `<div class="sys"><h4>${esc(titlu)} <span class="nrm">(${esc(normativ || "")})</span></h4>` +
+      (params ? `<p class="params">${esc(params)}</p>` : "") +
+      `<ul class="breviar">${(steps || []).map((s) => `<li>${esc(s)}</li>`).join("")}</ul></div>`;
 
-      <h3>3. Instalații sanitare — rezervor de consum și stație hidrofor</h3>
-      <div class="sys"><h4>${esc(ar.sistem)} <span class="nrm">(${esc(ar.normativ)})</span></h4>
-        <p class="params">Volum adoptat: ${ar.adoptat} mc · autonomie ${ar.autonomie}h</p>
-        <ul class="breviar">${ar.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ul></div>
-      <div class="sys"><h4>${esc(as.sistem)} <span class="nrm">(${esc(as.normativ)})</span></h4>
-        <p class="params">H = ${as.H_mCA} mCA (${as.H_bar} bar) · Q stație = ${as.Qstatie} l/s</p>
-        <ul class="breviar">${as.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ul></div>`;
+    let apaHtml = "";
+    if (apa || canalizare || electrice || gaze) {
+      apaHtml += `<h3>2. Cerințe de racordare la utilități publice</h3>`;
+      if (apa) {
+        const ad = apa.debite;
+        const consRows = ad.consumatori.map((cc) => `<tr><td>${esc(cc.nume)}</td><td class="num">${cc.cantitate} ${esc(cc.unit)}</td><td class="num">${cc.specific_l ? cc.specific_l + " l" : "—"}</td><td class="num">${cc.Q} mc/zi</td></tr>`).join("");
+        apaHtml += `<h4>2.1. Apă rece</h4>
+          <table class="grid"><thead><tr><th>Consumator</th><th class="num">Cantitate</th><th class="num">Consum specific</th><th class="num">Q</th></tr></thead>
+            <tbody>${consRows}<tr class="grand"><td>Q zilnic mediu</td><td></td><td></td><td class="num">${ad.Qzi_med} mc/zi</td></tr></tbody></table>
+          ${sysDoc("Debite de calcul", ad.normativ, `Qzi,med = ${ad.Qzi_med} mc/zi · Qmax,zi = ${ad.Qmax_zi} mc/zi · Qmax,orar = ${ad.Qmax_orar_mc} mc/h (${ad.Qmax_orar_ls} l/s)`, ad.steps)}
+          <p class="note"><b>Solicitare apă rece:</b> debit nominal ≈ ${ad.Qnominal_ls} l/s, ${esc(ad.dn)} (PEID PE100), presiune ≥ ${ad.presiune_bar} bar, apometru cu transmisie la distanță.</p>`;
+      }
+      if (canalizare) {
+        const cn = canalizare;
+        apaHtml += `<h4>2.2. Canalizare</h4>` +
+          sysDoc(cn.menajera.sistem, cn.menajera.normativ, `Qu = ${cn.menajera.Qu_zi} mc/zi · ${cn.menajera.Qu_orar_ls} l/s · racord ${cn.menajera.dn}`, cn.menajera.steps) +
+          (cn.pluviala.necesar ? sysDoc(cn.pluviala.sistem, cn.pluviala.normativ, `Q = ${cn.pluviala.Q} l/s · racord ${cn.pluviala.dn}`, cn.pluviala.steps) : "") +
+          (cn.separatoare.length ? `<p class="note"><b>Separatoare obligatorii:</b> ${cn.separatoare.map((s) => esc(s.tip) + " (" + esc(s.normativ) + ")").join("; ")}.</p>` : "");
+      }
+      if (electrice) {
+        const e = electrice;
+        apaHtml += `<h4>2.3. Energie electrică</h4>` +
+          sysDoc(e.sistem, e.normativ, `Pi = ${e.Pi} kW · Pa = ${e.Pa} kW · S = ${e.S} kVA · post trafo ${e.trafo} · grup electrogen ${e.ge}`, e.steps);
+      }
+      if (gaze) {
+        const g = gaze;
+        apaHtml += `<h4>2.4. Gaze naturale</h4>` +
+          sysDoc(g.sistem, g.normativ, `P instalată = ${g.P_total} kW · debit gaz q = ${g.q} mc/h · PRM ${g.prm} mc/h`, g.steps);
+      }
+    }
+    if (apa) {
+      const ar = apa.rezervor, as = apa.statie;
+      apaHtml += `<h3>3. Instalații sanitare — rezervor de consum și stație hidrofor</h3>
+        ${sysDoc(ar.sistem, ar.normativ, `Volum adoptat: ${ar.adoptat} mc · autonomie ${ar.autonomie}h`, ar.steps)}
+        ${sysDoc(as.sistem, as.normativ, `H = ${as.H_mCA} mCA (${as.H_bar} bar) · Q stație = ${as.Qstatie} l/s`, as.steps)}`;
     }
 
     return `<div class="doc">
