@@ -1,0 +1,7 @@
+# Configurare GitHub Pages pentru sowilo.ro.
+# Exclude materialele interne din site-ul publicat — ele rămân în repo (pe GitHub),
+# dar NU sunt servite la o adresă pe sowilo.ro.
+exclude:
+  - docs/
+  - .github/
+  - README.md
