@@ -84,8 +84,8 @@
           <select name="functiune"><option>hotel</option><option>birouri</option><option>comercial</option><option>locuințe colective</option><option>industrial</option><option>spital</option><option>învățământ</option></select></label>
         <label class="field"><span>Data memoriului</span><input name="data" placeholder="Iunie 2026" /></label>
         <div class="form-row span-2">
-          <label class="field"><span>Locuri cazare (persoane)</span><input name="locuriCazare" type="number" min="0" placeholder="180" /></label>
-          <label class="field"><span>Nr. camere</span><input name="nrCamere" type="number" min="0" placeholder="90" /></label>
+          <label class="field"><span id="lbl-unit">Nr. camere</span><input name="unitate" type="number" min="0" step="0.01" placeholder="90" /></label>
+          <label class="field" id="row-secundar"><span id="lbl-secundar">Locuri cazare (persoane)</span><input name="secundar" type="number" min="0" step="0.1" placeholder="180" /></label>
           <label class="field"><span>Niveluri supraterane</span><input name="nrNiveluriSupraterane" type="number" min="0" placeholder="4" /></label>
         </div>
         <div class="form-row span-2">
@@ -96,14 +96,23 @@
         </div>
         <div class="form-row span-2">
           <label class="field"><span>Locuri parcaj subteran</span><input name="parcLocuri" type="number" min="0" placeholder="120" /></label>
+          <label class="field"><span>Niveluri parcare</span><input name="nrNiveluriParcare" type="number" min="0" placeholder="2" /></label>
           <label class="field"><span>Arie parcaj protejată (m²)</span><input name="parcArie" type="number" min="0" placeholder="5000" /></label>
-          <label class="field"><span>Volum compartiment (m³)</span><input name="volumCompartiment" type="number" min="0" placeholder="35000" /></label>
         </div>
         <div class="form-row span-2">
-          <label class="field"><span>Săli aglomerate (&gt;200 pers)?</span>
+          <label class="field"><span>Volum compartiment (m³)</span><input name="volumCompartiment" type="number" min="0" placeholder="35000" /></label>
+          <label class="field" id="row-sali"><span>Săli aglomerate (&gt;200 pers)?</span>
             <select name="saliAglomerate"><option value="true">Da</option><option value="false">Nu</option></select></label>
           <label class="field"><span>Risc de incendiu</span>
             <select name="risc"><option value="mic">mic</option><option value="mediu" selected>mediu</option><option value="mare">mare</option></select></label>
+        </div>
+
+        <!-- Zonă office/retail la parter (mixed-use) -->
+        <div class="form-row span-2">
+          <label class="field"><span>Zonă office/retail la parter?</span>
+            <select name="officeAre"><option value="false">Nu</option><option value="true">Da</option></select></label>
+          <label class="field office-f" id="office-arie" hidden><span>Arie office/retail (m²)</span><input name="officeArie" type="number" min="0" placeholder="800" /></label>
+          <label class="field office-f" id="office-pers" hidden><span>Persoane office/retail</span><input name="officePersoane" type="number" min="0" placeholder="120" /></label>
         </div>
       </div>
       <p class="muted" style="margin-top:10px">💡 Câmpurile goale primesc valori implicite. Într-o versiune ulterioară, AI propune ipotezele lipsă (de confirmat).</p>

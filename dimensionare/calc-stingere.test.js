@@ -48,5 +48,27 @@ eq("sprinklere obligatorii (P2)", obSpr.obligatoriu, true);
 const obHi = dim.obligativitate.find((o) => o.sistem === "Hidranți interiori");
 eq("hidranți interiori obligatorii", obHi.obligatoriu, true);
 
+// --- Locuințe colective (bloc P+10, parcaj 2 niveluri) — încadrare rezidențială ---
+const rez = S.dimensionareStingere({
+  tip: "rezidential", persoane: 150, nrApartamente: 60, acNivel: 700,
+  nrNiveluriSupraterane: 11, inaltimeUltimPlanseu: 33, nivelStabilitate: "II",
+  volumCompartiment: 25000, parcaj: { locuri: 80, arieProtejata: 2400, nrNiveluri: 2 },
+});
+const rHi = rez.obligativitate.find((o) => o.sistem === "Hidranți interiori");
+eq("rezidential: hidranți interiori obligatorii (P+10)", rHi.obligatoriu, true);
+const rInalta = rez.obligativitate.find((o) => o.sistem === "Măsuri clădire înaltă");
+eq("rezidential: clădire înaltă (33 m ≥ 28)", rInalta.obligatoriu, true);
+const rSpr = rez.obligativitate.find((o) => o.sistem === "Sprinklere parcaj");
+eq("rezidential: sprinklere parcaj NU (80 < 101 locuri)", rSpr.obligatoriu, false);
+eq("rezidential: rezervor calculat (> 0)", rez.rezervor.adoptat > 0, true);
+
+// --- Mixed-use: zonă office/retail la parter ---
+const mu = S.dimensionareStingere({
+  tip: "turism", locuriCazare: 120, acNivel: 1200, nrNiveluriSupraterane: 5, inaltimeUltimPlanseu: 18,
+  office: { are: true, arie: 800, persoane: 250 }, parcaj: { locuri: 0 },
+});
+const mOffice = mu.obligativitate.find((o) => o.sistem === "Zonă office/retail parter");
+eq("mixed-use: apare zona office/retail", !!mOffice && mOffice.obligatoriu, true);
+
 console.log(`\n${pass} trecute, ${fail} eșuate`);
 process.exit(fail ? 1 : 0);

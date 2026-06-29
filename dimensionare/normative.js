@@ -32,6 +32,14 @@
       "NP 127:2009 art. 10 + art. 52-53 și P118/2-2013 mod. 2018 art. 7: parcaj subteran tip P2 (101-300 locuri) — sistem automat de stingere cu apă obligatoriu, timp de funcționare 60 min.",
     cladireInalta:
       "P118/1:2025: H ≥ 28 m = clădire înaltă; H ≥ 45 m = clădire foarte înaltă.",
+    hidrantiInterioriRezidential:
+      "P118/2-2013 mod. 2018 art. 4.1: hidranți interiori obligatorii la clădiri de locuit colective cu peste P+4 niveluri sau Ac > 600 m² și peste 3 niveluri supraterane. (CALIBRARE — de confirmat pe un memoriu rezidențial real.)",
+    hidrantiExterioriRezidential:
+      "P118/2-2013 mod. 2018 art. 6.1 + Anexa 7: hidranți exteriori obligatorii la clădiri de locuit cu volum compartiment / număr de persoane peste pragurile din normativ. (CALIBRARE.)",
+    hidrantiGeneric:
+      "P118/2-2013 mod. 2018: hidranți interiori/exteriori obligatorii la clădiri civile cu Ac > 600 m² și peste 3 niveluri supraterane sau volum compartiment peste prag. (CALIBRARE pe tipul de clădire.)",
+    officeRetail:
+      "Zonă office/retail la parter (funcțiune mixtă): se tratează ca risc mediu; dacă depășește 200 persoane devine sală aglomerată (timp de funcționare hidranți 60 min).",
   };
 
   const api = { NORMATIVE, PRAGURI, listByDomeniu: (d) => NORMATIVE.filter((n) => n.domeniu === d) };

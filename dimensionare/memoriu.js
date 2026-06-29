@@ -67,10 +67,11 @@
         <tr><td>Beneficiar</td><td>${esc(p.beneficiar || "—")}</td></tr>
         <tr><td>Amplasament</td><td>${esc(p.adresa || "—")}</td></tr>
         <tr><td>Funcțiune</td><td>${esc(prof.functiune || "—")}</td></tr>
-        <tr><td>Locuri de cazare / camere</td><td>${prof.locuriCazare || "—"} locuri / ${prof.nrCamere || "—"} camere</td></tr>
+        <tr><td>${esc(prof.etichetaUnit || "Unități")}</td><td>${prof.valoareUnit || "—"}${prof.persoane ? " · " + prof.persoane + " persoane (estimat)" : ""}</td></tr>
         <tr><td>Niveluri supraterane / înălțime ultim planșeu</td><td>${prof.nrNiveluriSupraterane || "—"} / ${prof.inaltimeUltimPlanseu || "—"} m</td></tr>
         <tr><td>Nivel de stabilitate la foc</td><td>${esc(prof.nivelStabilitate || "—")}</td></tr>
-        <tr><td>Parcaj subteran</td><td>${prof.parcaj && prof.parcaj.locuri ? prof.parcaj.locuri + " locuri, ~" + (prof.parcaj.arieProtejata || 0) + " m² protejați" : "—"}</td></tr>
+        <tr><td>Parcaj subteran</td><td>${prof.parcaj && prof.parcaj.locuri ? prof.parcaj.locuri + " locuri" + (prof.parcaj.nrNiveluri ? " pe " + prof.parcaj.nrNiveluri + " niveluri" : "") + ", ~" + (prof.parcaj.arieProtejata || 0) + " m² protejați" : "—"}</td></tr>
+        ${prof.office && prof.office.are ? `<tr><td>Zonă office/retail la parter</td><td>~${prof.office.arie || 0} m² · ${prof.office.persoane || 0} persoane</td></tr>` : ""}
       </table>
 
       <h3>1.1. Încadrarea în normativele de securitate la incendiu</h3>

@@ -65,13 +65,13 @@
   }
 
   // ---------- HIDRANȚI INTERIORI ZONA CAZARE (P118/2 Anexa 3) ----------
-  function hidrantiInterioriCazare({ saliAglomerate = false } = {}) {
+  function hidrantiInterioriCazare({ saliAglomerate = false, zona = "zonă cazare" } = {}) {
     const h = C.hidrantInteriorCazare;
     const Q = r1(h.jeturi * h.debitJet); // 4.2 l/s
     const timp = saliAglomerate ? h.timp_saliAglomerate : h.timp_normal;
     const rezerva = r0((Q * timp * 60) / 1000);
     return {
-      sistem: "Hidranți interiori — zonă cazare",
+      sistem: "Hidranți interiori — " + zona,
       necesar: true, Q, rezerva, timp, presiune: h.presiune_bar,
       normativ: "P118/2-2013 mod. 2018, Anexa 3",
       steps: [
@@ -164,29 +164,42 @@
     const N = (root.NORMATIVE_API && root.NORMATIVE_API.PRAGURI) ||
       (typeof require !== "undefined" ? require("./normative.js").PRAGURI : {});
     const out = [];
-    const hidrInt = (p.locuriCazare > 50) || (p.acNivel > 600 && p.nrNiveluriSupraterane > 3);
-    out.push({ sistem: "Hidranți interiori", obligatoriu: hidrInt, motiv: N.hidrantiInterioriTurism });
-    const hidrExt = (p.locuriCazare > 100) || (p.acNivel > 600 && p.nrNiveluriSupraterane > 3);
-    out.push({ sistem: "Hidranți exteriori", obligatoriu: hidrExt, motiv: N.hidrantiExterioriTurism });
+    const ac3 = p.acNivel > 600 && p.nrNiveluriSupraterane > 3;
+    const tip = p.tip || "turism";
+
+    if (tip === "rezidential") {
+      out.push({ sistem: "Hidranți interiori", obligatoriu: p.nrNiveluriSupraterane > 4 || ac3, motiv: N.hidrantiInterioriRezidential });
+      out.push({ sistem: "Hidranți exteriori", obligatoriu: (p.persoane || 0) > 300 || p.volumCompartiment > 5000, motiv: N.hidrantiExterioriRezidential });
+    } else if (tip === "turism") {
+      out.push({ sistem: "Hidranți interiori", obligatoriu: (p.locuriCazare > 50) || ac3, motiv: N.hidrantiInterioriTurism });
+      out.push({ sistem: "Hidranți exteriori", obligatoriu: (p.locuriCazare > 100) || ac3, motiv: N.hidrantiExterioriTurism });
+    } else {
+      out.push({ sistem: "Hidranți interiori", obligatoriu: ac3 || (p.persoane || 0) > 100, motiv: N.hidrantiGeneric });
+      out.push({ sistem: "Hidranți exteriori", obligatoriu: ac3 || p.volumCompartiment > 5000, motiv: N.hidrantiGeneric });
+    }
+
     const sprink = p.parcaj && p.parcaj.locuri >= 101 && p.parcaj.locuri <= 300;
     out.push({ sistem: "Sprinklere parcaj", obligatoriu: !!sprink, motiv: N.sprinklereParcajP2 });
-    const inalta = p.inaltimeUltimPlanseu >= 28;
-    out.push({ sistem: "Măsuri clădire înaltă", obligatoriu: inalta, motiv: N.cladireInalta });
+    out.push({ sistem: "Măsuri clădire înaltă", obligatoriu: p.inaltimeUltimPlanseu >= 28, motiv: N.cladireInalta });
+    if (p.office && p.office.are) out.push({ sistem: "Zonă office/retail parter", obligatoriu: true, motiv: N.officeRetail });
     return out;
   }
 
   // ---------- ORCHESTRARE: dimensionare completă stingere ----------
   function dimensionareStingere(p = {}) {
     const profile = Object.assign(
-      { locuriCazare: 0, nrCamere: 0, acNivel: 0, nrNiveluriSupraterane: 0, inaltimeUltimPlanseu: 0,
-        saliAglomerate: false, nivelStabilitate: "II", volumCompartiment: 30000, risc: "mediu",
-        parcaj: { locuri: 0, arieProtejata: 0 } },
+      { tip: "turism", locuriCazare: 0, persoane: 0, nrApartamente: 0, nrCamere: 0, acNivel: 0,
+        nrNiveluriSupraterane: 0, inaltimeUltimPlanseu: 0, saliAglomerate: false, nivelStabilitate: "II",
+        volumCompartiment: 30000, risc: "mediu", office: { are: false },
+        parcaj: { locuri: 0, arieProtejata: 0, nrNiveluri: 0 } },
       p
     );
-    const parcaj = profile.parcaj || { locuri: 0, arieProtejata: 0 };
+    const parcaj = profile.parcaj || { locuri: 0, arieProtejata: 0, nrNiveluri: 0 };
+    const zona = profile.tip === "rezidential" ? "zonă locuit" : profile.tip === "turism" ? "zonă cazare" : "zonă principală";
 
     const sprink = parcaj.locuri >= 101 ? sprinklereParcaj({ arieProtejata: parcaj.arieProtejata }) : null;
-    const hiCaz = hidrantiInterioriCazare({ saliAglomerate: profile.saliAglomerate });
+    if (sprink && parcaj.nrNiveluri > 1) sprink.steps.push(`Parcaj pe ${parcaj.nrNiveluri} niveluri — extracția de fum și compartimentarea se repartizează pe niveluri (detaliat la modulul desfumare).`);
+    const hiCaz = hidrantiInterioriCazare({ saliAglomerate: profile.saliAglomerate, zona });
     const hiParc = parcaj.locuri > 0 ? hidrantiInterioriParcaj({ locuriParcaj: parcaj.locuri }) : null;
     const hExt = hidrantiExteriori({ nivelStabilitate: profile.nivelStabilitate, volumCompartiment: profile.volumCompartiment, risc: profile.risc });
     const drencere = parcaj.locuri > 0 ? { sistem: "Drencere perdele rampă", rezerva: C.drencereRampa_mc, necesar: true, normativ: "NP 127:2009 art. 37", steps: [`Drencere de protecție a rampelor (estimare) ≈ ${C.drencereRampa_mc} m³.`] } : null;
@@ -195,7 +208,7 @@
       sprink && { eticheta: `Sprinklere parcaj (${sprink.Q} l/s × ${sprink.timp} min)`, rezerva: sprink.rezerva },
       hiParc && { eticheta: `Hidranți interiori parcaj (${hiParc.Q} l/s × ${hiParc.timp} min)`, rezerva: hiParc.rezerva },
       drencere && { eticheta: "Drencere perdele rampă", rezerva: drencere.rezerva },
-      { eticheta: `Hidranți interiori cazare (${hiCaz.Q} l/s × ${hiCaz.timp} min)`, rezerva: hiCaz.rezerva },
+      { eticheta: `${hiCaz.sistem} (${hiCaz.Q} l/s × ${hiCaz.timp} min)`, rezerva: hiCaz.rezerva },
       { eticheta: `Hidranți exteriori (${hExt.Q} l/s × ${hExt.timp} min)`, rezerva: hExt.rezerva },
     ].filter(Boolean);
 

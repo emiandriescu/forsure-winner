@@ -54,6 +54,31 @@
   const modal = $("#proj-modal");
   const pform = $("#proj-form");
 
+  // Configurație per tip de clădire: ce înseamnă câmpul principal + cel secundar.
+  const TIPURI = {
+    "hotel":              { tip: "turism",      unit: "Nr. camere",          uph: "90",   sec: "Locuri cazare (persoane)", sph: "180" },
+    "locuințe colective": { tip: "rezidential", unit: "Nr. apartamente",     uph: "60",   sec: "Persoane / apartament",    sph: "2.5", secDef: 2.5 },
+    "birouri":            { tip: "birouri",     unit: "Nr. persoane",        uph: "200" },
+    "comercial":          { tip: "comercial",   unit: "Arie comercială (m²)", uph: "1500" },
+    "industrial":         { tip: "industrial",  unit: "Nr. persoane",        uph: "50" },
+    "spital":             { tip: "spital",      unit: "Nr. paturi",          uph: "120",  sec: "Persoane (estimat)",       sph: "300" },
+    "învățământ":         { tip: "invatamant",  unit: "Nr. persoane",        uph: "400" },
+  };
+  const tipConf = (f) => TIPURI[f] || TIPURI["hotel"];
+
+  function onFunctiuneChange() {
+    const conf = tipConf(pform.elements.functiune.value);
+    $("#lbl-unit").textContent = conf.unit;
+    pform.elements.unitate.placeholder = conf.uph || "";
+    const hasSec = !!conf.sec;
+    $("#row-secundar").style.display = hasSec ? "" : "none";
+    if (hasSec) { $("#lbl-secundar").textContent = conf.sec; pform.elements.secundar.placeholder = conf.sph || ""; }
+  }
+  function toggleOffice() {
+    const on = pform.elements.officeAre.value === "true";
+    $$(".office-f").forEach((el) => (el.hidden = !on));
+  }
+
   function showList() { $("#view-list").hidden = false; $("#view-results").hidden = true; }
   function showResults() { $("#view-list").hidden = true; $("#view-results").hidden = false; }
 
@@ -78,18 +103,20 @@
 
   function blankProject() {
     return { id: "", name: "", beneficiar: "", adresa: "", functiune: "hotel", data: "",
-      locuriCazare: "", nrCamere: "", nrNiveluriSupraterane: "", acNivel: "", inaltimeUltimPlanseu: "",
-      nivelStabilitate: "II", parcLocuri: "", parcArie: "", volumCompartiment: "", saliAglomerate: "true", risc: "mediu" };
+      unitate: "", secundar: "", nrNiveluriSupraterane: "", acNivel: "", inaltimeUltimPlanseu: "",
+      nivelStabilitate: "II", parcLocuri: "", nrNiveluriParcare: "", parcArie: "", volumCompartiment: "",
+      saliAglomerate: "true", risc: "mediu", officeAre: "false", officeArie: "", officePersoane: "" };
   }
 
   function openProjectForm(p) {
     p = p || blankProject();
     $("#proj-modal-title").textContent = p.id ? "Editează proiect" : "Proiect nou";
     pform.elements.id.value = p.id;
-    ["name","beneficiar","adresa","functiune","data","locuriCazare","nrCamere","nrNiveluriSupraterane","acNivel","inaltimeUltimPlanseu","nivelStabilitate","volumCompartiment","risc"].forEach((k) => { if (pform.elements[k]) pform.elements[k].value = p[k] != null ? p[k] : ""; });
-    pform.elements.parcLocuri.value = p.parcLocuri != null ? p.parcLocuri : "";
-    pform.elements.parcArie.value = p.parcArie != null ? p.parcArie : "";
+    ["name","beneficiar","adresa","functiune","data","unitate","secundar","nrNiveluriSupraterane","acNivel","inaltimeUltimPlanseu","nivelStabilitate","parcLocuri","nrNiveluriParcare","parcArie","volumCompartiment","risc","officeArie","officePersoane"]
+      .forEach((k) => { if (pform.elements[k]) pform.elements[k].value = p[k] != null ? p[k] : ""; });
     pform.elements.saliAglomerate.value = String(p.saliAglomerate !== false && p.saliAglomerate !== "false");
+    pform.elements.officeAre.value = String(p.officeAre === true || p.officeAre === "true");
+    onFunctiuneChange(); toggleOffice();
     modal.showModal();
   }
 
@@ -99,22 +126,40 @@
     return {
       id: g("id"), name: g("name").trim(), beneficiar: g("beneficiar").trim(), adresa: g("adresa").trim(),
       functiune: g("functiune"), data: g("data").trim(),
-      locuriCazare: num("locuriCazare"), nrCamere: num("nrCamere"), nrNiveluriSupraterane: num("nrNiveluriSupraterane"),
+      unitate: num("unitate"), secundar: num("secundar"), nrNiveluriSupraterane: num("nrNiveluriSupraterane"),
       acNivel: num("acNivel"), inaltimeUltimPlanseu: num("inaltimeUltimPlanseu"),
-      nivelStabilitate: g("nivelStabilitate"), parcLocuri: num("parcLocuri"), parcArie: num("parcArie"),
-      volumCompartiment: num("volumCompartiment") || 30000,
+      nivelStabilitate: g("nivelStabilitate"), parcLocuri: num("parcLocuri"), nrNiveluriParcare: num("nrNiveluriParcare"),
+      parcArie: num("parcArie"), volumCompartiment: num("volumCompartiment") || 30000,
       saliAglomerate: g("saliAglomerate") === "true", risc: g("risc"),
+      officeAre: g("officeAre") === "true", officeArie: num("officeArie"), officePersoane: num("officePersoane"),
     };
   }
 
-  // mapează proiectul în profilul motorului de calcul
+  // mapează proiectul în profilul motorului de calcul (type-aware)
   function toProfile(p) {
+    const conf = tipConf(p.functiune);
+    // compatibilitate cu proiecte vechi (aveau nrCamere/locuriCazare)
+    const unitate = p.unitate != null && p.unitate !== "" ? p.unitate : (p.nrCamere || 0);
+    const secundar = p.secundar != null && p.secundar !== "" ? p.secundar : (p.locuriCazare || 0);
+
+    let locuriCazare = 0, persoane = 0, nrApartamente = 0, etichetaUnit = conf.unit, valoareUnit = unitate;
+    if (conf.tip === "turism") { locuriCazare = secundar; persoane = secundar; }
+    else if (conf.tip === "rezidential") { nrApartamente = unitate; persoane = Math.round(unitate * (secundar || conf.secDef || 2.5)); }
+    else if (conf.tip === "comercial") { persoane = Math.round(unitate / 5); } // ~1 pers/5 m² (orientativ)
+    else { persoane = unitate; }
+
+    let saliAglomerate = p.saliAglomerate;
+    let risc = p.risc;
+    const office = { are: !!p.officeAre, arie: p.officeArie || 0, persoane: p.officePersoane || 0 };
+    if (office.are) { if (office.persoane > 200) saliAglomerate = true; if (risc === "mic") risc = "mediu"; }
+
     return {
-      functiune: p.functiune, locuriCazare: p.locuriCazare, nrCamere: p.nrCamere,
+      functiune: p.functiune, tip: conf.tip, etichetaUnit, valoareUnit,
+      locuriCazare, persoane, nrApartamente, nrCamere: conf.tip === "turism" ? unitate : 0,
       acNivel: p.acNivel, nrNiveluriSupraterane: p.nrNiveluriSupraterane, inaltimeUltimPlanseu: p.inaltimeUltimPlanseu,
-      saliAglomerate: p.saliAglomerate, nivelStabilitate: p.nivelStabilitate,
-      volumCompartiment: p.volumCompartiment, risc: p.risc,
-      parcaj: { locuri: p.parcLocuri || 0, arieProtejata: p.parcArie || 0 },
+      saliAglomerate, nivelStabilitate: p.nivelStabilitate, volumCompartiment: p.volumCompartiment, risc,
+      office,
+      parcaj: { locuri: p.parcLocuri || 0, arieProtejata: p.parcArie || 0, nrNiveluri: p.nrNiveluriParcare || 0 },
     };
   }
 
@@ -125,6 +170,8 @@
     return p;
   }
 
+  pform.elements.functiune.addEventListener("change", onFunctiuneChange);
+  pform.elements.officeAre.addEventListener("change", toggleOffice);
   $("#proj-cancel").addEventListener("click", () => modal.close());
   pform.addEventListener("submit", (e) => {
     if (!pform.elements.name.value.trim()) { e.preventDefault(); return; }
@@ -211,8 +258,9 @@
   /* demo Hotel Sinaia */
   $("#btn-demo").addEventListener("click", () => {
     const demo = { id: uid(), name: "Hotel **** Sinaia", beneficiar: "Conform contract", adresa: "Str. Mănăstirii nr. 7, Sinaia, jud. Prahova",
-      functiune: "hotel", data: "Iunie 2026", locuriCazare: 180, nrCamere: 90, nrNiveluriSupraterane: 4, acNivel: 1525,
-      inaltimeUltimPlanseu: 17, nivelStabilitate: "II", parcLocuri: 120, parcArie: 5000, volumCompartiment: 35000, saliAglomerate: true, risc: "mediu" };
+      functiune: "hotel", data: "Iunie 2026", unitate: 90, secundar: 180, nrNiveluriSupraterane: 4, acNivel: 1525,
+      inaltimeUltimPlanseu: 17, nivelStabilitate: "II", parcLocuri: 120, nrNiveluriParcare: 2, parcArie: 5000,
+      volumCompartiment: 35000, saliAglomerate: true, risc: "mediu", officeAre: false, officeArie: 0, officePersoane: 0 };
     state.projects.push(computeProject(demo)); save(); renderList(); openResults(demo.id); toast("Exemplu Hotel Sinaia încărcat");
   });
 
