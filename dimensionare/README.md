@@ -11,7 +11,7 @@ Modulul curent: **Stingere incendiu** (sprinklere, hidranți interiori/exteriori
 - **Calcul determinist, verificabil** — fiecare valoare cu formula și articolul de normativ (breviar de calcul).
 - **Încadrare în obligativitate** (când e necesar fiecare sistem, cu temei normativ).
 - **Rezervor de incendiu** (cumul scenariu cel mai defavorabil) și **grup de pompare**.
-- **Cost · Risc · Beneficiu** integrat (estimare CAPEX + atenționări ISU).
+- **Cost · Risc · Beneficiu extins** — CAPEX pe toate specialitățile (grupat pe trade), cost specific €/m², OPEX (mentenanță) anual, matrice de risc (probabilitate × impact → nivel + măsură) și beneficii cuantificate.
 - **Memoriu tehnic PDF** (print-to-PDF, diacritice perfecte), cu logo și atestate.
 - **Export/Import** JSON.
 
@@ -39,7 +39,7 @@ Toate cele 15 verificări trec: sprinklere 15 l/s & rezervă 54 m³, hidranți i
 | `calc-canalizare.js` · `calc-electrice.js` · `calc-gaze.js` (+ `calc-utilitati.test.js`) | canalizare menajeră/pluvială, energie electrică (trafo + GE), gaze naturale |
 | `calc-sisteme.js` (+ `.test.js`) | termice, ventilație/climatizare, detecție incendiu, desfumare |
 | `normative.js` | normative curente + praguri de obligativitate |
-| `crb.js` | cost · risc · beneficiu |
+| `crb.js` (+ `.test.js`) | cost · risc · beneficiu extins (CAPEX pe specialități, OPEX, €/m², matrice de risc) |
 | `memoriu.js` | construire memoriu tehnic (print-view → PDF) |
 | `ai.js` (+ `.test.js`) + `netlify/functions/claude.js` | **stratul AI** — propunere ipoteze + redactare narativ memoriu (vezi mai jos) |
 
@@ -66,7 +66,7 @@ Toate specialitățile MEP sunt acum implementate, același tipar determinist (c
 
 Stingere ✓ · **Apă ✓** · **Canalizare ✓** · **Electrice ✓** · **Gaze ✓** · **Termice/HVAC ✓** · **Ventilație ✓** · **Detecție incendiu ✓** · **Desfumare ✓** — compuse într-un memoriu unic de racordare utilități + dimensionare instalații.
 
-Toate testele de regresie (76 verificări) trec:
+Toate testele de regresie (96 verificări) trec:
 
 ```
 node dimensionare/calc-stingere.test.js   # 20/20 — sprinklere, hidranți, rezervor 210 m³
@@ -74,6 +74,7 @@ node dimensionare/calc-apa.test.js        # 11/11 — Qzi,med 74,5; Qmax,orar 8,
 node dimensionare/calc-utilitati.test.js  #  9/9  — canalizare, electrice (trafo 1250, GE 550 kVA), gaze (PRM 200)
 node dimensionare/calc-sisteme.test.js    #  9/9  — termice 904/600 kW, ventilație 5400 mc/h, detecție, desfumare 72000 mc/h
 node dimensionare/ai.test.js              # 27/27 — strat AI: cereri valide (opus-4-8, fără temperature/budget_tokens), merge ipoteze, rezumat determinist
+node dimensionare/crb.test.js             # 20/20 — cost extins (8 specialități, €/m², OPEX), matrice de risc, beneficii cuantificate
 ```
 
 ## Limitări conștiente (faza curentă)

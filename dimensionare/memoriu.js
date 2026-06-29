@@ -43,13 +43,19 @@
     // Grup pompare
     const gp = dim.pompare;
 
-    // Cost
-    const costLines = crb.cost.lines.map((l) =>
-      `<tr><td>${esc(l.eticheta)}</td><td class="num">${l.qty} ${esc(l.unit)}</td><td class="num">${eur(l.pretUnit)}</td><td class="num">${eur(l.total)}</td></tr>`
+    // Cost — grupat pe specialități
+    const costLines = (crb.cost.grupuri || []).map((g) => {
+      const ls = crb.cost.lines.filter((l) => l.specialitate === g.specialitate);
+      return `<tr class="sum"><td><b>${esc(g.specialitate)}</b></td><td></td><td></td><td class="num"><b>${eur(g.total)} · ${g.pct}%</b></td></tr>` +
+        ls.map((l) => `<tr><td>${esc(l.eticheta)}</td><td class="num">${l.qty} ${esc(l.unit)}</td><td class="num">${eur(l.pretUnit)}</td><td class="num">${eur(l.total)}</td></tr>`).join("");
+    }).join("");
+
+    // Risc — matrice probabilitate × impact
+    const riscRows = crb.risc.map((x) =>
+      `<tr><td>${esc(x.categorie)}</td><td>${esc(x.descriere)}</td><td>${esc(x.probabilitate)}</td><td>${esc(x.impact)}</td><td>${esc(x.nivel)}</td><td>${esc(x.masura)}</td></tr>`
     ).join("");
 
-    const riscItems = crb.risc.map((x) => `<li>${esc(x.text)}</li>`).join("");
-    const benItems = crb.beneficiu.map((x) => `<li>${esc(x.text)}</li>`).join("");
+    const benItems = crb.beneficiu.map((x) => `<li>${esc(x.text)}${x.cuantificare ? " — <i>" + esc(x.cuantificare) + "</i>" : ""}</li>`).join("");
 
     // ---- Capitol RACORDARE UTILITĂȚI (apă + canalizare + electrice + gaze) ----
     const sysDoc = (titlu, normativ, params, steps) =>
@@ -160,11 +166,14 @@
       </table>
       <p class="note">Pompe atestate IGSU/MAI, alimentare din TGD + AAR la grup electrogen (consumator vital cf. I7/2023), încăpere cu separare EI 120.</p>
 
-      <h3>7. Analiză cost–risc–beneficiu</h3>
-      <h4>7.1. Estimare cost (CAPEX orientativ)</h4>
-      <table class="grid"><thead><tr><th>Element</th><th class="num">Cantitate</th><th class="num">Preț unitar</th><th class="num">Total</th></tr></thead>
-        <tbody>${costLines}<tr class="grand"><td>TOTAL estimat</td><td></td><td></td><td class="num">${eur(crb.cost.total)}</td></tr></tbody></table>
-      <h4>7.2. Riscuri / atenționări</h4><ul class="breviar">${riscItems}</ul>
+      <h3>7. Analiză cost–risc–beneficiu (toate specialitățile)</h3>
+      <h4>7.1. Estimare cost (CAPEX orientativ, pe specialități)</h4>
+      <table class="grid"><thead><tr><th>Specialitate / element</th><th class="num">Cantitate</th><th class="num">Preț unitar</th><th class="num">Total</th></tr></thead>
+        <tbody>${costLines}<tr class="grand"><td>TOTAL CAPEX estimat</td><td></td><td></td><td class="num">${eur(crb.cost.total)}</td></tr></tbody></table>
+      <p class="note">Cost specific ≈ <b>${eur(crb.cost.perMp)}/m²</b> arie desfășurată · OPEX (mentenanță) estimat ≈ <b>${eur(crb.cost.opexAnual)}/an</b>${crb.sinteza && crb.sinteza.specialitatePrincipala ? " · specialitate cu ponderea cea mai mare: " + esc(crb.sinteza.specialitatePrincipala.specialitate) + " (" + crb.sinteza.specialitatePrincipala.pct + "%)" : ""}. Prețurile sunt orientative; se actualizează la faza de ofertare.</p>
+      <h4>7.2. Matrice de risc (probabilitate × impact)</h4>
+      <table class="grid"><thead><tr><th>Categorie</th><th>Risc</th><th>Prob.</th><th>Impact</th><th>Nivel</th><th>Măsură de atenuare</th></tr></thead>
+        <tbody>${riscRows}</tbody></table>
       <h4>7.3. Beneficii</h4><ul class="breviar">${benItems}</ul>
 
       <h3>8. Concluzii</h3>

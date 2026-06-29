@@ -209,13 +209,14 @@
   function computeProject(p) {
     const profile = toProfile(p);
     const dim = STINGERE.dimensionareStingere(profile);
-    const crb = CRB.costRiscBeneficiu(dim);
-    p.dim = dim; p.crb = crb;
+    p.dim = dim;
     p.apa = (typeof APA !== "undefined") ? APA.dimensionareApa(profile) : null;
     p.canalizare = (typeof CANALIZARE !== "undefined") ? CANALIZARE.dimensionareCanalizare(profile, p.apa && p.apa.debite) : null;
     p.electrice = (typeof ELECTRICE !== "undefined") ? ELECTRICE.dimensionareElectrice(profile) : null;
     p.gaze = (typeof GAZE !== "undefined") ? GAZE.dimensionareGaze(profile) : null;
     p.sisteme = (typeof SISTEME !== "undefined") ? SISTEME.dimensionareSisteme(profile) : null;
+    // Cost-risc-beneficiu pe TOATE specialitățile (după ce toate sunt calculate)
+    p.crb = CRB.analizaExtinsa({ profile, dim, apa: p.apa, canalizare: p.canalizare, electrice: p.electrice, gaze: p.gaze, sisteme: p.sisteme });
     return p;
   }
 
@@ -321,9 +322,27 @@
       <div class="b"><div class="v">${eur(crb.cost.total)}</div><div class="l">Cost estimat (CAPEX)</div></div>
     </div>`;
 
-    const cost = `<table class="crb-cost"><thead><tr><th>Element</th><th class="num">Cant.</th><th class="num">Preț unitar</th><th class="num">Total</th></tr></thead><tbody>${
-      crb.cost.lines.map((l) => `<tr><td>${esc(l.eticheta)}</td><td class="num">${l.qty} ${esc(l.unit)}</td><td class="num">${eur(l.pretUnit)}</td><td class="num">${eur(l.total)}</td></tr>`).join("")
-    }<tr class="grand"><td>TOTAL</td><td></td><td></td><td class="num">${eur(crb.cost.total)}</td></tr></tbody></table>`;
+    const costRows = crb.cost.grupuri.map((g) => {
+      const ls = crb.cost.lines.filter((l) => l.specialitate === g.specialitate);
+      return `<tr class="grp"><td>${esc(g.specialitate)}</td><td></td><td></td><td class="num">${eur(g.total)} · ${g.pct}%</td></tr>` +
+        ls.map((l) => `<tr><td style="padding-left:16px">${esc(l.eticheta)}</td><td class="num">${l.qty} ${esc(l.unit)}</td><td class="num">${eur(l.pretUnit)}</td><td class="num">${eur(l.total)}</td></tr>`).join("");
+    }).join("");
+    const cost = `<table class="crb-cost"><thead><tr><th>Specialitate / element</th><th class="num">Cant.</th><th class="num">Preț unitar</th><th class="num">Total</th></tr></thead>
+      <tbody>${costRows}<tr class="grand"><td>TOTAL CAPEX</td><td></td><td></td><td class="num">${eur(crb.cost.total)}</td></tr></tbody></table>`;
+
+    const sint = crb.sinteza;
+    const sinteza = `<div class="bignum">
+      <div class="b"><div class="v">${eur(crb.cost.total)}</div><div class="l">CAPEX total</div></div>
+      <div class="b"><div class="v">${eur(crb.cost.perMp)}/m²</div><div class="l">Cost specific</div></div>
+      <div class="b"><div class="v">${eur(crb.cost.opexAnual)}/an</div><div class="l">OPEX (mentenanță)</div></div>
+      ${sint.specialitatePrincipala ? `<div class="b"><div class="v">${sint.specialitatePrincipala.pct}%</div><div class="l">${esc(sint.specialitatePrincipala.specialitate)}</div></div>` : ""}
+    </div>`;
+
+    const riscTbl = `<table class="risc-mat"><thead><tr><th>Categorie</th><th>Risc</th><th>Prob.</th><th>Impact</th><th>Nivel</th><th>Măsură</th></tr></thead><tbody>${
+      crb.risc.map((x) => `<tr><td>${esc(x.categorie)}</td><td>${esc(x.descriere)}</td><td>${esc(x.probabilitate)}</td><td>${esc(x.impact)}</td><td class="lvl lvl-${esc(x.nivel)}">${esc(x.nivel)}</td><td>${esc(x.masura)}</td></tr>`).join("")
+    }</tbody></table>`;
+
+    const benef = `<ul class="crb-list">${crb.beneficiu.map((b) => `<li>${esc(b.text)}${b.cuantificare ? ` <span class="muted">— ${esc(b.cuantificare)}</span>` : ""}</li>`).join("")}</ul>`;
 
     const aiBlock = p.aiText ? `<div class="ai-note"><b>✨ Narativ AI (în memoriul PDF):</b>
       <p>${esc(p.aiText.descriere || "")}</p>
@@ -344,10 +363,12 @@
         <ul>${dim.rezervor.steps.map((st) => `<li>${esc(st)}</li>`).join("")}</ul></div>
       <h2>Grup de pompare</h2>
       <div class="sys-card"><ul>${dim.pompare.steps.map((st) => `<li>${esc(st)}</li>`).join("")}</ul></div>
-      <h2>Cost · Risc · Beneficiu</h2>
-      <h3 style="margin:8px 0">Cost (CAPEX orientativ)</h3>${cost}
-      <h3 style="margin:14px 0 4px">Riscuri / atenționări</h3><ul class="crb-list">${crb.risc.map((x) => `<li>${esc(x.text)}</li>`).join("")}</ul>
-      <h3 style="margin:14px 0 4px">Beneficii</h3><ul class="crb-list">${crb.beneficiu.map((x) => `<li>${esc(x.text)}</li>`).join("")}</ul>`;
+      <h2>Cost · Risc · Beneficiu (toate specialitățile)</h2>
+      ${sinteza}
+      <h3 style="margin:8px 0">Cost (CAPEX orientativ, pe specialități)</h3>${cost}
+      <p class="muted" style="margin:6px 0">OPEX estimat ≈ ${eur(crb.cost.opexAnual)}/an (mentenanță). Prețurile sunt orientative — se ajustează la faza de ofertare.</p>
+      <h3 style="margin:14px 0 4px">Matrice de risc (probabilitate × impact)</h3>${riscTbl}
+      <h3 style="margin:14px 0 4px">Beneficii</h3>${benef}`;
   }
 
   /* ---------- AI: propune ipoteze (în formular) ---------- */
