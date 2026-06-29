@@ -7,7 +7,7 @@
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
   const eur = (n) => Number(n || 0).toLocaleString("ro-RO") + " €";
 
-  function buildMemoriu({ company, project, dim, crb }) {
+  function buildMemoriu({ company, project, dim, crb, apa }) {
     const c = company || {};
     const p = project || {};
     const prof = dim.profile;
@@ -49,6 +49,29 @@
     const riscItems = crb.risc.map((x) => `<li>${esc(x.text)}</li>`).join("");
     const benItems = crb.beneficiu.map((x) => `<li>${esc(x.text)}</li>`).join("");
 
+    // ---- Capitol APĂ (dacă există) ----
+    let apaHtml = "";
+    if (apa) {
+      const ad = apa.debite, ar = apa.rezervor, as = apa.statie;
+      const consRows = ad.consumatori.map((c) => `<tr><td>${esc(c.nume)}</td><td class="num">${c.cantitate} ${esc(c.unit)}</td><td class="num">${c.specific_l ? c.specific_l + " l" : "—"}</td><td class="num">${c.Q} mc/zi</td></tr>`).join("");
+      apaHtml = `
+      <h3>2. Cerințe de racordare — apă rece</h3>
+      <table class="grid"><thead><tr><th>Consumator</th><th class="num">Cantitate</th><th class="num">Consum specific</th><th class="num">Q</th></tr></thead>
+        <tbody>${consRows}<tr class="grand"><td>Q zilnic mediu</td><td></td><td></td><td class="num">${ad.Qzi_med} mc/zi</td></tr></tbody></table>
+      <div class="sys"><h4>Debite de calcul <span class="nrm">(${esc(ad.normativ)})</span></h4>
+        <p class="params">Qzi,med = ${ad.Qzi_med} mc/zi · Qmax,zi = ${ad.Qmax_zi} mc/zi · Qmax,orar = ${ad.Qmax_orar_mc} mc/h (${ad.Qmax_orar_ls} l/s)</p>
+        <ul class="breviar">${ad.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ul></div>
+      <p class="note"><b>Solicitare către operator (apă rece):</b> debit nominal ≈ ${ad.Qnominal_ls} l/s, ${esc(ad.dn)} (PEID PE100), presiune la limita proprietății ≥ ${ad.presiune_bar} bar, apometru cu transmisie la distanță.</p>
+
+      <h3>3. Instalații sanitare — rezervor de consum și stație hidrofor</h3>
+      <div class="sys"><h4>${esc(ar.sistem)} <span class="nrm">(${esc(ar.normativ)})</span></h4>
+        <p class="params">Volum adoptat: ${ar.adoptat} mc · autonomie ${ar.autonomie}h</p>
+        <ul class="breviar">${ar.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ul></div>
+      <div class="sys"><h4>${esc(as.sistem)} <span class="nrm">(${esc(as.normativ)})</span></h4>
+        <p class="params">H = ${as.H_mCA} mCA (${as.H_bar} bar) · Q stație = ${as.Qstatie} l/s</p>
+        <ul class="breviar">${as.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ul></div>`;
+    }
+
     return `<div class="doc">
       <div class="doc-head">
         <div class="doc-firm">
@@ -57,7 +80,7 @@
           ${atestate ? `<p>${esc(atestate)}</p>` : ""}
           ${firmContact ? `<p>${esc(firmContact)}</p>` : ""}
         </div>
-        <div class="doc-title"><h1>MEMORIU TEHNIC</h1><p>Dimensionare instalații de stingere a incendiilor</p>
+        <div class="doc-title"><h1>MEMORIU TEHNIC</h1><p>${apa ? "Racordare utilități + dimensionare instalații (apă rece, stingere incendiu)" : "Dimensionare instalații de stingere a incendiilor"}</p>
           <p>${esc(p.name || "Obiectiv")}</p><p>${esc(p.data || "")}</p></div>
       </div>
 
@@ -74,16 +97,16 @@
         ${prof.office && prof.office.are ? `<tr><td>Zonă office/retail la parter</td><td>~${prof.office.arie || 0} m² · ${prof.office.persoane || 0} persoane</td></tr>` : ""}
       </table>
 
-      <h3>1.1. Încadrarea în normativele de securitate la incendiu</h3>
+      <h3>1.1. Stingere incendiu — încadrarea în normativele de securitate la incendiu</h3>
       <table class="grid">
         <thead><tr><th>Sistem</th><th>Obligatoriu</th><th>Temei normativ</th></tr></thead>
         <tbody>${oblig}</tbody>
       </table>
-
-      <h3>2. Dimensionarea sistemelor de stingere (breviar de calcul)</h3>
+      ${apaHtml}
+      <h3>4. Stingere incendiu — dimensionarea sistemelor (breviar de calcul)</h3>
       ${sisteme}
 
-      <h3>3. Rezervor de incendiu (rezervă intangibilă)</h3>
+      <h3>5. Rezervor de incendiu (rezervă intangibilă)</h3>
       <table class="grid"><tbody>${rezComp}
         <tr class="sum"><td>Subtotal</td><td class="num">${rez.subtotal} m³</td></tr>
         <tr class="sum"><td>Marjă de proiectare +${rez.marja * 100}%</td><td class="num"></td></tr>
@@ -91,7 +114,7 @@
       </tbody></table>
       <p class="note">Recompletare automată din branșamentul de apă rece, timp maxim ≤ 24h. Cuvă impermeabilizată, control nivel prin sonde cu transmisie BMS, două compartimente cu by-pass pentru întreținere.</p>
 
-      <h3>4. Grup de pompare incendiu</h3>
+      <h3>6. Grup de pompare incendiu</h3>
       <table class="kv">
         <tr><td>Pompe principale (sprinklere + hidranți interiori)</td><td>${gp.pompePrincipale.Q} l/s · ${gp.pompePrincipale.H_mCA} mCA · ${esc(gp.pompePrincipale.config)}</td></tr>
         <tr><td>Pompe hidranți exteriori</td><td>${gp.pompeHidrantiExt.Q} l/s · ${gp.pompeHidrantiExt.H_mCA} mCA · ${esc(gp.pompeHidrantiExt.config)}</td></tr>
@@ -99,14 +122,14 @@
       </table>
       <p class="note">Pompe atestate IGSU/MAI, alimentare din TGD + AAR la grup electrogen (consumator vital cf. I7/2023), încăpere cu separare EI 120.</p>
 
-      <h3>5. Analiză cost–risc–beneficiu</h3>
-      <h4>5.1. Estimare cost (CAPEX orientativ)</h4>
+      <h3>7. Analiză cost–risc–beneficiu</h3>
+      <h4>7.1. Estimare cost (CAPEX orientativ)</h4>
       <table class="grid"><thead><tr><th>Element</th><th class="num">Cantitate</th><th class="num">Preț unitar</th><th class="num">Total</th></tr></thead>
         <tbody>${costLines}<tr class="grand"><td>TOTAL estimat</td><td></td><td></td><td class="num">${eur(crb.cost.total)}</td></tr></tbody></table>
-      <h4>5.2. Riscuri / atenționări</h4><ul class="breviar">${riscItems}</ul>
-      <h4>5.3. Beneficii</h4><ul class="breviar">${benItems}</ul>
+      <h4>7.2. Riscuri / atenționări</h4><ul class="breviar">${riscItems}</ul>
+      <h4>7.3. Beneficii</h4><ul class="breviar">${benItems}</ul>
 
-      <h3>6. Concluzii</h3>
+      <h3>8. Concluzii</h3>
       <p>Soluția de stingere a fost dimensionată conform normativelor în vigoare. Rezerva intangibilă adoptată este de <b>${rez.adoptat} m³</b>, asigurată dintr-un rezervor propriu și un grup de pompare atestat IGSU. Dimensionările au caracter preliminar (faza DTAC); calculul hidraulic complet și numărul exact de capete sprinkler se confirmă la faza Proiect Tehnic.</p>
 
       <div class="doc-sign"><div class="sig">Întocmit,<br/>${esc(c.name || "SOWILO SRL")}${c.proiectant ? "<br/>" + esc(c.proiectant) : ""}</div><div class="sig">Verificat</div></div>

@@ -114,6 +114,22 @@
           <label class="field office-f" id="office-arie" hidden><span>Arie office/retail (m²)</span><input name="officeArie" type="number" min="0" placeholder="800" /></label>
           <label class="field office-f" id="office-pers" hidden><span>Persoane office/retail</span><input name="officePersoane" type="number" min="0" placeholder="120" /></label>
         </div>
+
+        <!-- Dotări (opțional, pentru calculul apei) -->
+        <div class="span-2" style="margin-top:6px"><span class="muted" style="font-weight:600">Dotări (opțional — pentru calculul apei; gol = derivat din profil)</span></div>
+        <div class="form-row span-2">
+          <label class="field"><span>Restaurant (nr. mese)</span><input name="d_mese" type="number" min="0" placeholder="auto" /></label>
+          <label class="field"><span>Personal (nr.)</span><input name="d_personal" type="number" min="0" placeholder="auto" /></label>
+          <label class="field"><span>Bucătărie (mc/zi)</span><input name="d_bucatarie" type="number" min="0" step="0.1" placeholder="0" /></label>
+        </div>
+        <div class="form-row span-2">
+          <label class="field"><span>Piscină (mc/zi)</span><input name="d_piscina" type="number" min="0" step="0.1" placeholder="0" /></label>
+          <label class="field"><span>Spa (mc/zi)</span><input name="d_spa" type="number" min="0" step="0.1" placeholder="0" /></label>
+          <label class="field"><span>Spălătorie (mc/zi)</span><input name="d_spalatorie" type="number" min="0" step="0.1" placeholder="0" /></label>
+        </div>
+        <div class="form-row span-2">
+          <label class="field"><span>Irigații (mc/zi)</span><input name="d_irigatii" type="number" min="0" step="0.1" placeholder="0" /></label>
+        </div>
       </div>
       <p class="muted" style="margin-top:10px">💡 Câmpurile goale primesc valori implicite. Într-o versiune ulterioară, AI propune ipotezele lipsă (de confirmat).</p>
       <menu class="modal-actions">
@@ -128,6 +144,7 @@
 
   <script src="normative.js"></script>
   <script src="calc-stingere.js"></script>
+  <script src="calc-apa.js"></script>
   <script src="crb.js"></script>
   <script src="memoriu.js"></script>
   <script src="app.js"></script>

@@ -105,14 +105,15 @@
     return { id: "", name: "", beneficiar: "", adresa: "", functiune: "hotel", data: "",
       unitate: "", secundar: "", nrNiveluriSupraterane: "", acNivel: "", inaltimeUltimPlanseu: "",
       nivelStabilitate: "II", parcLocuri: "", nrNiveluriParcare: "", parcArie: "", volumCompartiment: "",
-      saliAglomerate: "true", risc: "mediu", officeAre: "false", officeArie: "", officePersoane: "" };
+      saliAglomerate: "true", risc: "mediu", officeAre: "false", officeArie: "", officePersoane: "",
+      d_mese: "", d_personal: "", d_bucatarie: "", d_piscina: "", d_spa: "", d_spalatorie: "", d_irigatii: "" };
   }
 
   function openProjectForm(p) {
     p = p || blankProject();
     $("#proj-modal-title").textContent = p.id ? "Editează proiect" : "Proiect nou";
     pform.elements.id.value = p.id;
-    ["name","beneficiar","adresa","functiune","data","unitate","secundar","nrNiveluriSupraterane","acNivel","inaltimeUltimPlanseu","nivelStabilitate","parcLocuri","nrNiveluriParcare","parcArie","volumCompartiment","risc","officeArie","officePersoane"]
+    ["name","beneficiar","adresa","functiune","data","unitate","secundar","nrNiveluriSupraterane","acNivel","inaltimeUltimPlanseu","nivelStabilitate","parcLocuri","nrNiveluriParcare","parcArie","volumCompartiment","risc","officeArie","officePersoane","d_mese","d_personal","d_bucatarie","d_piscina","d_spa","d_spalatorie","d_irigatii"]
       .forEach((k) => { if (pform.elements[k]) pform.elements[k].value = p[k] != null ? p[k] : ""; });
     pform.elements.saliAglomerate.value = String(p.saliAglomerate !== false && p.saliAglomerate !== "false");
     pform.elements.officeAre.value = String(p.officeAre === true || p.officeAre === "true");
@@ -132,6 +133,8 @@
       parcArie: num("parcArie"), volumCompartiment: num("volumCompartiment") || 30000,
       saliAglomerate: g("saliAglomerate") === "true", risc: g("risc"),
       officeAre: g("officeAre") === "true", officeArie: num("officeArie"), officePersoane: num("officePersoane"),
+      d_mese: g("d_mese"), d_personal: g("d_personal"), d_bucatarie: g("d_bucatarie"), d_piscina: g("d_piscina"),
+      d_spa: g("d_spa"), d_spalatorie: g("d_spalatorie"), d_irigatii: g("d_irigatii"),
     };
   }
 
@@ -153,20 +156,34 @@
     const office = { are: !!p.officeAre, arie: p.officeArie || 0, persoane: p.officePersoane || 0 };
     if (office.are) { if (office.persoane > 200) saliAglomerate = true; if (risc === "mic") risc = "mediu"; }
 
+    // dotări pentru calculul apei — doar valorile completate (gol → derivat din profil)
+    const dotari = {};
+    const dn = (k) => { const v = parseFloat(p["d_" + k]); return isNaN(v) ? undefined : v; };
+    if (dn("mese") != null) dotari.mese = dn("mese");
+    if (dn("personal") != null) dotari.personal = dn("personal");
+    if (dn("bucatarie") != null) dotari.bucatarie_mc = dn("bucatarie");
+    if (dn("piscina") != null) dotari.piscina_mc = dn("piscina");
+    if (dn("spa") != null) dotari.spa_mc = dn("spa");
+    if (dn("spalatorie") != null) dotari.spalatorie_mc = dn("spalatorie");
+    if (dn("irigatii") != null) dotari.irigatii_mc = dn("irigatii");
+
     return {
       functiune: p.functiune, tip: conf.tip, etichetaUnit, valoareUnit,
       locuriCazare, persoane, nrApartamente, nrCamere: conf.tip === "turism" ? unitate : 0,
       acNivel: p.acNivel, nrNiveluriSupraterane: p.nrNiveluriSupraterane, inaltimeUltimPlanseu: p.inaltimeUltimPlanseu,
+      cotaGeodezica: p.inaltimeUltimPlanseu || 0,
       saliAglomerate, nivelStabilitate: p.nivelStabilitate, volumCompartiment: p.volumCompartiment, risc,
-      office,
+      office, dotari,
       parcaj: { locuri: p.parcLocuri || 0, arieProtejata: p.parcArie || 0, nrNiveluri: p.nrNiveluriParcare || 0 },
     };
   }
 
   function computeProject(p) {
-    const dim = STINGERE.dimensionareStingere(toProfile(p));
+    const profile = toProfile(p);
+    const dim = STINGERE.dimensionareStingere(profile);
     const crb = CRB.costRiscBeneficiu(dim);
     p.dim = dim; p.crb = crb;
+    p.apa = (typeof APA !== "undefined") ? APA.dimensionareApa(profile) : null;
     return p;
   }
 
@@ -191,6 +208,29 @@
     $("#res-sub").textContent = [p.functiune, p.beneficiar, p.adresa].filter(Boolean).join(" · ");
     $("#res-body").innerHTML = renderResults(p);
     showResults();
+  }
+
+  function renderApa(apa) {
+    if (!apa) return "";
+    const d = apa.debite, rez = apa.rezervor, st = apa.statie;
+    const cons = d.consumatori.map((c) => `<tr><td>${esc(c.nume)}</td><td class="num">${c.cantitate} ${esc(c.unit)}</td><td class="num">${c.specific_l ? c.specific_l + " l" : "—"}</td><td class="num">${c.Q} mc/zi</td></tr>`).join("");
+    return `<h2>Apă rece — cerințe de racordare</h2>
+      <div class="bignum">
+        <div class="b"><div class="v">${d.Qmax_orar_ls} l/s</div><div class="l">Debit branșament (Qmax orar)</div></div>
+        <div class="b"><div class="v">${esc(d.dn)}</div><div class="l">Diametru branșament</div></div>
+        <div class="b"><div class="v">${rez.adoptat} mc</div><div class="l">Rezervor consum</div></div>
+      </div>
+      <table class="crb-cost"><thead><tr><th>Consumator</th><th class="num">Cantitate</th><th class="num">Consum specific</th><th class="num">Q</th></tr></thead>
+        <tbody>${cons}<tr class="grand"><td>Q zilnic mediu</td><td></td><td></td><td class="num">${d.Qzi_med} mc/zi</td></tr></tbody></table>
+      <div class="sys-card"><h4>Debite de calcul <span class="nrm">(${esc(d.normativ)})</span></h4>
+        <p class="params">Qzi,med = ${d.Qzi_med} mc/zi · Qmax,zi = ${d.Qmax_zi} mc/zi · Qmax,orar = ${d.Qmax_orar_mc} mc/h (${d.Qmax_orar_ls} l/s)</p>
+        <ul>${d.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ul></div>
+      <div class="sys-card"><h4>${esc(rez.sistem)} <span class="nrm">(${esc(rez.normativ)})</span></h4>
+        <p class="params">Volum adoptat: ${rez.adoptat} mc · autonomie ${rez.autonomie}h</p>
+        <ul>${rez.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ul></div>
+      <div class="sys-card"><h4>${esc(st.sistem)} <span class="nrm">(${esc(st.normativ)})</span></h4>
+        <p class="params">H = ${st.H_mCA} mCA (${st.H_bar} bar) · Q stație = ${st.Qstatie} l/s</p>
+        <ul>${st.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ul></div>`;
   }
 
   function renderResults(p) {
@@ -222,7 +262,8 @@
     }<tr class="grand"><td>TOTAL</td><td></td><td></td><td class="num">${eur(crb.cost.total)}</td></tr></tbody></table>`;
 
     return `${big}
-      <h2>Încadrare în obligativitate</h2>${oblig}
+      ${renderApa(p.apa)}
+      <h2>Stingere incendiu — încadrare în obligativitate</h2>${oblig}
       <h2>Sisteme dimensionate (breviar de calcul)</h2>${sisteme}
       <h2>Rezervor de incendiu</h2>
       <div class="sys-card"><p class="params">Adoptat: ${dim.rezervor.adoptat} m³ (subtotal ${dim.rezervor.subtotal} m³ + marjă ${dim.rezervor.marja * 100}%)</p>
@@ -237,7 +278,7 @@
 
   function printMemoriu(p) {
     if (!p.dim) computeProject(p);
-    $("#print-view").innerHTML = MEMORIU.buildMemoriu({ company: state.company, project: p, dim: p.dim, crb: p.crb });
+    $("#print-view").innerHTML = MEMORIU.buildMemoriu({ company: state.company, project: p, dim: p.dim, crb: p.crb, apa: p.apa });
     const t = document.title; document.title = `Memoriu - ${p.name}`;
     window.print(); setTimeout(() => (document.title = t), 500);
   }
@@ -260,7 +301,8 @@
     const demo = { id: uid(), name: "Hotel **** Sinaia", beneficiar: "Conform contract", adresa: "Str. Mănăstirii nr. 7, Sinaia, jud. Prahova",
       functiune: "hotel", data: "Iunie 2026", unitate: 90, secundar: 180, nrNiveluriSupraterane: 4, acNivel: 1525,
       inaltimeUltimPlanseu: 17, nivelStabilitate: "II", parcLocuri: 120, nrNiveluriParcare: 2, parcArie: 5000,
-      volumCompartiment: 35000, saliAglomerate: true, risc: "mediu", officeAre: false, officeArie: 0, officePersoane: 0 };
+      volumCompartiment: 35000, saliAglomerate: true, risc: "mediu", officeAre: false, officeArie: 0, officePersoane: 0,
+      d_mese: 200, d_personal: 60, d_bucatarie: 5, d_piscina: 6, d_spa: 3, d_spalatorie: 8, d_irigatii: 5 };
     state.projects.push(computeProject(demo)); save(); renderList(); openResults(demo.id); toast("Exemplu Hotel Sinaia încărcat");
   });
 
