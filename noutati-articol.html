@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noul normativ P118/1-2025: ce se schimbă — SOWILO</title>
+    <meta name="description" content="P118/1-2025, prima revizuire majoră în ~25 de ani a normativului de securitate la incendiu a construcțiilor: nivel de stabilitate la foc, cerințe pentru fotovoltaice și ce rămâne neschimbat.">
+    <meta name="theme-color" content="#2B5CF6">
+    <link rel="icon" type="image/png" href="logo-mark.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css?v=5">
+
+    <style>
+        .navbar { background: rgba(255,255,255,.94); border-bottom: 1px solid var(--hairline); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+        .nav-links a.is-current { color: var(--blue); }
+        .nav-links a.is-current::after { transform: scaleX(1); transform-origin: left; }
+
+        .tag { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; color: var(--blue); background: var(--blue-pale); border-radius: 100px; padding: 5px 12px; display: inline-block; }
+
+        .article-wrap { max-width: 820px; margin: 0 auto; padding: calc(var(--nav-h) + clamp(36px, 6vw, 80px)) var(--pad-x) 0; }
+        .breadcrumb { font-family: var(--font-mono); font-size: .72rem; color: var(--muted); letter-spacing: .04em; margin-bottom: 28px; }
+        .breadcrumb a { color: var(--muted); text-decoration: none; }
+        .breadcrumb a:hover { color: var(--blue); }
+
+        .article-header h1 {
+            font-size: clamp(2.1rem, 4.4vw, 3.4rem); font-weight: 700;
+            letter-spacing: -.02em; line-height: 1.08; margin: 18px 0 22px;
+        }
+        .article-byline {
+            display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+            font-family: var(--font-mono); font-size: .74rem; color: var(--muted);
+            letter-spacing: .03em; padding-bottom: 30px; border-bottom: 1px solid var(--hairline);
+        }
+        .article-byline .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--blue); }
+        .article-byline strong { color: var(--ink); font-weight: 600; }
+
+        .article-hero {
+            margin: 34px 0; height: clamp(200px, 30vw, 320px); border-radius: 20px;
+            background: linear-gradient(125deg, var(--blue-dark), var(--blue) 72%);
+            position: relative; overflow: hidden;
+        }
+        .article-hero::before {
+            content: ''; position: absolute; inset: 0;
+            background-image:
+                linear-gradient(to right, rgba(255,255,255,.10) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,.10) 1px, transparent 1px);
+            background-size: 50px 50px;
+            -webkit-mask-image: radial-gradient(ellipse 100% 90% at 55% 40%, #000 30%, transparent 80%);
+            mask-image: radial-gradient(ellipse 100% 90% at 55% 40%, #000 30%, transparent 80%);
+        }
+        .article-hero span { position: absolute; left: 26px; bottom: 22px; font-family: var(--font-mono); font-size: .72rem; color: rgba(255,255,255,.85); letter-spacing: .04em; }
+
+        .article-body { padding-bottom: clamp(48px, 6vw, 90px); }
+        .article-body .lead { font-size: clamp(1.15rem, 1.7vw, 1.32rem); color: var(--ink); line-height: 1.6; margin-bottom: 30px; font-weight: 500; }
+        .article-body h2 { font-size: clamp(1.4rem, 2.3vw, 1.9rem); margin: 40px 0 14px; letter-spacing: -.01em; }
+        .article-body p { font-size: 1.06rem; color: var(--text); margin-bottom: 18px; line-height: 1.75; }
+        .article-body ul { margin: 0 0 18px 0; padding-left: 0; list-style: none; }
+        .article-body li { position: relative; padding-left: 28px; margin-bottom: 12px; font-size: 1.06rem; color: var(--text); line-height: 1.7; }
+        .article-body li::before { content: '→'; position: absolute; left: 0; color: var(--blue); font-weight: 600; }
+        .article-body strong { color: var(--ink); }
+
+        .takeaways {
+            background: var(--blue-pale); border: 1px solid #D7E2FF; border-radius: 18px;
+            padding: clamp(24px, 3vw, 34px); margin: 34px 0;
+        }
+        .takeaways h3 { font-size: 1.05rem; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+        .takeaways h3::before { content: ''; width: 22px; height: 22px; border-radius: 6px; background: var(--blue); display: inline-block; -webkit-mask: center/14px no-repeat; }
+        .takeaways ul { list-style: none; padding: 0; margin: 0; }
+        .takeaways li { font-size: .98rem; color: var(--text); }
+
+        .note {
+            border-left: 3px solid var(--blue); background: #FAFBFE; border-radius: 0 12px 12px 0;
+            padding: 18px 22px; margin: 26px 0; font-size: .96rem; color: var(--muted);
+        }
+        .note strong { color: var(--ink); }
+
+        .article-cta {
+            margin-top: 44px; padding: clamp(28px, 3.4vw, 44px);
+            border-radius: 20px; background: var(--ink); color: #fff;
+            display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+        }
+        .article-cta h3 { color: #fff; font-size: clamp(1.3rem, 2vw, 1.7rem); margin-bottom: 6px; }
+        .article-cta p { color: var(--muted-dark); font-size: .96rem; margin: 0; }
+
+        .related { background: #F6F8FD; }
+        .related-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+        .related-card {
+            display: flex; flex-direction: column; gap: 12px; text-decoration: none;
+            border: 1px solid var(--hairline); border-radius: 16px; padding: 26px;
+            background: var(--paper); transition: transform .3s, border-color .3s, box-shadow .3s;
+        }
+        .related-card:hover { transform: translateY(-4px); border-color: rgba(43,92,246,.35); box-shadow: 0 18px 40px -18px rgba(13,31,110,.14); }
+        .related-card h4 { font-size: 1.08rem; color: var(--ink); line-height: 1.25; }
+        .related-card .read-more { font-family: var(--font-display); font-weight: 600; font-size: .78rem; text-transform: uppercase; letter-spacing: .1em; color: var(--blue); }
+
+        @media (max-width: 640px) {
+            .related-grid { grid-template-columns: 1fr; }
+            .article-cta { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar scrolled" id="navbar">
+    <div class="nav-inner">
+        <a href="index.html" class="nav-brand">
+            <img src="logo-mark.png" alt="SOWILO" class="nav-mark">
+            <span class="nav-wordmark">SOWILO<sup>™</sup></span>
+        </a>
+        <nav class="nav-links" aria-label="Navigație principală">
+            <a href="index.html#servicii"><span class="nav-idx">01</span>Servicii</a>
+            <a href="index.html#proces"><span class="nav-idx">02</span>Proces</a>
+            <a href="index.html#domenii"><span class="nav-idx">03</span>Domenii</a>
+            <a href="noutati.html" class="is-current"><span class="nav-idx">05</span>Noutăți</a>
+        </nav>
+        <a href="index.html#contact" class="nav-cta">Solicită ofertă</a>
+    </div>
+</header>
+
+<main id="top">
+
+    <article class="article-wrap">
+        <p class="breadcrumb"><a href="noutati.html">Noutăți</a> / Reglementări</p>
+
+        <header class="article-header">
+            <span class="tag">Reglementări</span>
+            <h1>Noul normativ P118/1-2025: ce se schimbă pentru proiectul tău</h1>
+            <div class="article-byline">
+                <span><strong>Echipa SOWILO</strong></span>
+                <span class="dot"></span>
+                <span>24 iunie 2026</span>
+                <span class="dot"></span>
+                <span>5 min citire</span>
+            </div>
+        </header>
+
+        <div class="article-hero"><span class="mono">fig. — securitatea la incendiu a construcțiilor</span></div>
+
+        <div class="article-body">
+            <p class="lead">După aproape 25 de ani, normativul care guvernează securitatea la incendiu a
+               construcțiilor a fost rescris. P118/1-2025 e în vigoare din mai 2025 și schimbă felul în care
+               se gândește rezistența la foc a unei clădiri — dar nu și ce mulți cred despre instalațiile de stingere și detecție.</p>
+
+            <h2>Ce se schimbă, pe scurt</h2>
+            <p>P118/1-2025 (aprobat prin Ordinul MDLPA 267/2025, publicat în martie 2025) înlocuiește vechiul
+               P118-99. Cea mai importantă schimbare conceptuală: noțiunea de <strong>„grad de rezistență la
+               foc"</strong> este înlocuită cu <strong>„nivel de stabilitate la foc"</strong>, care corelează
+               mai clar înălțimea clădirii, funcțiunea și performanța elementelor structurale.</p>
+            <ul>
+                <li>Cerințe noi de detecție, alarmare și stingere, diferențiate pe categorii de clădiri.</li>
+                <li>Prevederi explicite pentru <strong>panourile fotovoltaice</strong> montate pe acoperiș — un subiect absent din ediția veche.</li>
+                <li>Reguli actualizate pentru hidranți, sprinklere, bariere de fum și desfumare.</li>
+            </ul>
+
+            <h2>Capcana frecventă: „totul s-a schimbat în 2025"</h2>
+            <p>Nu. Doar <strong>Partea I</strong> a normativului a fost reeditată. Partea a II-a (instalații de
+               stingere) rămâne <strong>P118/2-2013</strong>, iar Partea a III-a (detecție și semnalizare) rămâne
+               <strong>P118/3-2015</strong>. Cele trei se aplică <strong>cumulativ</strong> — deci un proiect corect
+               trebuie să respecte simultan noua Parte I și vechile Părți II și III.</p>
+
+            <div class="takeaways">
+                <h3>De reținut</h3>
+                <ul>
+                    <li>P118/1-2025 e în vigoare din mai 2025; prima revizuire majoră în ~25 de ani.</li>
+                    <li>„Nivel de stabilitate la foc" înlocuiește „gradul de rezistență la foc".</li>
+                    <li>Apar cerințe specifice pentru sistemele fotovoltaice pe clădiri.</li>
+                    <li>Părțile II (stingere) și III (detecție) rămân 2013 / 2015 și se aplică în paralel.</li>
+                </ul>
+            </div>
+
+            <h2>Ce înseamnă concret pentru tine</h2>
+            <p>Dacă ai un proiect în avizare sau construcție acum, documentația de securitate la incendiu trebuie
+               aliniată la noua Parte I — în special scenariul de securitate, separările și soluțiile de
+               evacuare. Pentru clădirile cu fotovoltaice pe acoperiș, atenția la noile cerințe devine obligatorie.
+               Cel mai sigur e ca specialistul tehnic să verifice din start încadrarea pe noul „nivel de stabilitate".</p>
+
+            <div class="note">
+                <strong>Notă:</strong> acest articol e o sinteză de orientare, nu un substitut pentru proiectul
+                tehnic. Pentru încadrarea exactă a clădirii tale, datele se confirmă în textul oficial al normativului
+                și de către un proiectant/verificator atestat.
+            </div>
+
+            <div class="article-cta">
+                <div>
+                    <h3>Ai un proiect care intră sub P118/1-2025?</h3>
+                    <p>Îți spunem din prima ce implică pentru avizarea ISU și pentru instalații.</p>
+                </div>
+                <a href="index.html#contact" class="btn btn-primary"><span>Solicită o evaluare →</span></a>
+            </div>
+        </div>
+    </article>
+
+    <!-- Related -->
+    <section class="related">
+        <div class="section-inner">
+            <p class="section-label mono">Citește și</p>
+            <div class="related-grid">
+                <a href="#" class="related-card">
+                    <span class="tag">Energie</span>
+                    <h4>Fotovoltaice obligatorii din 2026: ce clădiri intră sub mandatul solar UE</h4>
+                    <span class="read-more">Citește →</span>
+                </a>
+                <a href="#" class="related-card">
+                    <span class="tag">Reglementări</span>
+                    <h4>Clădiri cu emisii zero (ZEB): ce trebuie să știi înainte de 2028</h4>
+                    <span class="read-more">Citește →</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="footer dark">
+    <div class="footer-inner">
+        <img src="logo-white.png" alt="SOWILO" class="footer-logo">
+        <nav class="footer-links" aria-label="Navigație subsol">
+            <a href="index.html#servicii">Servicii</a>
+            <a href="index.html#proces">Proces</a>
+            <a href="index.html#domenii">Domenii</a>
+            <a href="index.html#autorizatii">Autorizații</a>
+            <a href="noutati.html">Noutăți</a>
+            <a href="index.html#contact">Contact</a>
+        </nav>
+        <p class="footer-copy mono">© 2026 SOWILO SRL — Inginerie &amp; proiectare instalații. Toate drepturile rezervate.</p>
+    </div>
+</footer>
+
+</body>
+</html>

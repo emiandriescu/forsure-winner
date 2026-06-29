@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noutăți & resurse — SOWILO | Proiectare Instalații MEP</title>
+    <meta name="description" content="Noutăți din proiectarea instalațiilor MEP: normative noi (P118, EPBD), tehnologii (pompe de căldură, fotovoltaice, BMS) și scheme de finanțare — explicate pe înțelesul beneficiarilor.">
+    <meta name="keywords" content="noutati instalatii, normativ P118 2025, mandat solar EPBD, pompe de caldura, nZEB, proiectare MEP">
+    <meta name="theme-color" content="#2B5CF6">
+    <link rel="icon" type="image/png" href="logo-mark.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css?v=5">
+
+    <style>
+        /* ── Noutăți — componente specifice (reutilizează tokenii din styles.css) ── */
+        .navbar { background: rgba(255,255,255,.94); border-bottom: 1px solid var(--hairline); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+        .nav-links a.is-current { color: var(--blue); }
+        .nav-links a.is-current::after { transform: scaleX(1); transform-origin: left; }
+
+        .news-hero { padding-top: calc(var(--nav-h) + clamp(40px, 7vw, 96px)); }
+        .news-hero .section-inner { padding-top: 0; padding-bottom: clamp(40px, 5vw, 72px); }
+        .news-hero-head { max-width: 760px; }
+        .news-hero h1 {
+            font-size: clamp(2.4rem, 5.4vw, 4.4rem); font-weight: 700;
+            letter-spacing: -.02em; margin-bottom: 22px; line-height: 1.05;
+        }
+        .news-hero h1 em { font-style: normal; color: var(--blue); }
+        .news-hero p { font-size: clamp(1.02rem, 1.4vw, 1.2rem); color: var(--muted); max-width: 600px; }
+
+        .news-section .section-inner { padding-top: 0; }
+
+        /* tag / categorie */
+        .tag {
+            font-family: var(--font-mono); font-size: .66rem; letter-spacing: .12em;
+            text-transform: uppercase; color: var(--blue);
+            background: var(--blue-pale); border-radius: 100px; padding: 5px 12px;
+            display: inline-block;
+        }
+        .meta-date { font-family: var(--font-mono); font-size: .72rem; color: var(--muted); letter-spacing: .04em; }
+
+        /* card articol */
+        .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+        .article-card {
+            position: relative; display: flex; flex-direction: column;
+            border: 1px solid var(--hairline); border-radius: 18px;
+            padding: clamp(22px, 2.2vw, 30px); background: var(--paper);
+            text-decoration: none; overflow: hidden;
+            transition: transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s, border-color .35s;
+        }
+        .article-card::after {
+            content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px;
+            background: var(--blue); transform: scaleX(0); transform-origin: left;
+            transition: transform .45s cubic-bezier(.65,.05,.36,1);
+        }
+        .article-card:hover {
+            transform: translateY(-6px); border-color: rgba(43,92,246,.35);
+            box-shadow: 0 24px 48px -16px rgba(13,31,110,.14);
+        }
+        .article-card:hover::after { transform: scaleX(1); }
+        .article-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+        .article-card h3 {
+            font-size: 1.22rem; line-height: 1.2; margin-bottom: 12px; color: var(--ink);
+            transition: color .25s;
+        }
+        .article-card:hover h3 { color: var(--blue-dark); }
+        .article-card p { font-size: .93rem; color: var(--muted); margin-bottom: 22px; }
+        .read-more {
+            margin-top: auto; font-family: var(--font-display); font-weight: 600;
+            font-size: .82rem; text-transform: uppercase; letter-spacing: .1em;
+            color: var(--blue); display: inline-flex; align-items: center; gap: 8px;
+        }
+        .read-more span { transition: transform .3s; }
+        .article-card:hover .read-more span { transform: translateX(6px); }
+
+        /* articol featured */
+        .featured-article {
+            display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(28px, 4vw, 64px);
+            align-items: center; border: 1px solid var(--hairline); border-radius: 22px;
+            overflow: hidden; background: var(--paper); margin-bottom: 28px;
+            text-decoration: none;
+            transition: box-shadow .35s, border-color .35s;
+        }
+        .featured-article:hover { border-color: rgba(43,92,246,.35); box-shadow: 0 30px 60px -24px rgba(13,31,110,.18); }
+        .featured-visual {
+            position: relative; min-height: 320px; height: 100%;
+            background: linear-gradient(125deg, var(--blue-dark), var(--blue) 72%);
+            overflow: hidden;
+        }
+        .featured-visual::before {
+            content: ''; position: absolute; inset: 0;
+            background-image:
+                linear-gradient(to right, rgba(255,255,255,.10) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,.10) 1px, transparent 1px);
+            background-size: 46px 46px;
+            -webkit-mask-image: radial-gradient(ellipse 100% 90% at 60% 40%, #000 30%, transparent 78%);
+            mask-image: radial-gradient(ellipse 100% 90% at 60% 40%, #000 30%, transparent 78%);
+        }
+        .featured-visual .fv-label {
+            position: absolute; left: 28px; bottom: 24px; right: 28px;
+            font-family: var(--font-mono); font-size: .72rem; color: rgba(255,255,255,.82);
+            letter-spacing: .04em;
+        }
+        .featured-visual .fv-mark {
+            position: absolute; top: 26px; left: 28px;
+            font-family: var(--font-mono); font-size: .68rem; letter-spacing: .14em;
+            text-transform: uppercase; color: #fff;
+            background: rgba(255,255,255,.16); border-radius: 100px; padding: 6px 14px;
+        }
+        .featured-body { padding: clamp(28px, 3.4vw, 52px) clamp(28px, 3vw, 56px) clamp(28px, 3.4vw, 52px) 0; }
+        .featured-body .article-top { margin-bottom: 22px; }
+        .featured-body h2 {
+            font-size: clamp(1.6rem, 2.7vw, 2.4rem); line-height: 1.12;
+            letter-spacing: -.015em; margin-bottom: 16px; color: var(--ink);
+        }
+        .featured-body p { font-size: 1rem; color: var(--muted); margin-bottom: 26px; max-width: 480px; }
+
+        /* CTA newsletter */
+        .news-cta { position: relative; overflow: hidden; }
+        .news-cta .section-inner { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(32px, 5vw, 80px); align-items: center; }
+        .news-cta h2 { color: #fff; font-size: clamp(1.7rem, 3vw, 2.6rem); margin-bottom: 14px; letter-spacing: -.015em; }
+        .news-cta p { color: var(--muted-dark); font-size: 1.02rem; max-width: 460px; }
+        .news-cta-form { display: flex; gap: 12px; flex-wrap: wrap; }
+        .news-cta-form input {
+            flex: 1 1 220px; padding: 15px 18px; border-radius: 100px;
+            border: 1.5px solid var(--hairline-d); background: rgba(255,255,255,.05);
+            color: #fff; font-family: var(--font-body); font-size: .95rem; outline: none;
+        }
+        .news-cta-form input::placeholder { color: var(--muted-dark); }
+
+        @media (max-width: 1080px) {
+            .news-grid { grid-template-columns: repeat(2, 1fr); }
+            .featured-article { grid-template-columns: 1fr; }
+            .featured-visual { min-height: 220px; }
+            .featured-body { padding: clamp(24px, 4vw, 36px); }
+            .news-cta .section-inner { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 640px) {
+            .news-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ─────────────────────────────────── -->
+<header class="navbar scrolled" id="navbar">
+    <div class="nav-inner">
+        <a href="index.html" class="nav-brand">
+            <img src="logo-mark.png" alt="SOWILO" class="nav-mark">
+            <span class="nav-wordmark">SOWILO<sup>™</sup></span>
+        </a>
+        <nav class="nav-links" aria-label="Navigație principală">
+            <a href="index.html#servicii"><span class="nav-idx">01</span>Servicii</a>
+            <a href="index.html#proces"><span class="nav-idx">02</span>Proces</a>
+            <a href="index.html#domenii"><span class="nav-idx">03</span>Domenii</a>
+            <a href="noutati.html" class="is-current"><span class="nav-idx">05</span>Noutăți</a>
+        </nav>
+        <a href="index.html#contact" class="nav-cta">Solicită ofertă</a>
+    </div>
+</header>
+
+<main id="top">
+
+    <!-- ── HERO ───────────────────────────────── -->
+    <section class="news-hero">
+        <div class="section-inner">
+            <div class="news-hero-head">
+                <p class="section-label mono">( 05 ) — Noutăți &amp; resurse</p>
+                <h1>Ce se schimbă în <em>instalații</em>, explicat pe scurt.</h1>
+                <p>Normative noi, tehnologii care chiar merită și scheme de finanțare —
+                   pe înțelesul beneficiarilor, dezvoltatorilor și arhitecților. Actualizat periodic de echipa SOWILO.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── LISTĂ ARTICOLE ─────────────────────── -->
+    <section class="news-section">
+        <div class="section-inner">
+
+            <!-- Featured -->
+            <a href="noutati-articol.html" class="featured-article">
+                <div class="featured-visual">
+                    <span class="fv-mark">Articol recomandat</span>
+                    <span class="fv-label mono">P118/1-2025 — securitatea la incendiu a construcțiilor</span>
+                </div>
+                <div class="featured-body">
+                    <div class="article-top">
+                        <span class="tag">Reglementări</span>
+                        <span class="meta-date">24 iunie 2026</span>
+                    </div>
+                    <h2>Noul normativ P118/1-2025: ce se schimbă pentru proiectul tău</h2>
+                    <p>Prima revizuire majoră în ~25 de ani. „Nivelul de stabilitate la foc" înlocuiește
+                       gradul de rezistență, apar cerințe noi pentru panourile fotovoltaice — și de ce
+                       Părțile II și III rămân, de fapt, neschimbate.</p>
+                    <span class="read-more">Citește articolul <span>→</span></span>
+                </div>
+            </a>
+
+            <!-- Grid -->
+            <div class="news-grid">
+
+                <a href="#" class="article-card">
+                    <div class="article-top"><span class="tag">Energie</span><span class="meta-date">18 iun 2026</span></div>
+                    <h3>Fotovoltaice obligatorii din 2026: ce clădiri intră sub mandatul solar UE</h3>
+                    <p>Directiva EPBD impune panouri solare pe clădiri noi nerezidențiale &gt;250 m² până la final de 2026, apoi eșalonat. Ce înseamnă pentru autorizare și proiectare.</p>
+                    <span class="read-more">Citește <span>→</span></span>
+                </a>
+
+                <a href="#" class="article-card">
+                    <div class="article-top"><span class="tag">Tehnologii</span><span class="meta-date">10 iun 2026</span></div>
+                    <h3>Pompe de căldură în 2026: când merită cu adevărat și ce capcane să eviți</h3>
+                    <p>Piața și-a revenit, iar modelele de temperatură înaltă lasă caloriferele pe loc. Dar dimensionarea greșită și iernile reci rămân riscuri reale.</p>
+                    <span class="read-more">Citește <span>→</span></span>
+                </a>
+
+                <a href="#" class="article-card">
+                    <div class="article-top"><span class="tag">Finanțare</span><span class="meta-date">28 mai 2026</span></div>
+                    <h3>Casa Verde se mută pe baterii: ce înseamnă pentru prosumatori</h3>
+                    <p>Programul pentru fotovoltaice nou a fost eliminat din bugetul 2026; banii se mută spre stocare (Casa Verde Baterii). Cui i se adresează și când se deschide.</p>
+                    <span class="read-more">Citește <span>→</span></span>
+                </a>
+
+                <a href="#" class="article-card">
+                    <div class="article-top"><span class="tag">Reglementări</span><span class="meta-date">15 mai 2026</span></div>
+                    <h3>Clădiri cu emisii zero (ZEB): ce trebuie să știi înainte de 2028</h3>
+                    <p>Din 2028 clădirile publice noi trebuie să fie ZEB, din 2030 toate. Ce schimbă față de nZEB și de ce „pregătirea ZEB" începe la masa de proiectare, acum.</p>
+                    <span class="read-more">Citește <span>→</span></span>
+                </a>
+
+                <a href="#" class="article-card">
+                    <div class="article-top"><span class="tag">Tehnologii</span><span class="meta-date">6 mai 2026</span></div>
+                    <h3>Securitatea cibernetică a clădirilor devine obligatorie (NIS2)</h3>
+                    <p>Transpusă deja în România, NIS2 face din securitatea sistemelor BMS/automatizare o cerință legală. Ce înseamnă la proiectarea instalațiilor inteligente.</p>
+                    <span class="read-more">Citește <span>→</span></span>
+                </a>
+
+                <a href="#" class="article-card">
+                    <div class="article-top"><span class="tag">Reglementări</span><span class="meta-date">22 apr 2026</span></div>
+                    <h3>Stingere cu gaze: de ce Novec 1230 devine un pariu riscant</h3>
+                    <p>Clasificat PFAS și sub restricție REACH, agentul „curat" intră într-o zonă incertă. Gazul inert și ceața de apă sunt alternativele sigure pentru proiecte noi.</p>
+                    <span class="read-more">Citește <span>→</span></span>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ── CTA ────────────────────────────────── -->
+    <section class="news-cta dark">
+        <div class="section-inner">
+            <div>
+                <p class="section-label mono">Fii la curent</p>
+                <h2>Primește noutățile relevante pentru proiectele tale.</h2>
+                <p>Un rezumat scurt, trimestrial — normative noi, termene de conformare și tehnologii care contează. Fără spam.</p>
+            </div>
+            <form class="news-cta-form" onsubmit="return false">
+                <input type="email" placeholder="email@firma.ro" aria-label="Email">
+                <button type="submit" class="btn btn-primary"><span>Abonează-te</span></button>
+            </form>
+        </div>
+    </section>
+
+</main>
+
+<!-- ── FOOTER ─────────────────────────────────── -->
+<footer class="footer dark">
+    <div class="footer-inner">
+        <img src="logo-white.png" alt="SOWILO" class="footer-logo">
+        <nav class="footer-links" aria-label="Navigație subsol">
+            <a href="index.html#servicii">Servicii</a>
+            <a href="index.html#proces">Proces</a>
+            <a href="index.html#domenii">Domenii</a>
+            <a href="index.html#autorizatii">Autorizații</a>
+            <a href="noutati.html">Noutăți</a>
+            <a href="index.html#contact">Contact</a>
+        </nav>
+        <p class="footer-copy mono">© 2026 SOWILO SRL — Inginerie &amp; proiectare instalații. Toate drepturile rezervate.</p>
+    </div>
+</footer>
+
+</body>
+</html>
