@@ -191,6 +191,7 @@
     p.canalizare = (typeof CANALIZARE !== "undefined") ? CANALIZARE.dimensionareCanalizare(profile, p.apa && p.apa.debite) : null;
     p.electrice = (typeof ELECTRICE !== "undefined") ? ELECTRICE.dimensionareElectrice(profile) : null;
     p.gaze = (typeof GAZE !== "undefined") ? GAZE.dimensionareGaze(profile) : null;
+    p.sisteme = (typeof SISTEME !== "undefined") ? SISTEME.dimensionareSisteme(profile) : null;
     return p;
   }
 
@@ -261,6 +262,16 @@
     if (!g) return "";
     return `<h2>Instalații gaze naturale</h2>` + sysCard(g.sistem, g.normativ, `P = ${g.P_total} kW · q = ${g.q} mc/h · PRM ${g.prm} mc/h`, g.steps);
   }
+  function renderSisteme(s) {
+    if (!s) return "";
+    let out = `<h2>Analiza sistemelor de instalații</h2>`;
+    out += sysCard(s.termice.sistem, s.termice.normativ, `Încălzire ${s.termice.Pinc} kW · Răcire ${s.termice.Prac} kW`, s.termice.steps);
+    out += sysCard(s.ventilatie.sistem, s.ventilatie.normativ, `Aer camere ${s.ventilatie.aerCamere} mc/h · recuperare ≥ ${s.ventilatie.recuperare}%`, s.ventilatie.steps);
+    out += sysCard(s.detectie.sistem, s.detectie.normativ, `${s.detectie.loops} bucle · ${s.detectie.obligatoriu ? "obligatoriu" : "recomandat"}`, s.detectie.steps);
+    if (s.desfumare.necesar) out += sysCard(s.desfumare.sistem, s.desfumare.normativ, `Parcaj ${s.desfumare.Qparcaj} mc/h · presurizare ${s.desfumare.Qpresurizare} mc/h`, s.desfumare.steps);
+    else out += sysCard(s.desfumare.sistem, s.desfumare.normativ, `Presurizare ${s.desfumare.Qpresurizare} mc/h`, s.desfumare.steps);
+    return out;
+  }
 
   function renderResults(p) {
     const dim = p.dim, crb = p.crb;
@@ -295,6 +306,7 @@
       ${renderCanalizare(p.canalizare)}
       ${renderElectrice(p.electrice)}
       ${renderGaze(p.gaze)}
+      ${renderSisteme(p.sisteme)}
       <h2>Stingere incendiu — încadrare în obligativitate</h2>${oblig}
       <h2>Sisteme dimensionate (breviar de calcul)</h2>${sisteme}
       <h2>Rezervor de incendiu</h2>
@@ -310,7 +322,7 @@
 
   function printMemoriu(p) {
     if (!p.dim) computeProject(p);
-    $("#print-view").innerHTML = MEMORIU.buildMemoriu({ company: state.company, project: p, dim: p.dim, crb: p.crb, apa: p.apa, canalizare: p.canalizare, electrice: p.electrice, gaze: p.gaze });
+    $("#print-view").innerHTML = MEMORIU.buildMemoriu({ company: state.company, project: p, dim: p.dim, crb: p.crb, apa: p.apa, canalizare: p.canalizare, electrice: p.electrice, gaze: p.gaze, sisteme: p.sisteme });
     const t = document.title; document.title = `Memoriu - ${p.name}`;
     window.print(); setTimeout(() => (document.title = t), 500);
   }

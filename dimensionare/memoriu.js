@@ -7,7 +7,7 @@
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
   const eur = (n) => Number(n || 0).toLocaleString("ro-RO") + " €";
 
-  function buildMemoriu({ company, project, dim, crb, apa, canalizare, electrice, gaze }) {
+  function buildMemoriu({ company, project, dim, crb, apa, canalizare, electrice, gaze, sisteme }) {
     const c = company || {};
     const p = project || {};
     const prof = dim.profile;
@@ -20,8 +20,8 @@
       `<tr><td>${esc(o.sistem)}</td><td class="${o.obligatoriu ? "da" : "nu"}">${o.obligatoriu ? "DA" : "NU"}</td><td>${esc(o.motiv || "")}</td></tr>`
     ).join("");
 
-    // Sisteme cu breviar de calcul
-    const sisteme = dim.sisteme.map((s) => {
+    // Sisteme stingere cu breviar de calcul
+    const sistemeStingereHtml = dim.sisteme.map((s) => {
       const steps = (s.steps || []).map((st) => `<li>${esc(st)}</li>`).join("");
       const params = [];
       if (s.Q != null) params.push(`Q = ${s.Q} l/s`);
@@ -85,11 +85,25 @@
           sysDoc(g.sistem, g.normativ, `P instalată = ${g.P_total} kW · debit gaz q = ${g.q} mc/h · PRM ${g.prm} mc/h`, g.steps);
       }
     }
-    if (apa) {
-      const ar = apa.rezervor, as = apa.statie;
-      apaHtml += `<h3>3. Instalații sanitare — rezervor de consum și stație hidrofor</h3>
-        ${sysDoc(ar.sistem, ar.normativ, `Volum adoptat: ${ar.adoptat} mc · autonomie ${ar.autonomie}h`, ar.steps)}
-        ${sysDoc(as.sistem, as.normativ, `H = ${as.H_mCA} mCA (${as.H_bar} bar) · Q stație = ${as.Qstatie} l/s`, as.steps)}`;
+    if (apa || sisteme) {
+      apaHtml += `<h3>3. Analiza sistemelor de instalații</h3>`;
+      if (apa) {
+        const ar = apa.rezervor, as = apa.statie;
+        apaHtml += `<h4>3.1. Instalații sanitare — rezervor de consum și stație hidrofor</h4>
+          ${sysDoc(ar.sistem, ar.normativ, `Volum adoptat: ${ar.adoptat} mc · autonomie ${ar.autonomie}h`, ar.steps)}
+          ${sysDoc(as.sistem, as.normativ, `H = ${as.H_mCA} mCA (${as.H_bar} bar) · Q stație = ${as.Qstatie} l/s`, as.steps)}`;
+      }
+      if (sisteme) {
+        const t = sisteme.termice, v = sisteme.ventilatie, d = sisteme.detectie, df = sisteme.desfumare;
+        if (t) apaHtml += `<h4>3.2. Instalații termice</h4>` +
+          sysDoc(t.sistem, t.normativ, `Putere încălzire ≈ ${t.Pinc} kW · putere răcire ≈ ${t.Prac} kW`, t.steps);
+        if (v) apaHtml += `<h4>3.3. Ventilare și climatizare</h4>` +
+          sysDoc(v.sistem, v.normativ, `Aer proaspăt zone ocupate ≈ ${v.aerCamere} mc/h · ventilație parcaj ≈ ${v.aerParcaj} mc/h · recuperare ≥ ${v.recuperare}%`, v.steps);
+        if (d) apaHtml += `<h4>3.4. Detecție și alarmare incendiu</h4>` +
+          sysDoc(d.sistem, d.normativ, `${d.obligatoriu ? "Sistem obligatoriu" : "Sistem recomandat"} · ≈ ${d.loops} bucle adresabile`, d.steps);
+        if (df) apaHtml += `<h4>3.5. Desfumare și presurizare</h4>` +
+          sysDoc(df.sistem, df.normativ, `${df.necesar ? "Extracție fum parcaj ≈ " + df.Qparcaj + " mc/h (≈ " + df.Qpernivel + " mc/h/nivel) · " : ""}presurizare case scară ≈ ${df.Qpresurizare} mc/h`, df.steps);
+      }
     }
 
     return `<div class="doc">
@@ -100,7 +114,7 @@
           ${atestate ? `<p>${esc(atestate)}</p>` : ""}
           ${firmContact ? `<p>${esc(firmContact)}</p>` : ""}
         </div>
-        <div class="doc-title"><h1>MEMORIU TEHNIC</h1><p>${apa ? "Racordare utilități + dimensionare instalații (apă rece, stingere incendiu)" : "Dimensionare instalații de stingere a incendiilor"}</p>
+        <div class="doc-title"><h1>MEMORIU TEHNIC</h1><p>${apa ? "Racordare la utilități publice și dimensionarea sistemelor de instalații" : "Dimensionare instalații de stingere a incendiilor"}</p>
           <p>${esc(p.name || "Obiectiv")}</p><p>${esc(p.data || "")}</p></div>
       </div>
 
@@ -124,7 +138,7 @@
       </table>
       ${apaHtml}
       <h3>4. Stingere incendiu — dimensionarea sistemelor (breviar de calcul)</h3>
-      ${sisteme}
+      ${sistemeStingereHtml}
 
       <h3>5. Rezervor de incendiu (rezervă intangibilă)</h3>
       <table class="grid"><tbody>${rezComp}

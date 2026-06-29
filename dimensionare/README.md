@@ -13,11 +13,11 @@ Modulul curent: **Stingere incendiu** (sprinklere, hidranți interiori/exteriori
 - **Rezervor de incendiu** (cumul scenariu cel mai defavorabil) și **grup de pompare**.
 - **Cost · Risc · Beneficiu** integrat (estimare CAPEX + atenționări ISU).
 - **Memoriu tehnic PDF** (print-to-PDF, diacritice perfecte), cu logo și atestate.
-- **Export/Import** JSON, exemplu „Hotel Sinaia" cu un click.
+- **Export/Import** JSON.
 
 ## Cum rulezi
 
-Deschide `index.html` (prezentare) sau direct `app.html` (aplicația). Apasă **„Încarcă exemplu (Hotel Sinaia)"** ca să vezi tot fluxul → **„Generează memoriu PDF"**.
+Deschide `index.html` (prezentare) sau direct `app.html` (aplicația). Apasă **„+ Proiect nou"**, completează datele minime de clădire (gol = valori implicite) → **„Salvează & calculează"** → **„Generează memoriu PDF"**.
 
 ## Corectitudine (teste de regresie)
 
@@ -35,6 +35,9 @@ Toate cele 15 verificări trec: sprinklere 15 l/s & rezervă 54 m³, hidranți i
 |--------|-----|
 | `index.html`, `app.html`, `style.css`, `app.js` | prezentare + aplicație + orchestrare |
 | `calc-stingere.js` (+ `.test.js`) | **motor determinist** stingere (funcții pure, breviar de calcul) |
+| `calc-apa.js` (+ `.test.js`) | apă rece (debite, rezervor consum, hidrofor) |
+| `calc-canalizare.js` · `calc-electrice.js` · `calc-gaze.js` (+ `calc-utilitati.test.js`) | canalizare menajeră/pluvială, energie electrică (trafo + GE), gaze naturale |
+| `calc-sisteme.js` (+ `.test.js`) | termice, ventilație/climatizare, detecție incendiu, desfumare |
 | `normative.js` | normative curente + praguri de obligativitate |
 | `crb.js` | cost · risc · beneficiu |
 | `memoriu.js` | construire memoriu tehnic (print-view → PDF) |
@@ -51,9 +54,18 @@ Aplicația funcționează 100% fără AI. Pentru completarea ipotezelor lipsă �
 
 ## Roadmap module (până la memoriul complet ca Hotel Sinaia)
 
-Stingere ✓ · **Apă ✓** · **Canalizare ✓** · **Electrice ✓** · **Gaze ✓** → următoarele, același tipar determinist: **termice/HVAC** (CTA, recuperare), **detecție incendiu**, **desfumare** (folosește nr. niveluri parcare) — compuse într-un memoriu unic de racordare utilități + dimensionare.
+Toate specialitățile MEP sunt acum implementate, același tipar determinist (calcul + breviar + memoriu), calibrate pe Hotel Sinaia:
 
-Teste apă: `node dimensionare/calc-apa.test.js` (11/11, calibrate pe Hotel Sinaia: Qzi,med 74,5; Qmax,zi 104; Qmax,orar 8,7 mc/h / 2,4 l/s; rezervor consum 110 mc; hidrofor 57 mCA).
+Stingere ✓ · **Apă ✓** · **Canalizare ✓** · **Electrice ✓** · **Gaze ✓** · **Termice/HVAC ✓** · **Ventilație ✓** · **Detecție incendiu ✓** · **Desfumare ✓** — compuse într-un memoriu unic de racordare utilități + dimensionare instalații.
+
+Toate testele de regresie (49 verificări) trec:
+
+```
+node dimensionare/calc-stingere.test.js   # 20/20 — sprinklere, hidranți, rezervor 210 m³
+node dimensionare/calc-apa.test.js        # 11/11 — Qzi,med 74,5; Qmax,orar 8,7 mc/h; rezervor 110 mc; hidrofor 57 mCA
+node dimensionare/calc-utilitati.test.js  #  9/9  — canalizare, electrice (trafo 1250, GE 550 kVA), gaze (PRM 200)
+node dimensionare/calc-sisteme.test.js    #  9/9  — termice 904/600 kW, ventilație 5400 mc/h, detecție, desfumare 72000 mc/h
+```
 
 ## Limitări conștiente (faza curentă)
 
