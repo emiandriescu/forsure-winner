@@ -68,9 +68,13 @@ repetăm în fiecare rubrică:
   alegerea conservatoare, aliniată la cerința EPBD de BACS și control zonal/pe prezență.
 - **Fotovoltaic pe acoperiș + stocare**: bancabil, module ~22% randament (2025), amortizare
   ~4–9 ani. Economia depinde acum de **autoconsum** (un kWh autoconsumat valorează de 2–8× unul
-  exportat), deci stocarea devine regula, nu opțiunea. **Relevanță RO foarte mare:** Legea
-  255/2024 face stocarea practic obligatorie pentru prosumatorii fotovoltaici până la 31 dec
-  2027 (altfel plafon de export 3 kW). România avea ~3,35 GW / ~288k prosumatori în nov. 2025.
+  exportat), deci stocarea devine regula, nu opțiunea. **Relevanță RO foarte mare:** România avea
+  ~3,35 GW / ~288k prosumatori în nov. 2025, iar subvențiile s-au mutat de la PV către **stocare**
+  (Casa Verde Baterii, vezi §10).
+  > ⚠️ **De verificat (corecție):** obligația ca prosumatorii să instaleze stocare până la final
+  > 2027 (Legea 255/2024) **pare abrogată** de Camera Deputaților în dec. 2024 (împreună cu „taxa
+  > pe soare"). Rapoartele sunt contradictorii — tratează stocarea ca **stimulată, nu obligatorie
+  > legal**, până la confirmarea juridică.
 - **Încărcare EV + management dinamic al sarcinii (DLM)**: AC/DC matur și acum cerut de
   reglementare (AFIR, ISO 15118-20 din vara 2025). DLM este valoarea reală de inginerie — evită
   supradimensionarea branșamentului și e deseori elementul critic de proiectare.
@@ -299,8 +303,9 @@ lista de monitorizare (⚠️)** — eficacitate bună în lab, dar întrebări 
 
 ## 5. Stingere incendiu
 
-> Reglementare RO: **P118/2-2025** referă seriile SR EN (ex. SR EN 14972 pentru ceață de apă, SR EN
-> 12845 pentru sprinklere, EN 15004/EN 12094 pentru stingere cu gaze).
+> Reglementare RO: stingerea curge prin **P118/2-2013** (NU există P118/2-2025 — doar Partea I a fost
+> reeditată în 2025; Partea a II-a rămâne 2013 și se aplică cumulativ). Referă seriile SR EN (ex. SR
+> EN 14972 pentru ceață de apă, SR EN 12845 pentru sprinklere, EN 15004/EN 12094 pentru stingere cu gaze).
 
 | Tehnologie | Verdict |
 |------------|---------|
@@ -315,7 +320,7 @@ lista de monitorizare (⚠️)** — eficacitate bună în lab, dar întrebări 
 - **Ceață de apă (water mist)**: HPWM (>35 bar, ex. Marioff HI-FOG) e FM-Approved și standardizată EN;
   marele câștigător pe termen scurt din restrângerea agenților „clean". FM Approved pentru data-center,
   deployment-uri reale 2025–2026. Până la ~90% reducere a consumului de apă vs sprinklere clasice.
-  **Potrivire RO foarte bună:** P118/2-2025 referă deja seria **SR EN 14972** → direct specificabilă, fără
+  **Potrivire RO foarte bună:** P118/2-2013 referă deja seria **SR EN 14972** → direct specificabilă, fără
   gol de reglementare. Avantajul cheie față de agenții PFAS al căror viitor e acum incert.
 - **Gaze inerte (IG-541 Inergen / IG-55 Argonite)**: dovedite, listate NFPA 2001 / ISO 14520 / EN 15004,
   reduc O₂ la ~12–12,5%. **Avantaj decisiv 2026:** NU sunt PFAS, ODP/GWP zero, complet în afara restricției
@@ -333,7 +338,7 @@ lista de monitorizare (⚠️)** — eficacitate bună în lab, dar întrebări 
   depozite frigorifice. Momentum real în 2025 (WAGNER OxyReduct F-Line a primit aprobare FM). „Emergent"
   pentru că: capex + cost de funcționare continuu (generare N₂ 24/7), guvernanță de sănătate ocupațională
   pentru mediu cu O₂ redus, ROI doar pentru active de mare valoare. Acoperit de **EN 16750** / CEN/TR 16832.
-  > ⚠️ **De verificat:** tratarea explicită în P118/2-2025 a sistemelor permanente de reducere a oxigenului
+  > ⚠️ **De verificat:** tratarea explicită în P118/2-2013 a sistemelor permanente de reducere a oxigenului
   > nu a fost confirmată — probabil necesită acceptare ISU / echivalență inginerească. Confirmă înainte de a specifica.
 - **Stingere baterii litiu / ESS**: cea mai dinamică zonă. **NFPA 855 (ediția 2026)** e referința actuală
   (aliniere cu detecția NFPA 72, teste la scară mare LSFT, acoperire pentru chimii non-litiu). **Limitare
@@ -539,9 +544,10 @@ lista de monitorizare (⚠️)** — eficacitate bună în lab, dar întrebări 
   real și valoros, **dar** „AI M&V" complet automat e parțial hype — ajustările non-rutiniere cer expert.
   Adoptă automatizarea selectiv, unde există date de contor inteligent.
 - **Certificate de performanță energetică (EPC)**: obligatorii și consacrate; reforma EPBD aduce **scala
-  armonizată A–G** (Clasa A = doar ZEB; Clasa G = cele mai slabe 15%) și șablon comun. **Relevanță RO:**
-  România folosește azi **A–F** (Mc 001-2022) → trecerea la **A–G** e o schimbare substanțială de
-  metodologie și bază de date. *Stadiul șablonului RO actualizat — de verificat la MDLPA/ANRE.*
+  armonizată A–G** la nivel UE (Clasa A = doar ZEB; Clasa G = cele mai slabe 15%) și șablon comun pentru
+  comparabilitate transfrontalieră. **Relevanță RO:** România folosește deja o scală **A–G** (plus un indice
+  1–100 și o clasă CO₂ separată, Mc 001-2022) — schimbarea reală e **rearmonizarea la șablonul comun UE**
+  (definiția Clasei A = ZEB), nu introducerea scalei. *Stadiul exact al rescalării — de verificat la MDLPA.*
 
 ### Tendințe reale care se formalizează (📈)
 - **Carbon încorporat vs operațional**: distincția e standardizată (EN 15978, RICS WLCA ed. 2). Pe măsură ce
@@ -574,10 +580,105 @@ lista de monitorizare (⚠️)** — eficacitate bună în lab, dar întrebări 
 
 ---
 
+## 10. Context România — normative, autorizări și finanțare
+
+> Această rubrică e specifică pieței RO: ce normative se aplică pe fiecare specialitate, ce autorizări
+> îi trebuie firmei ca să proiecteze, și ce finanțare e disponibilă. **Avertisment de fiabilitate:**
+> aproape toate sursele oficiale RO (legislatie.just.ro, mdlpa.ro, anre.ro, afm.ro, cnsipc.igsu.ro) au
+> blocat fetch-ul direct (HTTP 403), deci o parte din numere/date provin din extrase de motor de căutare,
+> corroborate între surse. Confirmă cifrele și numerele de ordin în textul oficial înainte de uz profesional.
+
+### 10.1 Normative tehnice pe specialitate (versiuni curente)
+
+| Specialitate | Normativ curent | Ce acoperă / status |
+|--------------|-----------------|----------------------|
+| **Electrice** | **I7-2011**, modificat prin **Ordin MDLPA 959/2023** (în vigoare ~12 iul 2023) | Proiectare/execuție/exploatare instalații electrice clădiri. Ordinul 959/2023 a introdus **protecția la defect de arc (AFDD)**, cerințe de rezistență la foc a cablurilor (SR EN 50577), pozare FO în microtuburi PEHD fără halogeni. Rămâne „I7-2011" (modificare, nu reeditare). |
+| **Electrice — rețele/legare la pământ** | **NTE 007/08/00**, **NTE 401/03/00**, **NTE 003/04/00** (ANRE) | Rețele de cabluri, LEA/LEC, MT/IT — pe partea de distribuție. Legarea la pământ în clădiri: prin I7-2011. |
+| **Protecție la trăsnet** | **I7-2011** (capitol dedicat) + **SR EN 62305-1…4** | Evaluare risc, LPS, distanțe de separare (relevant și pentru paratrăsnet vs panouri PV). |
+| **Ventilații & climatizare** | **I5-2022** (Ordin 173/2023, ~10 mar 2023) | Înlocuiește I5-2010. Proiectare/execuție/exploatare ventilare-climatizare. Referă **SR EN 16798-1** (IEQ, cu anexă națională), **SR EN 378** (frig/pompe de căldură — siguranță). |
+| **Sanitare (clădiri)** | **I9-2022** (Ordin MDLPA ~2960/2022, MO 1167 bis/06.12.2022) | Înlocuiește I9-2015. Instalații sanitare interioare, alimentare cu apă, canalizare, ACM. |
+| **Apă-canal (localități)** | **NP 133-2022** (Ordin 15/2023) | Înlocuiește NP 133-2013. Sisteme de alimentare cu apă și canalizare (rețele exterioare/municipale), 3 volume. |
+| **Termice / încălzire** | **I13-2015**, modificat prin **Ordin 170/2023** | Încălzire centrală, centrale și puncte termice, rețele termice, ACM. Sarcină termică: **SR 1907-1:2014** și **SR 1907-2:2014**. |
+| **Securitate la incendiu — construcții** | **P118/1-2025** (Ordin 267/2025, MO 204 bis/10.03.2025, în vigoare ~9–10 mai 2025) | Înlocuiește P118-99. Înlocuiește „gradul de rezistență la foc" cu **„nivel de stabilitate la foc"**; prevederi noi inclusiv pentru **panouri fotovoltaice**. |
+| **Securitate la incendiu — stingere** | **P118/2-2013** (NU există ediție 2025) | Hidranți, **sprinklere**, drencere, ceață de apă. Referă **SR EN 12845**. |
+| **Securitate la incendiu — detecție** | **P118/3-2015** (mod. Ordin 6025/2018; NU există ediție 2025) | Detectare, semnalizare, avertizare incendiu. Referă **SR EN 54**. |
+| **Performanță energetică** | **Mc 001-2022** (aplicabil din 17 iul 2023) + **Legea 372/2005** mod. **Legea 238/2024** | Metodologie de calcul; rezistențele termice ale anvelopei devin **recomandate**, nu impuse. Legea 238/2024 cere **raport de conformare nZEB** la autorizare + cotă minimă **30% regenerabile**. |
+
+> ⚠️ **Corecție importantă vs. percepția comună:** **doar Partea I** a P118 a fost reeditată în 2025.
+> **Părțile a II-a (2013) și a III-a (2015) rămân în vigoare** și se aplică **cumulativ** cu Partea I.
+> Nu există „P118-2/2025" sau „P118-3/2025".
+
+**SR EN cheie transpuse pentru MEP/incendiu:** EN 54 (detecție), EN 12101 (desfumare; ex. SR EN 12101-6
+presurizare), EN 12845 (sprinklere, +A1:2020), EN 378 (frig/pompe de căldură), EN 16798 (ventilare/IEQ).
+
+### 10.2 Autorizări & atestate pentru o firmă de proiectare MEP
+
+| Domeniu | Cine emite / bază legală | Ce-ți trebuie |
+|---------|--------------------------|----------------|
+| **Electrice** | **ANRE** — Ordin 134/2021 (Regulament atestare operatori economici) | Atestat de firmă, tip **A (A1/A2) = proiectare** (B = execuție). Gradul leagă tensiunea: **IIA** (<1 kV/JT), **IIIA** (până la ~20 kV/MT, stații/rețele), **IVA** (≥110 kV/IT). Necesită min. **2 electricieni autorizați ANRE** de grad potrivit. **Valabilitate nelimitată**, dar **verificare/vizare la 5 ani** (altfel își pierde valabilitatea) + raportare anuală a contractelor. |
+| **Securitate la incendiu** | **CNSIPC / IGSU** — OMAI 87/2010 (mod. 112/2014) | Autorizație **per categorie de lucrare**, separat **proiectare** vs **instalare-întreținere**, pentru: **IDSAI** (detecție/semnalizare), **stingere** (limitare și stingere), **desfumare** (ventilare pentru evacuare fum, exceptând natural-organizat). Se acordă firmei, **condiționat de personal cu certificate de competență** (ex. „Proiectant sisteme de securitate", COR 215119). Pe **perioadă nedeterminată**. |
+| **Verificatori de proiecte & experți tehnici** | **MDLPA** — Ordin 817/2021 | Atestare pe **cerințe fundamentale / domenii**: **Cc** (incendiu-construcții), **Ci** (incendiu-instalații, acoperă toate specialitățile), **Is** (sanitare, incl. stingere), **It** (termice/HVAC), **Ie** (electrice, incl. curenți slabi/detecție), **Ig** (gaze). Verificarea incendiu pe proiecte de instalații se face cu **Ci** sau cu Is/It/Ie/Ig individual. Verificator: min. 8 ani vechime; expert: min. 12. Legitimație valabilă **5 ani**, cu prelungire. |
+| **Auditor energetic clădiri** | **MDLPA/MDRT** — Ordin 2237/2010 (actualizat) | **AE Ici** (grad I, construcții+instalații) — EPC + audit pentru **toate** categoriile de clădiri (min. 5 ani); **AE IIci** (grad II) — doar EPC pentru locuințe unifamiliale/apartamente (min. 3 ani). Gradul I e cel care semnează **raportul de conformare nZEB**. |
+
+> **Corelare cu SOWILO:** firma deține deja atestat **ANRE** + autorizații **IGSU** pe **IDSAI (detecție)**,
+> **stingere** și **desfumare** (vezi PDF-urile din repo) — adică exact setul de autorizări de securitate la
+> incendiu de mai sus. Tabelul ajută la planificarea reînnoirilor (vizarea ANRE la 5 ani) și a competențelor.
+>
+> ⚠️ **Schimbare 2024 confirmată:** Legea 238/2024 a **majorat amenzile cu până la ~400%** sub Legea 372/2005
+> și a introdus suspendarea dreptului de practică (12–24 luni) pentru auditori/experți sancționați. Câteva
+> presupuse modificări 2026 (Ordin 348/2026 auditori; OUG 17/2026 depunere e-mail avize ISU) apar într-o
+> singură sursă — **de confirmat**.
+
+### 10.3 Scheme de finanțare (status mijloc 2026)
+
+> Marcaj: **OPEN** = se poate aplica · **CLOSED** = închis/în implementare · **UPCOMING** = anunțat, ghid în
+> pregătire · *incert* = bazat pe o singură sursă.
+
+- **Fondul pentru Modernizare** — canalul cel mai robust și activ. România a primit ~**1,24 mld €** (cea mai
+  mare cotă) în dec. 2025. Rulat prin „Programe-cheie" (Ministerul Energiei): **PK1** (RES + stocare — ghiduri
+  pentru **entități publice** actualizate 23 iun 2026, ~500 mn €, până la 10 mn €/proiect — **OPEN**); **PK5**
+  (termoficare + cogenerare, 590 mn € — OPEN/UPCOMING); **PK7** (eficiență energetică industrială, 150 mn €).
+  Plus o schemă nouă de **stocare standalone 150 mn €** (aprobată CE ~mar 2026 — UPCOMING).
+- **PNRR** — renegociat 2025: redus la **21,41 mld €**, **termen-limită dur 31 aug 2026** pentru investițiile
+  rămase (risc ridicat de penalizări). **C5 „Valul Renovării"** (rezidențial + clădiri publice): **CLOSED** la
+  aplicări, în implementare/plată. **C16 REPowerEU** (vouchere PV+stocare gospodării): în implementare, sub țintă.
+- **Casa Verde Fotovoltaice** (PV nou gospodării, AFM): **ELIMINATĂ** din bugetul AFM 2026 (fără sesiune 2025).
+  Înlocuită de **Casa Verde Baterii** (stocare pentru prosumatori **existenți**): ~400 mn lei (~80 mn €) —
+  **UPCOMING**, înscrieri după publicarea Ghidului în MO (estimat **iul.–aug. 2026**). *(pv-magazine, 18 mai 2026,
+  confirmă mutarea „de la solar la stocare".)*
+- **Electric Up 2** (IMM/HoReCa — PV+încărcare EV+stocare, până la 150k €/beneficiar): **CLOSED**, în
+  evaluare/contractare (596 mn lei alocați pentru plăți, iun 2026).
+- **Termoficare / geotermal:** **Programul Termoficare** (MDLPA, OUG 53/2019, până la 85% cofinanțare) — **OPEN**,
+  multianual. **Geotermal București ~200 mn €** (SACET, prin Fondul de Modernizare) — implementare începută mar
+  2026 (*acordarea finanțării — de confirmat*). Schemă națională geotermală **300 mn €** — UPCOMING/în consultare.
+
+### 10.4 Stadiul transpunerii EPBD în România
+
+- **Transpunere parțială.** România a transpus **doar Art. 17(15)** (eliminarea subvențiilor pentru cazane
+  fosile standalone) prin **OG 16/2025** (MO 787/22.08.2025), ca răspuns la o scrisoare de punere în întârziere
+  din mar 2025. ⚠️ Legea de aprobare a OG 16/2025 e **contestată la CCR** (sesizare prezidențială ~apr 2026)
+  pentru amendamente care ar prelungi sprijinul pentru cazane fosile — fără decizie finală confirmată.
+- **Corpul principal al EPBD reformat (Directiva (UE) 2024/1275): NU e confirmat transpus** la 28 iun 2026
+  (termenul de 29 mai 2026 a trecut). Există doar un *proiect* de lege de modificare a Legii 372/2005 (MDLPA).
+  **Acesta e cel mai important element incert** — de verificat în Monitorul Oficial / cdep.ro.
+- **Deja în vigoare** (prin Legea 238/2024): **raportul de conformare nZEB** la autorizare + cota de 30% regenerabile.
+- **Încă lipsește:** definiția **ZEB**; rescalarea EPC la **șablonul comun UE** (RO are deja A–G, dar nu rearmonizat
+  cu Clasa A = ZEB); regulile de implementare ale **mandatului solar**; **MEPS** și Planul Național de Renovare.
+- **Proceduri de infringement active vs România:** scrisoare de punere în întârziere (iun 2026) pentru
+  neprezentarea Planurilor Naționale de Renovare; **opinie motivată INFR(2025)0358** pentru netranspunerea EED
+  (Directiva 2023/1791). Risc de trimitere la CJUE cu sancțiuni financiare.
+
+> **Concluzie practică pentru proiectare:** proiectează deja la **pregătire ZEB** și include raportul de conformare
+> nZEB (obligatoriu) — nu aștepta transpunerea completă. Mandatul solar UE (>250 m² din 2026) e o țintă pe care o
+> poți anticipa chiar dacă regulile RO de implementare întârzie. Verifică periodic Monitorul Oficial pentru legea
+> de transpunere a corpului principal EPBD.
+
+---
+
 ## Verdict rapid (sumar transversal)
 
 ### De adoptat acum (mature, deseori cerute de reglementare)
-- KNX/DALI-2; fotovoltaic + stocare (Legea 255/2024); încărcare EV + DLM
+- KNX/DALI-2; fotovoltaic + stocare (subvenții mutate spre stocare — Casa Verde Baterii); încărcare EV + DLM
 - Contorizare digitală a apei; pompe ECM; PICV; PEX/PP-R(CT); robineți touchless; control Legionella
 - Agenți frigorifici cu GWP redus (R-290/CO₂ ca implicit de viitor); recuperare de căldură; DCV; radiant + DOAS;
   chillere oil-free (pe sarcină parțială); pompe de căldură (calitate-critică)
@@ -610,7 +711,8 @@ lista de monitorizare (⚠️)** — eficacitate bună în lab, dar întrebări 
 - **8 ian 2026** — aplicabilitate CPR (UE) 2024/3110 (marcaj CE detecție/stingere).
 - **2027** — limita F-Gas GWP-150 pentru monobloc; ținte naționale de flexibilitate; MEPS naționale.
 - **2028 / 2030** — ZEB (public / toate); raportare GWP pe ciclu de viață (>1.000 m² / toate).
-- **31 dec 2027** — stocare obligatorie pentru prosumatori PV în RO (Legea 255/2024).
+- **iul.–aug. 2026** — publicarea Ghidului Casa Verde Baterii (stocare pentru prosumatori existenți); **31 aug 2026** — termen-limită dur PNRR pentru investițiile rămase.
+- *(Atenție: „stocare obligatorie prosumatori până în 2027" — Legea 255/2024 — pare abrogată dec. 2024; de confirmat juridic.)*
 
 ---
 
@@ -666,7 +768,7 @@ Documentul se bazează pe research web din 2025–2026. Sursele cheie, pe rubric
 - Marioff HI-FOG (water mist, data-center) — https://www.marioff.com/en/fire-protection-on-land/data-centers/
 - NFPA 855 (ediția 2026, BESS) — Energy-Storage.News — https://www.energy-storage.news/nfpa-855-2026-edition-updates-and-what-they-mean-for-energy-storage-projects/
 - WAGNER OxyReduct / hipoxic — Wikipedia — https://en.wikipedia.org/wiki/Hypoxic_air_technology_for_fire_prevention
-- P118/2-2025 / reglementări incendiu RO 2025 — SpeedFire — https://speedfire.ro/reglementari-tehnice-privind-securitatea-la-incendiu-in-romania-lista-completa-actualizata-in-2025/
+- Reglementări incendiu RO 2025 (P118/2-2013 încă în vigoare) — SpeedFire — https://speedfire.ro/reglementari-tehnice-privind-securitatea-la-incendiu-in-romania-lista-completa-actualizata-in-2025/
 
 **Desfumare**
 - EN 12101-13:2022 (PDS) — BSI — https://knowledge.bsigroup.com/products/...pressure-differential-systems-pds...
@@ -695,6 +797,27 @@ Documentul se bazează pe research web din 2025–2026. Sursele cheie, pe rubric
 - SRI — Comisia Europeană — https://energy.ec.europa.eu/topics/energy-efficiency/energy-performance-buildings/smart-readiness-indicator_en
 - Transpunere EPBD în RO — energynomics.ro — https://www.energynomics.ro/en/one-year-to-transpose-eu-energy-performance-of-buildings-directive/
 - Eliminarea cazanelor fosile — EHPA — https://ehpa.org/news-and-resources/news/whos-banning-fossil-fuel-boilers/
+
+**Context România (rubrica 10) — normative**
+- Ordin 959/2023 (I7-2011 mod.) — Portal Legislativ — https://legislatie.just.ro/Public/DetaliiDocument/271142 ; analiză MIGS — https://migs.ro/normativ-pentru-proiectarea-executia-si-exploatarea-instalatiilor-electrice-aferente-cladirilor-indicativ-i-7-2011-modificari-2023-in-vigoare/
+- Ordin 173/2023 (I5-2022) — Portal Legislativ — https://legislatie.just.ro/Public/DetaliiDocumentAfis/264657
+- I9-2022 — Portal Legislativ — https://legislatie.just.ro/Public/DetaliiDocumentAfis/262281 ; NP 133-2022 (Ordin 15/2023) — https://legislatie.just.ro/Public/DetaliiDocumentAfis/264654
+- I13-2015 (mod. Ordin 170/2023) — Portal Legislativ — https://legislatie.just.ro/Public/DetaliiDocumentAfis/174761
+- Ordin 267/2025 (P118/1-2025) — Portal Legislativ — https://legislatie.just.ro/public/DetaliiDocument/295242 ; OAR — https://oar.archi/stiri/normativul-p118-1-2025-8-mai-2025-ce-se-schimba/ ; MDLPA — https://www.mdlpa.ro/subarticles/8/normativincediu032025
+- P118/3-2015 (mod. Ordin 6025/2018) — https://migs.ro/wp-content/uploads/2016/09/P-118-III-2015-Detectie-semnalizare-incendiu.pdf
+- Mc 001-2022 — AAECR — https://aaecr.ro/wp-content/uploads/2023/01/Mc-001-2022-Metodologie-calcul-performanta-energetica-cladiri.pdf ; Legea 238/2024 — https://legislatie.just.ro/public/DetaliiDocument/285769
+
+**Context România (rubrica 10) — autorizări**
+- ANRE — Regulament atestare operatori (Ordin 134/2021) — Portal Legislativ — https://legislatie.just.ro/Public/DetaliiDocumentAfis/249816 ; ghid grade — https://expert-electrice.ro/autorizari-anre/
+- CNSIPC/IGSU — autorizarea persoanelor juridice — https://cnsipc.igsu.ro/autorizarea-persoanelor-juridice ; OMAI 87/2010 — https://legislatie.just.ro/Public/DetaliiDocument/117899
+- MDLPA — atestare verificatori/experți (Ordin 817/2021) — https://legislatie.just.ro/Public/DetaliiDocumentAfis/245353 ; domenii/cerințe — https://verificatori.ro/cerinte-fundamentale
+- Auditori energetici (Regulament 2237/2010 act.) — Lege5 — https://lege5.ro/Gratuit/geztonrvhe/ ; Legea 238/2024 amenzi +400% — Revista Construcțiilor — https://www.revistaconstructiilor.eu/index.php/2024/10/07/amenzi-majorate-cu-pana-la-400-pentru-nerespectarea-prevederilor-legii-372-2005-modificata-in-luna-iulie-prin-legea-238-2024/
+
+**Context România (rubrica 10) — finanțare & transpunere EPBD**
+- PNRR revizuit 21,41 mld € — Agerpres — https://www.agerpres.ro/economic/2025/11/13/ ; Fondul de Modernizare (ghiduri actualizate iun 2026) — Fonduri Structurale — https://www.fonduri-structurale.ro/stiri/40562/
+- Casa Verde Fotovoltaice eliminată / Baterii — pv-magazine — https://www.pv-magazine.com/2026/05/18/romania-moves-from-solar-to-storage-rebates/ ; abrogare obligație stocare (dec. 2024) — Digi24 — https://www.digi24.ro/.../camera-deputatilor-a-eliminat-obligatia-prosumatorilor-de-a-si-instala-baterii-de-stocare-3042377
+- Geotermal București ~200 mn € — Balkan Green Energy News — https://balkangreenenergynews.com/geothermal-district-heating-investment-worth-eur-200-million-starts-in-bucharest/
+- OG 16/2025 (transpunere Art. 17(15) EPBD) — AAECR — https://aaecr.ro/stiri/ordonanta-nr-16-din-21-august-2025/ ; pachet infringement iun 2026 — Comisia Europeană — https://energy.ec.europa.eu/news/june-infringements-package-key-decisions-energy-2026-06-04_en
 
 > **Avertisment general:** mai multe surse instituționale (EUR-Lex, Comisia Europeană, ECHA, REHVA, EHPA,
 > RICS) și surse RO au blocat fetch-ul direct (HTTP 403); o parte din cifre provin din extrase de motor de
