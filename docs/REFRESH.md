@@ -1,19 +1,33 @@
 # Reîmprospătarea documentului `tendinte-mep.md`
 
-Acest fișier conține (1) un **prompt reutilizabil** pe care îl rulezi ca să actualizezi
-`docs/tendinte-mep.md` cu noutățile din domeniu și (2) **instrucțiuni** pentru a programa
-reîmprospătarea automată **trimestrială** în Claude Code pe web.
+Reîmprospătarea trimestrială e **deja automatizată** printr-un GitHub Action comis în repo
+(`.github/workflows/mep-refresh.yml`). Acest fișier conține (1) **ce trebuie făcut o singură dată**
+ca Action-ul să poată rula, (2) **promptul reutilizabil** (folosit de Action și pentru rulări manuale).
 
 Documentul rămâne de uz intern — reîmprospătarea deschide doar un **PR draft**, nu publică nimic online.
 
 ---
 
-## 1. De ce nu un „loop" intern
+## 1. Automatizarea (GitHub Action) și cei doi pași unici
 
-Claude Code pe web rulează într-un mediu **efemer**: containerul se reciclează după inactivitate, iar
-un cron/`/loop` pornit într-o sesiune **expiră în maxim 7 zile**. Deci o reîmprospătare reală la 3 luni
-**nu** se poate face dintr-o sesiune. Soluția corectă e o **sesiune programată recurentă** (trigger la
-nivel de platformă) care pornește o sesiune nouă, rulează promptul de mai jos și deschide un PR draft.
+De ce nu un „loop" intern: Claude Code pe web rulează într-un mediu **efemer** (containerul se reciclează,
+iar un cron/`/loop` din sesiune expiră în max 7 zile), deci o reîmprospătare la 3 luni nu poate fi pornită
+din sesiune. Soluția durabilă e workflow-ul **`.github/workflows/mep-refresh.yml`**, care rulează pe
+infrastructura GitHub: trimestrial (1 ian/apr/iul/oct) **+** la cerere (buton manual). La fiecare rulare
+face research-ul, actualizează documentul și deschide un **PR draft**.
+
+Ca workflow-ul să funcționeze, sunt necesari (o singură dată) **doi pași** pe care doar tu îi poți face
+din motive de securitate:
+
+1. **Adaugă tokenul OAuth Claude ca secret.** Rulează local `claude setup-token`, copiază tokenul, apoi
+   în repo: **Settings → Secrets and variables → Actions → New repository secret**, nume
+   **`CLAUDE_CODE_OAUTH_TOKEN`**, valoarea = tokenul. (Folosește abonamentul tău Claude, fără costuri API.)
+2. **Permite Action-ului să deschidă PR-uri.** **Settings → Actions → General → Workflow permissions** →
+   bifează **„Allow GitHub Actions to create and approve pull requests"**.
+
+**Activare:** `schedule` rulează doar de pe branch-ul implicit, deci automatizarea pornește **după ce acest
+branch e mers în `main`**. **Rulare manuală oricând:** tab-ul **Actions → „MEP doc quarterly refresh" →
+Run workflow**.
 
 ---
 
@@ -51,22 +65,17 @@ nivel de platformă) care pornește o sesiune nouă, rulează promptul de mai jo
 
 ---
 
-## 3. Cum programezi reîmprospătarea trimestrială (Claude Code web)
+## 3. Cum rulezi reîmprospătarea
 
-1. Intră în Claude Code pe web și deschide repo-ul **`emiandriescu/forsure-winner`**.
-2. Creează un **trigger / sesiune programată recurentă** (scheduled session) pe acest repo. În
-   configurarea triggerului:
-   - **Cadență:** trimestrial (la fiecare 3 luni). Sugestie de date: 1 mar / 1 iun / 1 sep / 1 dec.
-   - **Prompt:** lipește integral promptul din secțiunea 2 de mai sus.
-   - **Branch de pornire:** `main` (sesiunea va crea singură branch-ul `claude/mep-refresh-...`).
-3. Salvează. La fiecare declanșare, sesiunea rulează research-ul, actualizează documentul și deschide un
-   PR draft pe care îl revizuiești și îl închizi/mergi manual când ești mulțumit.
+- **Automat (trimestrial):** odată ce branch-ul e mers în `main` și cei doi pași din secțiunea 1 sunt
+  făcuți, workflow-ul rulează singur la 1 ian/apr/iul/oct și deschide un PR draft. Nu trebuie să faci nimic.
+- **Manual (oricând), din GitHub:** tab-ul **Actions → „MEP doc quarterly refresh" → Run workflow**.
+- **Manual, dintr-o sesiune Claude Code:** lipește promptul din secțiunea 2 ca mesaj — efectul e identic
+  (research + PR draft).
 
-Documentația oficială pentru sesiuni/triggere programate:
-**https://code.claude.com/docs/en/claude-code-on-the-web**
-
-> Dacă interfața nu oferă (încă) programare recurentă pentru repo-ul tău, alternativa e să rulezi manual
-> promptul din secțiunea 2 o dată pe trimestru — efectul e identic (PR draft cu actualizările).
+> Alternativă fără GitHub Action (dacă vrei doar rulări la cerere): rulează promptul din secțiunea 2
+> într-o sesiune Claude Code pe web pe acest repo. Documentația platformei:
+> **https://code.claude.com/docs/en/claude-code-on-the-web**
 
 ---
 
