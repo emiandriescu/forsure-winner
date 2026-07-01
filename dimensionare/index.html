@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SOWILO Dimensionare — estimare & dimensionare instalații din date minime</title>
+  <meta name="description" content="Dimensionează instalațiile de stingere a incendiilor și generează memoriul tehnic pornind de la foarte puține date despre clădire. Conform P118, NP 127, SR EN 12845. Construit de SOWILO (atestate ANRE/IGSU)." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .hero{max-width:880px;margin:0 auto;padding:70px 24px 30px;text-align:center}
+    .hero .eyebrow{display:inline-block;font-size:.8rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#0ea5e9;background:rgba(14,165,233,.12);padding:5px 12px;border-radius:30px;margin-bottom:18px}
+    .hero h1{font-size:2.3rem;letter-spacing:-.5px;margin-bottom:16px}
+    .hero p.lead{font-size:1.12rem;color:#cfd5e4;max-width:680px;margin:0 auto 26px}
+    .hero .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .feats{max-width:980px;margin:30px auto;padding:0 24px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .feat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px}
+    .feat .fi{font-size:1.6rem;margin-bottom:8px}.feat h3{font-size:1.02rem;margin-bottom:6px}.feat p{font-size:.9rem;color:var(--muted);margin:0}
+    .how{max-width:880px;margin:24px auto;padding:0 24px}
+    .how ol{color:#cfd5e4;line-height:1.8}
+    @media(max-width:740px){.feats{grid-template-columns:1fr}.hero h1{font-size:1.7rem}}
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <span class="eyebrow">Pentru proiectanți de instalații · PSI</span>
+    <h1>Din câteva date despre clădire → dimensionare + memoriu tehnic</h1>
+    <p class="lead">Introduci datele de bază ale clădirii (funcțiune, regim, arii, locuri cazare, parcaj) și aplicația dimensionează instalațiile de stingere a incendiilor și generează memoriul tehnic — cu breviar de calcul, încadrare normativă și analiză cost-risc-beneficiu. Calcule deterministe conform P118, NP 127:2009, SR EN 12845.</p>
+    <div class="cta">
+      <a class="btn btn-primary" href="app.html" style="padding:14px 26px;font-size:1.05rem">Intră în aplicație →</a>
+    </div>
+    <p class="muted" style="margin-top:14px">Calibrat pe memorii tehnice reale (Hotel Sinaia). Fiecare cifră e justificată prin formulă și articol de normativ.</p>
+  </section>
+
+  <div class="feats">
+    <div class="feat"><div class="fi">🧮</div><h3>Calcul determinist, verificabil</h3><p>Sprinklere (OH2), hidranți interiori/exteriori, rezervă intangibilă, grup pompare — fiecare valoare cu formula și articolul de normativ.</p></div>
+    <div class="feat"><div class="fi">📄</div><h3>Memoriu tehnic PDF</h3><p>Structură profesională (date generale, încadrare, breviar de calcul, concluzii), cu logo și atestate. Diacritice perfecte.</p></div>
+    <div class="feat"><div class="fi">⚖️</div><h3>Cost · Risc · Beneficiu</h3><p>Estimare CAPEX din cantitățile rezultate + atenționări de conformitate ISU, integrat în memoriu.</p></div>
+  </div>
+
+  <div class="how">
+    <h2 style="text-align:center">Cum funcționează</h2>
+    <ol>
+      <li>Completezi profilul clădirii (sau apeși „Încarcă exemplu Hotel Sinaia").</li>
+      <li>Aplicația calculează automat sistemele de stingere și rezerva de incendiu.</li>
+      <li>Generezi memoriul tehnic în PDF, gata de pus pe masă.</li>
+    </ol>
+    <p class="muted" style="text-align:center">Următoarele module: apă, canalizare, electrice, gaze, ventilație, detecție, desfumare — până la memoriul complet de racordare utilități.</p>
+  </div>
+
+  <footer class="appfoot"><span class="muted">SOWILO Dimensionare · construit de o firmă reală de proiectare instalații, cu atestate ANRE/IGSU.</span></footer>
+</body>
+</html>
