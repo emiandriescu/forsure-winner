@@ -13,6 +13,8 @@ Modulul curent: **Stingere incendiu** (sprinklere, hidranți interiori/exteriori
 - **Rezervor de incendiu** (cumul scenariu cel mai defavorabil) și **grup de pompare**.
 - **Cost · Risc · Beneficiu extins** — CAPEX pe toate specialitățile (grupat pe trade), cost specific €/m², OPEX (mentenanță) anual, matrice de risc (probabilitate × impact → nivel + măsură) și beneficii cuantificate.
 - **Catalog de prețuri editabil** (tab „Firma mea") — ajustezi tarifele la valorile tale; se aplică tuturor proiectelor și se salvează în browser (`sowilo_preturi`).
+- **Racordare la utilități + pagină de fezabilitate (Go/No-go)** — din debitele/puterile calculate: ce se solicită fiecărui operator (ATR, avize apă-canal, cerere gaz, ISU), semafor de risc de capacitate, termene-capcană și estimarea garanției de racordare electrică (30 €/kW). Pagina de fezabilitate = un PDF de o pagină, bancabil, pentru dezvoltator/investitor.
+- **Export deviz + cantități (Excel/CSV)** — devizul pe specialități + solicitările de racordare, exportabile pentru licitație/ofertare (CSV cu `;` și BOM UTF-8, se deschide direct în Excel RO).
 - **Memoriu tehnic PDF** (print-to-PDF, diacritice perfecte), cu logo și atestate.
 - **Export/Import** JSON.
 
@@ -39,6 +41,8 @@ Toate cele 15 verificări trec: sprinklere 15 l/s & rezervă 54 m³, hidranți i
 | `calc-apa.js` (+ `.test.js`) | apă rece (debite, rezervor consum, hidrofor) |
 | `calc-canalizare.js` · `calc-electrice.js` · `calc-gaze.js` (+ `calc-utilitati.test.js`) | canalizare menajeră/pluvială, energie electrică (trafo + GE), gaze naturale |
 | `calc-sisteme.js` (+ `.test.js`) | termice, ventilație/climatizare, detecție incendiu, desfumare |
+| `calc-racordare.js` (+ `.test.js`) | solicitări de racordare (ATR/apă-canal/gaz/ISU), risc de capacitate, garanție electrică |
+| `fezabilitate.js` · `export.js` (+ `export.test.js`) | pagină Go/No-go (PDF) · export deviz + cantități (CSV/Excel) |
 | `normative.js` | normative curente + praguri de obligativitate |
 | `crb.js` (+ `.test.js`) | cost · risc · beneficiu extins (CAPEX pe specialități, OPEX, €/m², matrice de risc) |
 | `memoriu.js` | construire memoriu tehnic (print-view → PDF) |
@@ -67,7 +71,7 @@ Toate specialitățile MEP sunt acum implementate, același tipar determinist (c
 
 Stingere ✓ · **Apă ✓** · **Canalizare ✓** · **Electrice ✓** · **Gaze ✓** · **Termice/HVAC ✓** · **Ventilație ✓** · **Detecție incendiu ✓** · **Desfumare ✓** — compuse într-un memoriu unic de racordare utilități + dimensionare instalații.
 
-Toate testele de regresie (96 verificări) trec:
+Toate testele de regresie (127 verificări) trec:
 
 ```
 node dimensionare/calc-stingere.test.js   # 20/20 — sprinklere, hidranți, rezervor 210 m³
@@ -75,7 +79,9 @@ node dimensionare/calc-apa.test.js        # 11/11 — Qzi,med 74,5; Qmax,orar 8,
 node dimensionare/calc-utilitati.test.js  #  9/9  — canalizare, electrice (trafo 1250, GE 550 kVA), gaze (PRM 200)
 node dimensionare/calc-sisteme.test.js    #  9/9  — termice 904/600 kW, ventilație 5400 mc/h, detecție, desfumare 72000 mc/h
 node dimensionare/ai.test.js              # 27/27 — strat AI: cereri valide (opus-4-8, fără temperature/budget_tokens), merge ipoteze, rezumat determinist
-node dimensionare/crb.test.js             # 20/20 — cost extins (8 specialități, €/m², OPEX), matrice de risc, beneficii cuantificate
+node dimensionare/crb.test.js             # 25/25 — cost extins (8 specialități, €/m², OPEX), matrice de risc, catalog editabil
+node dimensionare/calc-racordare.test.js  # 13/13 — solicitări operatori, garanție electrică 31.530 €, risc capacitate, ISU
+node dimensionare/export.test.js          # 13/13 — export CSV (deviz+racordare) + pagină de fezabilitate Go/No-go
 ```
 
 ## Limitări conștiente (faza curentă)

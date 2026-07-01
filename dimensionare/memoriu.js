@@ -180,7 +180,11 @@
       ${aiText && aiText.concluzii ? para(aiText.concluzii) : ""}
       <p>Soluția de stingere a fost dimensionată conform normativelor în vigoare. Rezerva intangibilă adoptată este de <b>${rez.adoptat} m³</b>, asigurată dintr-un rezervor propriu și un grup de pompare atestat IGSU. Dimensionările au caracter preliminar (faza DTAC); calculul hidraulic complet și numărul exact de capete sprinkler se confirmă la faza Proiect Tehnic.</p>
 
-      <div class="doc-sign"><div class="sig">Întocmit,<br/>${esc(c.name || "SOWILO SRL")}${c.proiectant ? "<br/>" + esc(c.proiectant) : ""}</div><div class="sig">Verificat</div></div>
+      <div class="doc-sign">
+        <div class="sig">Întocmit,<br/><b>${esc(c.name || "SOWILO SRL")}</b>${c.proiectant ? "<br/>" + esc(c.proiectant) : ""}${atestate ? "<br/><span class=\"mut\">" + esc(atestate) + "</span>" : ""}<div class="stamp">semnătură și ștampilă</div></div>
+        <div class="sig">Verificat (verificator atestat MDLPA),<div class="stamp">semnătură și ștampilă</div></div>
+      </div>
+      <p class="note" style="margin-top:14px">Prezenta documentație are caracter preliminar (faza DTAC) și constituie o predimensionare conform normativelor în vigoare, elaborată sub responsabilitatea proiectantului de specialitate. Valorile se confirmă la faza Proiect Tehnic și prin verificarea tehnică de specialitate.</p>
       <div class="doc-foot"><span>${esc(c.name || "")}</span><span>Generat cu SOWILO Dimensionare</span></div>
     </div>`;
   }

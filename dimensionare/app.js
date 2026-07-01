@@ -259,6 +259,7 @@
     p.electrice = (typeof ELECTRICE !== "undefined") ? ELECTRICE.dimensionareElectrice(profile) : null;
     p.gaze = (typeof GAZE !== "undefined") ? GAZE.dimensionareGaze(profile) : null;
     p.sisteme = (typeof SISTEME !== "undefined") ? SISTEME.dimensionareSisteme(profile) : null;
+    p.racordare = (typeof RACORDARE !== "undefined") ? RACORDARE.dimensionareRacordare({ electrice: p.electrice, apa: p.apa, canalizare: p.canalizare, gaze: p.gaze, dim, profile }) : null;
     // Cost-risc-beneficiu pe TOATE specialitățile (după ce toate sunt calculate), cu catalogul utilizatorului
     p.crb = CRB.analizaExtinsa({ profile, dim, apa: p.apa, canalizare: p.canalizare, electrice: p.electrice, gaze: p.gaze, sisteme: p.sisteme }, currentPreturi());
     return p;
@@ -342,6 +343,24 @@
     return out;
   }
 
+  const capLbl = { "scăzut": "SCĂZUT", "moderat": "MODERAT", "ridicat": "RIDICAT", "critic": "CRITIC" };
+  function renderRacordare(rac) {
+    if (!rac) return "";
+    const rows = rac.utilitati.map((u) =>
+      `<tr><td><b>${esc(u.utilitate)}</b><br/><span class="muted">${esc(u.document)}</span></td>
+        <td>${esc(u.solicitare)}</td><td>${esc(u.cost)}</td>
+        <td class="lvl lvl-${esc(u.nivel)}">${capLbl[u.nivel] || esc(u.nivel)}</td>
+        <td>${esc(u.termen)}</td></tr>`).join("");
+    return `<h2>Racordare la utilități — solicitări către operatori</h2>
+      <div class="bignum">
+        <div class="b"><div class="v">${capLbl[rac.verdict] || esc(rac.verdict)}</div><div class="l">Verdict racordare (risc max.)</div></div>
+        <div class="b"><div class="v">${eur(rac.garantieElectric)}</div><div class="l">Garanție racordare electrică</div></div>
+      </div>
+      <table class="risc-mat"><thead><tr><th>Utilitate</th><th>De solicitat operatorului</th><th>Cost</th><th>Risc</th><th>Termen</th></tr></thead>
+        <tbody>${rows}</tbody></table>
+      <p class="muted" style="margin:6px 0">${esc(rac.nota || "")}</p>`;
+  }
+
   function renderResults(p) {
     const dim = p.dim, crb = p.crb;
     const oblig = `<table class="oblig"><thead><tr><th>Sistem</th><th>Obligatoriu</th><th>Temei normativ</th></tr></thead><tbody>${
@@ -395,6 +414,7 @@
 
     return `${big}
       ${aiBlock}
+      ${renderRacordare(p.racordare)}
       ${renderApa(p.apa)}
       ${renderCanalizare(p.canalizare)}
       ${renderElectrice(p.electrice)}
@@ -464,6 +484,25 @@
     window.print(); setTimeout(() => (document.title = t), 500);
   }
 
+  function printFezabilitate(p) {
+    if (!p.dim) computeProject(p);
+    if (typeof FEZABILITATE === "undefined") return;
+    $("#print-view").innerHTML = FEZABILITATE.buildFezabilitate({ company: state.company, project: p, dim: p.dim, crb: p.crb, racordare: p.racordare });
+    const t = document.title; document.title = `Fezabilitate - ${p.name}`;
+    window.print(); setTimeout(() => (document.title = t), 500);
+  }
+
+  function exportDeviz(p) {
+    if (!p.dim) computeProject(p);
+    if (typeof EXPORTCSV === "undefined") return;
+    const csv = "﻿" + EXPORTCSV.buildExportCSV(p); // BOM UTF-8 pentru diacritice în Excel
+    const b = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(b);
+    a.download = "deviz-" + (p.name || "proiect").replace(/[^\w\-]+/g, "_") + ".csv";
+    a.click(); URL.revokeObjectURL(a.href); toast("Deviz exportat (CSV pentru Excel)");
+  }
+
   /* events */
   $("#btn-new").addEventListener("click", () => openProjectForm(null));
   $("#btn-back").addEventListener("click", () => { showList(); renderList(); });
@@ -471,6 +510,8 @@
   $("#btn-pdf").addEventListener("click", () => { const p = state.projects.find((x) => x.id === currentId); if (p) printMemoriu(p); });
   $("#btn-ai-ipoteze").addEventListener("click", aiPropuneIpoteze);
   $("#btn-ai-narativ").addEventListener("click", aiNarativ);
+  $("#btn-fezabilitate").addEventListener("click", () => { const p = state.projects.find((x) => x.id === currentId); if (p) printFezabilitate(p); });
+  $("#btn-export-deviz").addEventListener("click", () => { const p = state.projects.find((x) => x.id === currentId); if (p) exportDeviz(p); });
   $("#proj-list").addEventListener("click", (e) => {
     const t = e.target.dataset;
     if (t.open) openResults(t.open);
