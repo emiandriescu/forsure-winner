@@ -90,7 +90,7 @@
     }
 
     /* ── Hero intro (după încărcarea fonturilor) ── */
-    if (hasGSAP && !reduceMotion) {
+    if (hasGSAP && !reduceMotion && document.querySelector('.hero-inner')) {
         gsap.set('.hero-inner, .hero-stats, .hero-fig', { autoAlpha: 0 });
 
         const runHeroIntro = () => {
@@ -162,16 +162,20 @@
             });
         });
 
-        gsap.from('.domain-row', {
-            y: 36, autoAlpha: 0, duration: .7, ease: 'power3.out', stagger: .07,
-            scrollTrigger: { trigger: '.domains-list', start: 'top 85%', once: true }
-        });
+        if (document.querySelector('.domains-list')) {
+            gsap.from('.domain-row', {
+                y: 36, autoAlpha: 0, duration: .7, ease: 'power3.out', stagger: .07,
+                scrollTrigger: { trigger: '.domains-list', start: 'top 85%', once: true }
+            });
+        }
 
         /* Marquee scrub: viteza crește ușor la scroll */
-        gsap.to('.marquee-track', {
-            xPercent: -8, ease: 'none',
-            scrollTrigger: { trigger: '.marquee', start: 'top bottom', end: 'bottom top', scrub: 1 }
-        });
+        if (document.querySelector('.marquee-track')) {
+            gsap.to('.marquee-track', {
+                xPercent: -8, ease: 'none',
+                scrollTrigger: { trigger: '.marquee', start: 'top bottom', end: 'bottom top', scrub: 1 }
+            });
+        }
     }
 
     /* ── Contact form (mailto) ───────────────────── */

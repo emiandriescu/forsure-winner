@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portofoliu — SOWILO | Proiectare Instalații</title>
+    <meta name="description" content="Portofoliul SOWILO SRL — selecție de proiecte de instalații electrice, sanitare, termice & HVAC, detecție și stingere incendiu, la fazele SF, DALI, DTAC, PTh și DE.">
+    <meta property="og:title" content="Portofoliu — SOWILO | Proiectare Instalații">
+    <meta property="og:description" content="Selecție de proiecte de instalații pe 8 domenii — rezidențial, medical, învățământ, retail, cultură & sport, producție.">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#2B5CF6">
+    <link rel="icon" type="image/png" href="logo-mark.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css?v=6">
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ── NAVBAR ─────────────────────────────────── -->
+<header class="navbar" id="navbar">
+    <div class="nav-inner">
+        <a href="index.html" class="nav-brand" data-hover>
+            <img src="logo-mark.png" alt="SOWILO" class="nav-mark">
+            <span class="nav-wordmark">SOWILO<sup>™</sup></span>
+        </a>
+        <nav class="nav-links" aria-label="Navigație principală">
+            <a href="index.html#servicii" data-hover><span class="nav-idx">01</span>Servicii</a>
+            <a href="index.html#proces" data-hover><span class="nav-idx">02</span>Proces</a>
+            <a href="index.html#domenii" data-hover><span class="nav-idx">03</span>Domenii</a>
+            <a href="index.html#autorizatii" data-hover><span class="nav-idx">04</span>Autorizații</a>
+            <a href="portofoliu.html" class="is-active" data-hover><span class="nav-idx">05</span>Portofoliu</a>
+        </nav>
+        <a href="index.html#contact" class="nav-cta" data-hover>Solicită ofertă</a>
+        <button class="nav-toggle" id="navToggle" aria-label="Meniu" aria-expanded="false">
+            <span></span><span></span>
+        </button>
+    </div>
+</header>
+
+<!-- Mobile overlay menu -->
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <nav class="mobile-links">
+        <a href="index.html#servicii"><span>01</span>Servicii</a>
+        <a href="index.html#proces"><span>02</span>Proces</a>
+        <a href="index.html#domenii"><span>03</span>Domenii</a>
+        <a href="index.html#autorizatii"><span>04</span>Autorizații</a>
+        <a href="portofoliu.html"><span>05</span>Portofoliu</a>
+        <a href="index.html#contact"><span>06</span>Contact</a>
+    </nav>
+    <div class="mobile-menu-foot">
+        <a href="tel:0748635346">0748 635 346</a>
+        <a href="mailto:office@sowilo.ro">office@sowilo.ro</a>
+    </div>
+</div>
+
+<main id="top">
+
+    <!-- ── HEADER PAGINĂ ──────────────────────── -->
+    <section class="pf-hero">
+        <div class="section-inner">
+            <p class="section-label mono" data-reveal>( Portofoliu ) — Lucrări predate</p>
+            <h1 class="section-title" data-reveal>Ce am proiectat<br>până acum.</h1>
+            <p class="section-sub pf-hero-sub" data-reveal>O selecție din proiectele elaborate de echipa SOWILO și colaboratorii
+               noștri — instalații electrice, sanitare, termice &amp; HVAC (inclusiv evacuare fum și presurizare),
+               detecție și stingere incendiu — la fazele SF, DALI, D.T.A.C., P.Th. și D.E.</p>
+            <p class="pf-hero-meta mono" data-reveal><span id="pfTotal">—</span> proiecte · 8 domenii · toate specialitățile</p>
+        </div>
+    </section>
+
+    <!-- ── FILTRE ─────────────────────────────── -->
+    <div class="pf-filter" id="pfFilter">
+        <div class="pf-filter-inner">
+            <button class="chip is-active" data-filter="all" data-hover>Toate</button>
+            <button class="chip" data-filter="el" data-hover>Electrice</button>
+            <button class="chip" data-filter="sa" data-hover>Sanitare</button>
+            <button class="chip" data-filter="hvac" data-hover>Termice &amp; HVAC</button>
+            <button class="chip" data-filter="sting" data-hover>Stingere</button>
+            <button class="chip" data-filter="idsai" data-hover>IDSAI</button>
+            <button class="chip" data-filter="desf" data-hover>Desfumare</button>
+            <button class="chip" data-filter="cs" data-hover>Curenți slabi</button>
+            <span class="pf-count mono"><span id="pfCount">—</span> proiecte afișate</span>
+        </div>
+    </div>
+
+    <!-- ── LISTA PROIECTE ─────────────────────── -->
+    <div class="pf-groups">
+
+        <!-- 01 · REZIDENȚIAL -->
+        <section class="pf-group" data-domain="rezidential">
+            <header class="pf-group-head" data-reveal>
+                <span class="pf-group-idx mono">01</span>
+                <h2>Rezidențial</h2>
+                <span class="pf-group-count mono"></span>
+            </header>
+            <ul class="pf-list">
+                <li class="pf-row" data-tags="el sa hvac"><span class="pf-name">Bloc de locuințe colective — Păcurari, Iași</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-tags="el sa hvac"><span class="pf-name">Blocuri de locuințe — platforma Fortus, Iași</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Termice &amp; HVAC</span></span></li>
+                <!-- ═══ COLAB HVAC — START (a se șterge la retragerea portofoliului HVAC) ═══ -->
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Modificări imobil rezidențial existent — fațade și recompartimentări, București</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Imobil locuințe colective S+P+3E — Constanța</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Ansamblu locuințe individuale P+1E cu anexe și rețele — Mărăcineni, Buzău</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Imobil mixt 2S+P+7E+8–10Er — locuințe și spații comerciale, București</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Consolidare și construire locuințe colective D+P+2E+3Er — București</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Extindere imobil rezidențial — Corp A, București</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Supraetajare și modificări imobil rezidențial — București</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Imobil locuințe colective S+P+3E+4Er — București</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Două imobile locuințe colective P+2E+3Er — Tunari, Ilfov</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Ansamblu rezidențial Amber Forest — 100+ locuințe P+1E, Tunari, Ilfov</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Imobil mixt 2S+P+6E+Er — comerț, servicii și locuințe, Voluntari, Ilfov</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <!-- ═══ COLAB HVAC — END ═══ -->
+            </ul>
+        </section>
+
+        <!-- 02 · HORECA & TURISM -->
+        <section class="pf-group" data-domain="horeca">
+            <header class="pf-group-head" data-reveal>
+                <span class="pf-group-idx mono">02</span>
+                <h2>HoReCa &amp; Turism</h2>
+                <span class="pf-group-count mono"></span>
+            </header>
+            <ul class="pf-list">
+                <li class="pf-row" data-tags="el sa hvac idsai sting"><span class="pf-name">Centru SPA — Băile Oglinzi, Neamț</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Termice &amp; HVAC</span><span class="tag">IDSAI</span><span class="tag">Stingere</span></span></li>
+                <!-- ═══ COLAB HVAC — START (a se șterge la retragerea portofoliului HVAC) ═══ -->
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Restaurant Burger King — Mega Mall, București</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Cafenea Starbucks — Universitate, București</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Restaurant parter — Chiajna, Ilfov</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Amenajare restaurant în imobil mixt — București</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Unitate turistică D+P+1E+M cu centru SPA și săli de evenimente — Gura Vadului, Prahova</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Cofetărie P+1E — Voluntari, Ilfov</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <!-- ═══ COLAB HVAC — END ═══ -->
+            </ul>
+        </section>
+
+        <!-- 03 · ÎNVĂȚĂMÂNT -->
+        <section class="pf-group" data-domain="invatamant">
+            <header class="pf-group-head" data-reveal>
+                <span class="pf-group-idx mono">03</span>
+                <h2>Învățământ</h2>
+                <span class="pf-group-count mono"></span>
+            </header>
+            <ul class="pf-list">
+                <li class="pf-row" data-tags="el sa hvac"><span class="pf-name">Școala „George Coșbuc"</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-tags="el sa hvac"><span class="pf-name">Colegiul Ștefănescu</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-tags="el sa hvac"><span class="pf-name">Corp nou — Universitatea „Ștefan cel Mare", Suceava</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-tags="el sa hvac"><span class="pf-name">Liceul Tehnologic Băile Olănești, Vâlcea</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-tags="el sa hvac"><span class="pf-name">Grădiniță — Roman, Neamț</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-tags="el sa hvac"><span class="pf-name">Colegiul „Vasile Lovinescu" — Fălticeni, Suceava</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-tags="el sa hvac"><span class="pf-name">Grădiniță — Dorohoi, Botoșani</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-tags="el sa hvac"><span class="pf-name">Grădinița Waldorf</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-tags="el sa hvac"><span class="pf-name">Cămin Leonida</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-tags="el sa hvac"><span class="pf-name">Liceul „Mihail Sadoveanu" — Corp C2</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-tags="el sa hvac"><span class="pf-name">Liceul „Mihail Sadoveanu" — Corp C10</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Termice &amp; HVAC</span></span></li>
+                <!-- ═══ COLAB HVAC — START (a se șterge la retragerea portofoliului HVAC) ═══ -->
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Supraetajare școală și sală de sport nouă — Valu lui Traian, Constanța</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Conversie în unitate de învățământ preuniversitar cu bazin — Voluntari, Ilfov</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Corp învățământ, cazare și bazin de antrenament — Baza nautică Lac Siutghiol, Constanța</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Unitate de învățământ cu dotări complementare — Tunari, Ilfov</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Creșă 4 grupe — Nădlac, Arad</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Consolidare și extindere școală, sală de sport nouă — Voluntari, Ilfov</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Extindere infrastructură universitară IT&amp;C — Universitatea „Ovidius", Constanța</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Școală clasele 0–VIII cu sală de sport — Valu lui Traian, Constanța</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <!-- ═══ COLAB HVAC — END ═══ -->
+            </ul>
+        </section>
+
+        <!-- 04 · MEDICAL -->
+        <section class="pf-group" data-domain="medical">
+            <header class="pf-group-head" data-reveal>
+                <span class="pf-group-idx mono">04</span>
+                <h2>Medical</h2>
+                <span class="pf-group-count mono"></span>
+            </header>
+            <ul class="pf-list">
+                <li class="pf-row" data-tags="sa"><span class="pf-name">Spitalul „Sf. Dimitrie" — Târgu Neamț</span><span class="pf-tags"><span class="tag">Sanitare</span></span></li>
+                <li class="pf-row" data-tags="el sa hvac"><span class="pf-name">Spital — Pașcani, Iași</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-tags="el sa hvac"><span class="pf-name">Spital — Bisericani, Neamț</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-tags="el sa hvac"><span class="pf-name">Spital Mamaia</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Termice &amp; HVAC</span></span></li>
+                <!-- ═══ COLAB HVAC — START (a se șterge la retragerea portofoliului HVAC) ═══ -->
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Modernizare și extindere secție oncologie — Botoșani</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Centru medical de permanență — Bălușeni, Botoșani</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Clinică oftalmologică — Ploiești</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Dispensar medical uman — Corni, Botoșani</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Clădire nouă — secții pneumologie și boli infecțioase, Miercurea-Ciuc</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Reabilitare și modernizare centru medical — Bârlad</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Centru medical multifuncțional cu paturi D+P+6E — Constanța</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Amenajare birouri și laboratoare medicale (4.200 mp) — București</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Conversie hotel P+4E în unitate sanitară cu paturi — Eforie Sud, Constanța</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <!-- ═══ COLAB HVAC — END ═══ -->
+            </ul>
+        </section>
+
+        <!-- 05 · RETAIL & COMERCIAL -->
+        <section class="pf-group" data-domain="retail">
+            <header class="pf-group-head" data-reveal>
+                <span class="pf-group-idx mono">05</span>
+                <h2>Retail &amp; Comercial</h2>
+                <span class="pf-group-count mono"></span>
+            </header>
+            <ul class="pf-list">
+                <li class="pf-row" data-tags="el sa hvac"><span class="pf-name">Spălătorie — Palas Campus, Iași</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-tags="el sa hvac"><span class="pf-name">Showroom — Palas Campus, Iași</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Termice &amp; HVAC</span></span></li>
+                <!-- ═══ COLAB HVAC — START (a se șterge la retragerea portofoliului HVAC) ═══ -->
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Amenajări magazine fashion (Sinsay, Cropp, House, Reserved, Mohito) — Ploiești și Sibiu</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Supermarket Penny Market — Râmnicu Sărat, Buzău</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Galerie comercială JYSK — Pantelimon, Ilfov</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Conversie spațiu expozițional în supermarket, birouri și depozitare — Brașov</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Supermarket Penny Market — Constanța</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Supermarket Penny Market — Fierbinți-Târg, Ialomița</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <!-- ═══ COLAB HVAC — END ═══ -->
+            </ul>
+        </section>
+
+        <!-- 06 · CULTURĂ & SPORT -->
+        <section class="pf-group" data-domain="cultura-sport">
+            <header class="pf-group-head" data-reveal>
+                <span class="pf-group-idx mono">06</span>
+                <h2>Cultură &amp; Sport</h2>
+                <span class="pf-group-count mono"></span>
+            </header>
+            <ul class="pf-list">
+                <li class="pf-row" data-tags="el sa sting idsai desf cs"><span class="pf-name">Sala Polivalentă — Brăila</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Stingere</span><span class="tag">IDSAI</span><span class="tag">Desfumare</span><span class="tag">Curenți slabi</span></span></li>
+                <li class="pf-row" data-tags="el sa idsai cs"><span class="pf-name">Centru multifuncțional „Cetatea Longo Campo" — Câmpulung, Argeș</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">IDSAI</span><span class="tag">Curenți slabi</span></span></li>
+                <li class="pf-row" data-tags="cs"><span class="pf-name">Cinema Dacia — Iași</span><span class="pf-tags"><span class="tag">Curenți slabi</span></span></li>
+                <li class="pf-row" data-tags="el sa hvac"><span class="pf-name">Cinematograful Ozana — Târgu Neamț</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-tags="el sa"><span class="pf-name">Amenajare urbană — Gura Humorului, Suceava</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span></span></li>
+                <li class="pf-row" data-tags="el sa"><span class="pf-name">Parc municipal — Dorohoi, Botoșani</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span></span></li>
+                <!-- ═══ COLAB HVAC — START (a se șterge la retragerea portofoliului HVAC) ═══ -->
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Bazin de înot didactic — Zalău</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Reabilitare și modernizare Casa de Cultură — Târgu Jiu</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Reabilitare și modernizare bazin de înot descoperit — Târgu Jiu</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Bazin de înot didactic — Sânandrei, Timiș</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Sală de sport școlară — Cernavodă, Constanța</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Construire și dotare Clubul Copiilor — Mizil, Prahova</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Finalizare așezământ cultural — Brănești, Ilfov</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <!-- ═══ COLAB HVAC — END ═══ -->
+            </ul>
+        </section>
+
+        <!-- 07 · BIROURI & ADMINISTRATIV -->
+        <section class="pf-group" data-domain="birouri">
+            <header class="pf-group-head" data-reveal>
+                <span class="pf-group-idx mono">07</span>
+                <h2>Birouri &amp; Administrativ</h2>
+                <span class="pf-group-count mono"></span>
+            </header>
+            <ul class="pf-list">
+                <li class="pf-row" data-tags="el sa hvac"><span class="pf-name">Amenajare birouri Safeguard — Palas Campus, Iași</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-tags="el sa hvac"><span class="pf-name">Amenajare birouri HIGHTEC — Palas Campus, Iași</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span><span class="tag">Termice &amp; HVAC</span></span></li>
+                <!-- ═══ COLAB HVAC — START (a se șterge la retragerea portofoliului HVAC) ═══ -->
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Incubator de afaceri S+P+6E — Constanța</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Spațiu birouri P+1E — Comănești, Bacău</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Incubator de afaceri D+P+Mez+6E — Constanța</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Pavilion administrativ nou — incintă militară, București</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Consolidare și modernizare clădire administrativă — București</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Clădire arhivă P+1E — Agigea, Constanța</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <!-- ═══ COLAB HVAC — END ═══ -->
+            </ul>
+        </section>
+
+        <!-- 08 · PRODUCȚIE & DEPOZITARE -->
+        <section class="pf-group" data-domain="productie">
+            <header class="pf-group-head" data-reveal>
+                <span class="pf-group-idx mono">08</span>
+                <h2>Producție &amp; Depozitare</h2>
+                <span class="pf-group-count mono"></span>
+            </header>
+            <ul class="pf-list">
+                <li class="pf-row" data-tags="el sa"><span class="pf-name">Hală de producție — Thimm</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span></span></li>
+                <li class="pf-row" data-tags="el sa"><span class="pf-name">Fabrică de nutrețuri combinate (FNC)</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span></span></li>
+                <li class="pf-row" data-tags="el sa"><span class="pf-name">Hale agrozootehnice — ferme</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span></span></li>
+                <li class="pf-row" data-tags="el sa"><span class="pf-name">Hală de producție</span><span class="pf-tags"><span class="tag">Electrice</span><span class="tag">Sanitare</span></span></li>
+                <!-- ═══ COLAB HVAC — START (a se șterge la retragerea portofoliului HVAC) ═══ -->
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Fabrică de înghețată — Drobeta-Turnu Severin</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Clădire vestiare personal — incintă portuară, Constanța</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Hală producție, depozitare și birouri P+supantă — Agigea, Constanța</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Hală producție, depozitare și birouri — Buftea, Ilfov</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Birouri și depozit produse farmaceutice P+1E — Constanța</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <li class="pf-row" data-src="colab" data-tags="hvac"><span class="pf-name">Hală asamblare tablouri electrice P+1E — Lumina, Constanța</span><span class="pf-tags"><span class="tag">Termice &amp; HVAC</span></span></li>
+                <!-- ═══ COLAB HVAC — END ═══ -->
+            </ul>
+        </section>
+
+        <p class="pf-note mono">Denumirile proiectelor sunt prescurtate. Lista completă a lucrărilor, cu fazele
+           și detaliile fiecărui proiect, este disponibilă la cerere.</p>
+
+    </div>
+
+    <!-- ── CTA ────────────────────────────────── -->
+    <section class="pf-cta">
+        <h2 class="section-title" data-reveal>Vrei detalii despre<br>un proiect anume?</h2>
+        <a href="index.html#contact" class="btn btn-primary magnetic" data-hover><span>Contactează-ne →</span></a>
+    </section>
+
+</main>
+
+<!-- ── FOOTER ─────────────────────────────────── -->
+<footer class="footer dark">
+    <div class="footer-inner">
+        <img src="logo-white.png" alt="SOWILO" class="footer-logo">
+        <nav class="footer-links" aria-label="Navigație subsol">
+            <a href="index.html#servicii" data-hover>Servicii</a>
+            <a href="index.html#proces" data-hover>Proces</a>
+            <a href="index.html#domenii" data-hover>Domenii</a>
+            <a href="index.html#autorizatii" data-hover>Autorizații</a>
+            <a href="portofoliu.html" data-hover>Portofoliu</a>
+            <a href="index.html#contact" data-hover>Contact</a>
+        </nav>
+        <p class="footer-copy mono">© 2026 SOWILO SRL — Inginerie &amp; proiectare instalații. Toate drepturile rezervate.</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
+<script src="script.js?v=6" defer></script>
+
+<!-- Filtrare portofoliu -->
+<script>
+(function () {
+    'use strict';
+    var chips   = document.querySelectorAll('.chip');
+    var rows    = document.querySelectorAll('.pf-row');
+    var groups  = document.querySelectorAll('.pf-group');
+    var countEl = document.getElementById('pfCount');
+    var totalEl = document.getElementById('pfTotal');
+
+    function apply(tag) {
+        var total = 0;
+        rows.forEach(function (r) {
+            var show = tag === 'all' || (' ' + r.dataset.tags + ' ').indexOf(' ' + tag + ' ') !== -1;
+            r.classList.toggle('is-hidden', !show);
+            if (show) total++;
+        });
+        groups.forEach(function (g) {
+            var vis = g.querySelectorAll('.pf-row:not(.is-hidden)').length;
+            g.classList.toggle('is-hidden', vis === 0);
+            var c = g.querySelector('.pf-group-count');
+            if (c) c.textContent = vis + (vis === 1 ? ' proiect' : ' proiecte');
+        });
+        if (countEl) countEl.textContent = total;
+    }
+
+    chips.forEach(function (ch) {
+        ch.addEventListener('click', function () {
+            chips.forEach(function (c) { c.classList.remove('is-active'); });
+            ch.classList.add('is-active');
+            apply(ch.dataset.filter);
+        });
+    });
+
+    if (totalEl) totalEl.textContent = rows.length;
+    apply('all');
+})();
+</script>
+</body>
+</html>
