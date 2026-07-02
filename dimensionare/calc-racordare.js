@@ -26,13 +26,14 @@
     // --- Energie electrică (ATR) ---
     if (electrice) {
       const putere = electrice.Pa || 0;           // putere absorbită ≈ putere de racordare solicitată
+      const pi = electrice.Pi || 0, s = electrice.S || 0;
       const garantie = r0(putere * C.garantie_eur_kw);
-      const nivel = nivelDin(electrice.S || 0, C.electric_kva_atentie, C.electric_kva_mt);
-      const mt = (electrice.S || 0) >= C.electric_kva_mt;
+      const nivel = nivelDin(s, C.electric_kva_atentie, C.electric_kva_mt);
+      const mt = s >= C.electric_kva_mt;
       util.push({
         cheie: "electric", utilitate: "Energie electrică", operator: "Operator de distribuție (ex. Distribuție Energie / rețele locale)",
         document: "Aviz tehnic de racordare (ATR)", nivel,
-        solicitare: `Putere de racordare ≈ ${putere} kW (Pi ${electrice.Pi} kW · S ${electrice.S} kVA)${mt ? " — racordare la medie tensiune, post propriu de transformare" : ""}.`,
+        solicitare: `Putere de racordare ≈ ${putere} kW (Pi ${pi} kW · S ${s} kVA)${mt ? " — racordare la medie tensiune, post propriu de transformare" : ""}.`,
         cost: `Garanție de racordare ≈ ${garantie.toLocaleString("ro-RO")} € (${C.garantie_eur_kw} €/kW, ANRE)${mt ? "; posibilă întărire de rețea — de confirmat" : ""}.`,
         termen: "ATR emis în max 30 zile calendaristice de la dosar complet; contract de racordare semnat în 12 luni.",
         valoare: garantie,
@@ -45,7 +46,7 @@
       util.push({
         cheie: "apa", utilitate: "Alimentare cu apă", operator: "Operator apă-canal (ex. Apa Nova / ACET / regie locală)",
         document: "Aviz de racordare apă", nivel: nivelDin(ls, C.apa_ls_atentie, C.apa_ls_atentie * 2),
-        solicitare: `Debit de calcul Qmax orar ≈ ${apa.debite.Qmax_orar_mc} mc/h (${ls} l/s), branșament ${apa.debite.dn}, presiune ≥ ${apa.debite.presiune_bar} bar.`,
+        solicitare: `Debit de calcul Qmax orar ≈ ${apa.debite.Qmax_orar_mc || 0} mc/h (${ls} l/s), branșament ${apa.debite.dn || "—"}, presiune ≥ ${apa.debite.presiune_bar || 2.5} bar.`,
         cost: "Cost branșament — de ofertat de operator/executant autorizat.",
         termen: "Avizul definitiv se emite pe proiectul de execuție al branșamentului.",
         valoare: 0,
@@ -68,12 +69,13 @@
 
     // --- Gaze naturale (cerere de racordare) ---
     if (gaze) {
-      const q = gaze.q || 0;
+      // riscul și încadrarea de presiune se evaluează pe debitul SOLICITAT (cel cerut operatorului), nu pe cel de calcul
+      const q = gaze.q_solicitat || gaze.q || 0;
       const presiuneMedie = q >= C.gaz_mch_presiune;
       util.push({
         cheie: "gaz", utilitate: "Gaze naturale", operator: "Operator de distribuție gaz (ex. Distrigaz Sud / Delgaz Grid)",
         document: "Cerere de racordare gaz", nivel: nivelDin(q, C.gaz_mch_presiune, C.gaz_mch_presiune * 3),
-        solicitare: `Debit instalat q ≈ ${q} mc/h, PRM ${gaze.prm} mc/h${presiuneMedie ? " — probabil presiune medie, stație de reglare-măsurare dedicată" : ""}.`,
+        solicitare: `Debit solicitat ≈ ${q} mc/h (calcul: ${gaze.q || 0} mc/h), PRM ${gaze.prmLabel || gaze.prm || "—"} mc/h${presiuneMedie ? " — probabil presiune medie, stație de reglare-măsurare dedicată" : ""}.`,
         cost: "Cost racord + PRM — de ofertat de operator.",
         termen: "Operatorul analizează în max 30 zile lucrătoare; racordare completă tipic ~3–4 luni.",
         valoare: 0,
@@ -81,7 +83,7 @@
     }
 
     // --- ISU (aviz/autorizație de securitate la incendiu) ---
-    const nivInalt = (profile && profile.inaltimeUltimPlanseu || 0) >= 28;
+    const nivInalt = (profile && profile.inaltimeUltimPlanseu || 0) > 28; // „clădire înaltă" = strict peste 28 m (P118)
     const colectivInalt = profile && profile.tip === "rezidential" && (profile.nrNiveluriSupraterane || 0) > 4;
     const oblig = dim && dim.obligativitate && dim.obligativitate.some((o) => o.obligatoriu);
     const isuNecesar = !!((profile && profile.saliAglomerate) || nivInalt || colectivInalt || oblig);
@@ -101,12 +103,13 @@
     const verdict = util.reduce((acc, u) => (ordine[u.nivel] > ordine[acc] ? u.nivel : acc), "scăzut");
     const garantieElectric = (util.find((u) => u.cheie === "electric") || {}).valoare || 0;
 
+    // timeline construit doar din utilitățile efectiv prezente în proiect
     const timeline = [
-      { pas: "ATR energie electrică", durata: "≤ 30 zile", nota: "operator distribuție" },
-      { pas: "Cerere racordare gaz", durata: "~3–4 luni", nota: "cel mai lung — de pornit devreme" },
-      { pas: "Avize apă-canal", durata: "pe proiectul de execuție", nota: "operator apă-canal" },
+      electrice && { pas: "ATR energie electrică", durata: "≤ 30 zile", nota: "operator distribuție" },
+      gaze && { pas: "Cerere racordare gaz", durata: "~3–4 luni", nota: "cel mai lung — de pornit devreme" },
+      (apa || canalizare) && { pas: "Avize apă-canal", durata: "pe proiectul de execuție", nota: "operator apă-canal" },
       { pas: "Aviz ISU", durata: "15 zile lucrătoare", nota: "autorizație +30 zile după control" },
-    ];
+    ].filter(Boolean);
 
     return { utilitati: util, verdict, garantieElectric, timeline,
       nota: "Estimări preliminare (faza DTAC), sub responsabilitatea proiectantului; capacitățile și costurile de racordare se confirmă cu operatorii." };

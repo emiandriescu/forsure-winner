@@ -90,7 +90,7 @@
       if (gaze) {
         const g = gaze;
         apaHtml += `<h4>2.4. Gaze naturale</h4>` +
-          sysDoc(g.sistem, g.normativ, `P instalată = ${g.P_total} kW · debit gaz q = ${g.q} mc/h · PRM ${g.prm} mc/h`, g.steps);
+          sysDoc(g.sistem, g.normativ, `P instalată = ${g.P_total} kW · debit gaz q = ${g.q} mc/h · PRM ${g.prmLabel || g.prm} mc/h`, g.steps);
       }
     }
     if (apa || sisteme) {

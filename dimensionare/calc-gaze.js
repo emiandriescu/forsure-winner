@@ -7,7 +7,13 @@
   const r1 = (n) => Math.round(n * 10) / 10;
   const C = { PCI: 9.5, eta: 0.95, Wmp_incalzire: 80, kW_acm_pers: 2, marja: 0.10, marjaSolicitare: 0.05 };
   const PRM_STD = [40, 65, 100, 160, 200, 250, 400];
-  const nextStd = (v) => PRM_STD.find((x) => x >= v) || PRM_STD[PRM_STD.length - 1];
+  // Selecție PRM: peste gama standard NU se plafonează silențios — se propun module în paralel.
+  function selectPRM(v) {
+    const max = PRM_STD[PRM_STD.length - 1];
+    const n = Math.max(1, Math.ceil(v / max) || 1);
+    const unit = PRM_STD.find((x) => x >= Math.ceil(v / n)) || max;
+    return { n, unit, total: n * unit, label: n > 1 ? `${n} × ${unit}` : `${unit}` };
+  }
 
   function dimensionareGaze(p = {}) {
     const arie = p.arieDesfasurata || (p.acNivel * p.nrNiveluriSupraterane) || 0;
@@ -21,16 +27,18 @@
     const P_total = r0(P_baza * (1 + C.marja));
     const q = r1(P_total / (C.PCI * C.eta));
     const q_solicitat = r1(q * (1 + C.marjaSolicitare));
-    const prm = nextStd(q_solicitat);
+    const sel = selectPRM(q_solicitat);
     return {
       sistem: "Instalații gaze naturale",
-      P_incalzire, P_acm, P_piscina, P_bucatarie, P_total, q, q_solicitat, prm,
+      P_incalzire, P_acm, P_piscina, P_bucatarie, P_total, q, q_solicitat,
+      prm: sel.total, prmUnit: sel.unit, prmN: sel.n, prmLabel: sel.label,
       normativ: "NTPEE 2018 (Ord. ANRE 89/2018), I6",
       steps: [
-        `Putere termică instalată: încălzire ${P_incalzire} kW (${C.Wmp_incalzire} W/mp × ${arie} mp, cf. C107) + ACM ${P_acm} kW + piscină ${P_piscina} kW + bucătărie ${P_bucatarie} kW.`,
+        `Putere termică instalată: încălzire ${P_incalzire} kW (${C.Wmp_incalzire} W/mp × ${arie} mp, cf. C107) + ACM ${P_acm} kW + piscină ${P_piscina} kW (forfetar, dacă există) + bucătărie ${P_bucatarie} kW.`,
         `Cu marjă +${C.marja * 100}% → P total instalată ≈ ${P_total} kW.`,
         `Debit gaz q = P / (PCI × η) = ${P_total} / (${C.PCI} × ${C.eta}) = ${q} mc/h (PCI gaz natural ${C.PCI} kWh/Nmc, η cazane condensare ${C.eta}).`,
-        `Solicitare către operator: Q ≈ ${q_solicitat} mc/h, presiune redusă (2-6 bar), PRM dimensionat la ${prm} mc/h în nișă exterioară ventilată.`,
+        `Solicitare către operator: Q ≈ ${q_solicitat} mc/h, presiune redusă (2-6 bar), PRM ${sel.label} mc/h (capacitate totală ${sel.total} mc/h ≥ debitul solicitat) în nișă exterioară ventilată.`,
+        ...(sel.n > 1 ? [`Debitul depășește gama standard pe un singur modul — PRM multi-modul propus; configurația finală se stabilește cu operatorul la PT.`] : []),
       ],
     };
   }

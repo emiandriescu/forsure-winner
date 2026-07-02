@@ -71,11 +71,11 @@ Toate specialitățile MEP sunt acum implementate, același tipar determinist (c
 
 Stingere ✓ · **Apă ✓** · **Canalizare ✓** · **Electrice ✓** · **Gaze ✓** · **Termice/HVAC ✓** · **Ventilație ✓** · **Detecție incendiu ✓** · **Desfumare ✓** — compuse într-un memoriu unic de racordare utilități + dimensionare instalații.
 
-Toate testele de regresie (127 verificări) trec:
+Toate testele de regresie (145 verificări) trec:
 
 ```
-node dimensionare/calc-stingere.test.js   # 20/20 — sprinklere, hidranți, rezervor 210 m³
-node dimensionare/calc-apa.test.js        # 11/11 — Qzi,med 74,5; Qmax,orar 8,7 mc/h; rezervor 110 mc; hidrofor 57 mCA
+node dimensionare/calc-stingere.test.js   # 32/32 — sprinklere, hidranți, rezervor 210 m³ + P3/P4, clădire înaltă 120 min, gating obligativitate
+node dimensionare/calc-apa.test.js        # 17/17 — Qzi,med 74,5; Qmax,orar 8,7 mc/h; rezervor 110 mc; hidrofor 57 mCA + spital 325 l/pat
 node dimensionare/calc-utilitati.test.js  #  9/9  — canalizare, electrice (trafo 1250, GE 550 kVA), gaze (PRM 200)
 node dimensionare/calc-sisteme.test.js    #  9/9  — termice 904/600 kW, ventilație 5400 mc/h, detecție, desfumare 72000 mc/h
 node dimensionare/ai.test.js              # 27/27 — strat AI: cereri valide (opus-4-8, fără temperature/budget_tokens), merge ipoteze, rezumat determinist

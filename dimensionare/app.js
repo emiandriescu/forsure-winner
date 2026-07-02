@@ -278,10 +278,17 @@
 
   /* ---------- RESULTS ---------- */
   let currentId = null;
+  // recalculează proiectul dacă lipsește orice parte a schemei curente (proiect vechi din
+  // localStorage sau import de backup dintr-o versiune anterioară) — calculul e determinist și ieftin
+  function ensureComputed(p) {
+    const stale = !p.dim || !p.crb || !p.crb.sinteza || !p.crb.cost || !p.crb.cost.grupuri || !p.racordare || !p.sisteme;
+    if (stale) { computeProject(p); save(); }
+    return p;
+  }
   function openResults(id) {
     const p = state.projects.find((x) => x.id === id); if (!p) return;
     currentId = id;
-    if (!p.dim) computeProject(p), save();
+    ensureComputed(p);
     $("#res-title").textContent = p.name;
     $("#res-sub").textContent = [p.functiune, p.beneficiar, p.adresa].filter(Boolean).join(" · ");
     $("#res-body").innerHTML = renderResults(p);
@@ -330,7 +337,7 @@
   }
   function renderGaze(g) {
     if (!g) return "";
-    return `<h2>Instalații gaze naturale</h2>` + sysCard(g.sistem, g.normativ, `P = ${g.P_total} kW · q = ${g.q} mc/h · PRM ${g.prm} mc/h`, g.steps);
+    return `<h2>Instalații gaze naturale</h2>` + sysCard(g.sistem, g.normativ, `P = ${g.P_total} kW · q = ${g.q} mc/h · PRM ${g.prmLabel || g.prm} mc/h`, g.steps);
   }
   function renderSisteme(s) {
     if (!s) return "";
@@ -466,7 +473,7 @@
     if (typeof AI === "undefined") return;
     if (!AI.configured()) { toast("Setează proxy-ul sau cheia AI în „Firma mea”."); return; }
     const p = state.projects.find((x) => x.id === currentId); if (!p) return;
-    if (!p.dim) computeProject(p);
+    ensureComputed(p);
     const btn = $("#btn-ai-narativ"); const old = btn.textContent; btn.disabled = true; btn.textContent = "Se redactează…";
     try {
       p.aiText = await AI.redacteaza(AI.computedSummary(p));
@@ -478,14 +485,14 @@
   }
 
   function printMemoriu(p) {
-    if (!p.dim) computeProject(p);
+    ensureComputed(p);
     $("#print-view").innerHTML = MEMORIU.buildMemoriu({ company: state.company, project: p, dim: p.dim, crb: p.crb, apa: p.apa, canalizare: p.canalizare, electrice: p.electrice, gaze: p.gaze, sisteme: p.sisteme, aiText: p.aiText });
     const t = document.title; document.title = `Memoriu - ${p.name}`;
     window.print(); setTimeout(() => (document.title = t), 500);
   }
 
   function printFezabilitate(p) {
-    if (!p.dim) computeProject(p);
+    ensureComputed(p);
     if (typeof FEZABILITATE === "undefined") return;
     $("#print-view").innerHTML = FEZABILITATE.buildFezabilitate({ company: state.company, project: p, dim: p.dim, crb: p.crb, racordare: p.racordare });
     const t = document.title; document.title = `Fezabilitate - ${p.name}`;
@@ -493,7 +500,7 @@
   }
 
   function exportDeviz(p) {
-    if (!p.dim) computeProject(p);
+    ensureComputed(p);
     if (typeof EXPORTCSV === "undefined") return;
     const csv = "﻿" + EXPORTCSV.buildExportCSV(p); // BOM UTF-8 pentru diacritice în Excel
     const b = new Blob([csv], { type: "text/csv;charset=utf-8;" });

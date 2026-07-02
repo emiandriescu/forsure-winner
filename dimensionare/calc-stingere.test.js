@@ -70,5 +70,39 @@ const mu = S.dimensionareStingere({
 const mOffice = mu.obligativitate.find((o) => o.sistem === "Zonă office/retail parter");
 eq("mixed-use: apare zona office/retail", !!mOffice && mOffice.obligatoriu, true);
 
+// --- Corecții audit: P3/P4, clădire înaltă 120 min, NaN, merge profund, gating obligativitate ---
+const p3 = S.dimensionareStingere({ tip: "turism", locuriCazare: 200, parcaj: { locuri: 400, arieProtejata: 12000 } });
+eq("P3 (400 locuri): sprinklere OBLIGATORII", p3.obligativitate.find((o) => o.sistem === "Sprinklere parcaj").obligatoriu, true);
+
+const inalt = S.hidrantiInterioriCazare({ cladireInalta: true });
+eq("clădire înaltă: timp hidranți interiori 120 min", inalt.timp, 120);
+eq("clădire înaltă: rezervă 30 m³ (4,2 × 120 min)", inalt.rezerva, 30);
+
+eq("volum compartiment NaN → implicit 30.000 → qee 10", S.qeeAnexa7({ volumCompartiment: parseInt("") }), 10);
+eq("stabilitate V: qee crescut (10 → 15)", S.qeeAnexa7({ nivelStabilitate: "V", volumCompartiment: 35000 }), 15);
+eq("clădire înaltă la exact 28 m: NU (strict > 28)", S.obligativitate({ tip: "turism", inaltimeUltimPlanseu: 28 }).find((o) => o.sistem === "Măsuri clădire înaltă").obligatoriu, false);
+
+// parcaj parțial (fără arieProtejata) nu mai anulează sprinklerele obligatorii
+const partial = S.dimensionareStingere({ parcaj: { locuri: 150 } });
+const pSpr = partial.sisteme.find((s) => s.sistem.startsWith("Sprinklere"));
+eq("parcaj parțial: sprinklere dimensionate (arie estimată)", pSpr.necesar && pSpr.capeteTotal > 0, true);
+
+// clădire mică, nimic obligatoriu → sistemele nu intră în rezervă
+const mic = S.dimensionareStingere({ tip: "turism", locuriCazare: 10, nrNiveluriSupraterane: 2, acNivel: 300, volumCompartiment: 2000, parcaj: { locuri: 0 } });
+eq("clădire mică: nimic obligatoriu → rezervor 0", mic.rezervor.adoptat, 0);
+eq("clădire mică: hidranții marcați neobligatorii", mic.sisteme.find((s) => s.sistem.startsWith("Hidranți interiori")).necesar, false);
+
+// rotunjirea nu coboară sub subtotal
+const rz = S.rezervorIncendiu([{ eticheta: "x", rezerva: 96 }]);
+eq("rezervor: adoptat ≥ subtotal (96 → 105)", rz.adoptat >= 96, true);
+
+// normalizare functiune → tip
+const fn = S.dimensionareStingere({ functiune: "locuințe colective", persoane: 100, nrNiveluriSupraterane: 7, acNivel: 400, volumCompartiment: 8000 });
+eq("functiune 'locuințe colective' → praguri rezidențiale", fn.profile.tip, "rezidential");
+
+// parcaj mic de suprafață (< 10 locuri) nu declanșează NP 127
+const p2loc = S.dimensionareStingere({ tip: "turism", locuriCazare: 120, volumCompartiment: 35000, parcaj: { locuri: 2 } });
+eq("2 locuri parcare: fără hidranți/drencere de parcaj", p2loc.sisteme.some((s) => s.sistem === "Hidranți interiori — parcaj"), false);
+
 console.log(`\n${pass} trecute, ${fail} eșuate`);
 process.exit(fail ? 1 : 0);

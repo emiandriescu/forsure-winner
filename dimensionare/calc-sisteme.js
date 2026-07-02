@@ -31,11 +31,21 @@
     };
   }
 
+  // Predicat comun de existență a parcajului + estimarea câmpului lipsă (~25 m²/loc) —
+  // ventilația și desfumarea nu mai pot diverge când e completat doar unul dintre câmpuri.
+  function parcajInfo(p) {
+    const raw = (p && p.parcaj) || {};
+    const locuri = raw.locuri || (raw.arieProtejata ? Math.round(raw.arieProtejata / 25) : 0);
+    const arie = raw.arieProtejata || (raw.locuri ? raw.locuri * 25 : 0);
+    return { exista: locuri > 0, locuri, arie, nrNiveluri: Math.max(1, Math.round(raw.nrNiveluri || 1)) };
+  }
+
   // ---------- VENTILAȚIE / CLIMATIZARE (I5/2022) ----------
   function ventilatie(p) {
     const persoane = p.persoane || 0;
     const aerCamere = r0(persoane * C.aerPersoana);
-    const volParcaj = (p.parcaj && p.parcaj.arieProtejata ? p.parcaj.arieProtejata : 0) * C.inaltimeNivel;
+    const parc = parcajInfo(p);
+    const volParcaj = parc.arie * C.inaltimeNivel;
     const aerParcaj = r0(volParcaj * C.schimburiParcaj);
     return {
       sistem: "Instalații de ventilare și climatizare", aerCamere, aerParcaj, recuperare: C.recuperare_min,
@@ -66,21 +76,26 @@
 
   // ---------- DESFUMARE (NP 127:2009 + P118/1:2025) ----------
   function desfumare(p) {
-    const parcaj = p.parcaj || { locuri: 0, nrNiveluri: 0 };
-    const cuSprinklere = parcaj.locuri >= 101; // P2 → sprinklere → debit redus
+    const parc = parcajInfo(p);
+    const cuSprinklere = parc.locuri >= 101; // ≥ 101 locuri → sprinklere obligatorii (aliniat cu calc-stingere) → debit redus
     const specific = cuSprinklere ? C.desfumareCuSprinklere : C.desfumareFaraSprinklere;
-    const Qparcaj = r0(parcaj.locuri * specific);
-    const nrNiv = parcaj.nrNiveluri || 1;
-    const Qpernivel = nrNiv > 0 ? r0(Qparcaj / nrNiv) : Qparcaj;
-    const Qpresurizare = r0(2 * C.presurizareScara); // 2 case de scară
+    const Qparcaj = r0(parc.locuri * specific);
+    const nrNiv = parc.nrNiveluri;
+    const Qpernivel = r0(Qparcaj / nrNiv);
+    // presurizarea caselor de scară se justifică la clădiri înalte (> 28 m) sau când scările deservesc parcaj subteran
+    const presurizareNecesara = (p.inaltimeUltimPlanseu || 0) > 28 || parc.exista;
+    const nrScari = 2; // ipoteză de lucru — de precizat de proiectant
+    const Qpresurizare = presurizareNecesara ? r0(nrScari * C.presurizareScara) : 0;
     return {
       sistem: "Desfumare și presurizare", Qparcaj, Qpernivel, nrNiv, Qpresurizare, cuSprinklere,
-      necesar: parcaj.locuri > 0,
+      necesar: parc.exista,
       normativ: "NP 127:2009 art. 117 + SR EN 12101-13",
       steps: [
-        parcaj.locuri > 0 ? `Parcaj: debit extracție fum = ${parcaj.locuri} locuri × ${specific} mc/h/auto = ${Qparcaj} mc/h (${cuSprinklere ? "cu sprinklere — NP 127 art. 117 alin.1" : "fără sprinklere — alin.2"}).` : "Fără parcaj subteran.",
-        parcaj.locuri > 0 ? `Repartiție pe ${nrNiv} ${nrNiv === 1 ? "nivel" : "niveluri"} ≈ ${Qpernivel} mc/h/nivel; ventilatoare F400/120 (rezistente 400°C/120 min) + jet fans, compartimentare ≤ 6.000 mp cu ecrane EI 120.` : "",
-        `Presurizare case de scară ≈ ${Qpresurizare} mc/h (2 case × ${C.presurizareScara} mc/h, SR EN 12101-13, ΔP 50 Pa); desfumare săli aglomerate și circulații etaje.`,
+        parc.exista ? `Parcaj: debit extracție fum = ${parc.locuri} locuri × ${specific} mc/h/auto = ${Qparcaj} mc/h (${cuSprinklere ? "cu sprinklere — NP 127 art. 117 alin.1" : "fără sprinklere — alin.2"}).` : "Fără parcaj subteran.",
+        parc.exista ? `Repartiție pe ${nrNiv} ${nrNiv === 1 ? "nivel" : "niveluri"} ≈ ${Qpernivel} mc/h/nivel; ventilatoare F400/120 (rezistente 400°C/120 min) + jet fans, compartimentare ≤ 6.000 mp cu ecrane EI 120.` : "",
+        presurizareNecesara
+          ? `Presurizare case de scară ≈ ${Qpresurizare} mc/h (ipoteză: ${nrScari} case × ${C.presurizareScara} mc/h — de precizat numărul real de scări; SR EN 12101-13, ΔP 50 Pa); desfumare săli aglomerate și circulații etaje.`
+          : `Presurizarea caselor de scară nu se impune pe datele introduse (clădire ≤ 28 m, fără parcaj subteran) — de reevaluat la PT după configurația scărilor.`,
       ].filter(Boolean),
     };
   }

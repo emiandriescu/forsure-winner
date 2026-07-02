@@ -35,5 +35,26 @@ ok("rezervor consum 110-120 mc", dim.rezervor.adoptat >= 110 && dim.rezervor.ado
 eq("hidrofor H (mCA)", dim.statie.H_mCA, 57);
 ok("hidrofor Q stație ≥ 3 l/s", dim.statie.Qstatie >= 3, dim.statie.Qstatie);
 
+// --- Corecții audit ---
+// spital: consum specific de spital (325 l/pat), nu de birouri (25 l)
+const sp = A.dimensionareApa({ tip: "spital", persoane: 200 });
+eq("spital 200 paturi: Qzi,med = 65 mc/zi (325 l/pat)", sp.debite.Qzi_med, 65);
+
+// cotă geodezică 0 explicită nu mai cade pe înălțimea clădirii
+const h0 = A.hidrofor({ cotaGeodezica: 0, inaltimeUltimPlanseu: 30 }, 2);
+eq("cotă geodezică 0: H = 0+25+8+7 = 40 mCA", h0.H_mCA, 40);
+
+// consumatorii mici nu se pierd la sumare (1,35 mc nu devine 0 în total)
+const micC = A.debiteApa({ tip: "turism", persoane: 10, nrCamere: 5, dotari: { mese: 0, personal: 54 } });
+ok("suma folosește valorile nerotunjite", Math.abs(micC.Qzi_med - (2 + 1.35)) < 0.06, micC.Qzi_med);
+
+// banda DN 75 există (1,6 l/s nu mai primește DN 100)
+eq("DN pentru 1,6 l/s = DN 75", A.dnBransament(1.6), "DN 75");
+eq("DN pentru 2,4 l/s rămâne DN 100 (calibrare)", A.dnBransament(2.4), "DN 100");
+
+// rezervorul de consum nu coboară sub volumul de bază
+const rz = A.rezervorConsum({}, 96);
+ok("rezervor consum ≥ baza (96 mc)", rz.adoptat >= 96, rz.adoptat);
+
 console.log(`\n${pass} trecute, ${fail} eșuate`);
 process.exit(fail ? 1 : 0);

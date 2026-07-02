@@ -17,8 +17,10 @@
 
   // menajeră — pe baza debitelor de apă (din modulul Apă)
   function menajera(apaDebite) {
-    const Qmax_zi = apaDebite ? apaDebite.Qmax_zi : 0;
-    const Qmax_orar_ls = apaDebite ? apaDebite.Qmax_orar_ls : 0;
+    // guard pe fiecare câmp — un obiect parțial (schemă veche) nu propagă NaN în memoriu
+    const num = (v) => (Number.isFinite(v) ? v : 0);
+    const Qmax_zi = num(apaDebite && apaDebite.Qmax_zi);
+    const Qmax_orar_ls = num(apaDebite && apaDebite.Qmax_orar_ls);
     const Qu_zi = r1(C.coefMenajer * Qmax_zi);
     const Qu_orar_ls = r1(C.coefMenajer * Qmax_orar_ls);
     return {
@@ -34,6 +36,8 @@
   // pluvială — Q = ψ × S × i
   function pluviala(p) {
     const S_ha = (p.arieAcoperis || 0) / 10000;
+    // în breviar S(ha) se afișează cu 4 zecimale, ca aritmetica tipărită să reproducă rezultatul
+    const S_disp = Math.round(S_ha * 10000) / 10000;
     const i = p.i_ploaie || 130;
     const Q = r1(C.psi * S_ha * i);
     return {
@@ -41,16 +45,17 @@
       necesar: (p.arieAcoperis || 0) > 0,
       normativ: "STAS 1795, SR EN 752",
       steps: [
-        `Suprafață receptoare (acoperiș + platforme) S = ${p.arieAcoperis || 0} m² = ${r1(S_ha)} ha.`,
+        `Suprafață receptoare (acoperiș + platforme) S = ${p.arieAcoperis || 0} m² = ${S_disp} ha.`,
         `Intensitate ploaie de calcul i = ${i} l/s/ha; coeficient de scurgere ψ = ${C.psi}.`,
-        `Q pluvial = ψ × S × i = ${C.psi} × ${r1(S_ha)} × ${i} = ${Q} l/s → racord ${dnCanal(Q)} PEID, cu cămin de retenție/regularizare pe lot.`,
+        `Q pluvial = ψ × S × i = ${C.psi} × ${S_disp} × ${i} = ${Q} l/s → racord ${dnCanal(Q)} PEID, cu cămin de retenție/regularizare pe lot.`,
       ],
     };
   }
 
   function separatoare(p) {
     const out = [];
-    const areRestaurant = p.tip === "turism" || (p.dotari && p.dotari.mese);
+    // mese = 0 explicit (fără restaurant/bucătărie) NU impune separator de grăsimi, chiar la hotel
+    const areRestaurant = (p.dotari && p.dotari.mese != null) ? p.dotari.mese > 0 : p.tip === "turism";
     if (areRestaurant) out.push({ tip: "Separator de grăsimi (bucătărie)", normativ: "SR EN 1825" });
     if (p.parcaj && p.parcaj.locuri > 0) out.push({ tip: "Separator de hidrocarburi (parcaj)", normativ: "SR EN 858" });
     return out;

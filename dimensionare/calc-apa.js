@@ -18,6 +18,7 @@
     consumCazare_l: 200,      // hotel: l/pers/zi (I9-2022)
     consumRezidential_l: 210, // locuințe colective: l/pers/zi
     consumBirouri_l: 25,      // birouri/învățământ: l/pers/zi
+    consumSpital_l: 325,      // spital: l/pat/zi (STAS 1478 — CALIBRARE, de confirmat pe un memoriu real)
     consumMasa_l: 25,         // restaurant: l/masă
     consumPersonal_l: 25,     // personal: l/pers/zi
     autonomieRezervor_h: 24,  // autonomie rezervor consum
@@ -31,9 +32,10 @@
   // l/s din mc/h
   const lps = (mc_h) => mc_h / 3.6;
 
-  // DN branșament după debit (l/s) — tabel orientativ PEID
+  // DN branșament după debit (l/s) — tabel orientativ PEID (punct calibrat: 2,4-3 l/s → DN 100)
   function dnBransament(qls) {
     if (qls <= 1.5) return "DN 50";
+    if (qls <= 2.2) return "DN 75";
     if (qls <= 3.5) return "DN 100";
     if (qls <= 7) return "DN 125";
     if (qls <= 12) return "DN 160";
@@ -45,8 +47,9 @@
     const tip = p.tip || "turism";
     const d = p.dotari || {};
     const list = [];
+    // Qraw = valoarea nerotunjită (pentru sumă); Q = valoarea afișată (1 zecimală)
     const add = (nume, cantitate, unit, specific_l, Q_mc_zi, nota) =>
-      list.push({ nume, cantitate, unit, specific_l, Q: r1(Q_mc_zi), nota });
+      list.push({ nume, cantitate, unit, specific_l, Q: r1(Q_mc_zi), Qraw: Q_mc_zi, nota });
 
     if (tip === "turism") {
       const persoane = p.persoane || p.locuriCazare || 0;
@@ -70,9 +73,12 @@
     } else if (tip === "comercial") {
       const persoane = p.persoane || 0;
       add("Spațiu comercial", persoane, "pers", 20, persoane * 20 / 1000);
+    } else if (tip === "spital") {
+      const paturi = p.persoane || 0;
+      add("Spital (paturi)", paturi, "paturi", C.consumSpital_l, paturi * C.consumSpital_l / 1000);
     } else {
       const persoane = p.persoane || 0;
-      add(tip === "spital" ? "Spital (paturi/persoane)" : "Persoane", persoane, "pers", C.consumBirouri_l, persoane * C.consumBirouri_l / 1000);
+      add("Persoane", persoane, "pers", C.consumBirouri_l, persoane * C.consumBirouri_l / 1000);
     }
     if (p.office && p.office.are && p.office.persoane) add("Zonă office/retail parter", p.office.persoane, "pers", 20, p.office.persoane * 20 / 1000);
     return list;
@@ -81,11 +87,14 @@
   // ---------- DEBITE DE CONSUM + BRANȘAMENT ----------
   function debiteApa(p) {
     const list = consumatori(p);
-    const Qzi_med = r1(list.reduce((s, c) => s + c.Q, 0));
+    // suma pe valorile NEROTUNJITE — consumatorii mici nu se pierd prin rotunjirea pe rând
+    const Qzi_med = r1(list.reduce((s, c) => s + (c.Qraw != null ? c.Qraw : c.Q), 0));
     const Qmax_zi = r1(Qzi_med * C.Kzi);
-    const Qmax_orar_mc = r1(C.Kor * Qmax_zi / C.oreFunctionare);
-    const Qmax_orar_ls = r1(lps(Qmax_orar_mc));
-    const Qnominal_ls = Math.max(1, Math.ceil(Qmax_orar_ls * 10) / 10); // rotunjit în sus la 0,1
+    const Qmax_orar_raw = C.Kor * Qmax_zi / C.oreFunctionare;   // mc/h, nerotunjit
+    const Qmax_orar_mc = r1(Qmax_orar_raw);
+    const Qmax_orar_ls = r1(lps(Qmax_orar_raw));
+    // debitul nominal se rotunjește ÎN SUS din valoarea nerotunjită (nu din cea deja rotunjită la 0,1)
+    const Qnominal_ls = Math.max(1, Math.ceil(lps(Qmax_orar_raw) * 10) / 10);
     const dn = dnBransament(Qnominal_ls);
     return {
       consumatori: list, Qzi_med, Qmax_zi, Qmax_orar_mc, Qmax_orar_ls,
@@ -106,7 +115,9 @@
     const autonomie = (p.autonomieRezervor_h || C.autonomieRezervor_h);
     const baza = (autonomie / 24) * Qmax_zi;
     const cuMarja = baza * (1 + C.marjaRezervor);
-    const adoptat = Math.round(cuMarja / 10) * 10; // rotunjire la 10 mc
+    // rotunjire la 10 mc la cea mai apropiată valoare (calibrat: 104,3 → 114,7 → 110); niciodată sub volumul de bază
+    let adoptat = Math.round(cuMarja / 10) * 10;
+    if (adoptat < baza) adoptat = Math.ceil(baza / 10) * 10;
     return {
       sistem: "Rezervor de apă rece pentru consum",
       autonomie, baza: r0(baza), adoptat,
@@ -114,7 +125,7 @@
       steps: [
         `Autonomie cerută în caz de avarie alimentare rețea: ${autonomie}h (hotel/clădire importantă).`,
         `Volum = (autonomie/24) × Qmax,zi = (${autonomie}/24) × ${Qmax_zi} = ${r1(baza)} mc.`,
-        `Cu marjă +${C.marjaRezervor * 100}% și rotunjire → VOLUM REZERVOR CONSUM adoptat = ${adoptat} mc.`,
+        `Cu marjă +${C.marjaRezervor * 100}% = ${r1(cuMarja)} mc; rotunjit la 10 mc (rotunjirea poate absorbi o parte din marjă, nu din volumul de bază) → VOLUM REZERVOR CONSUM adoptat = ${adoptat} mc.`,
         `Separat de rezerva de incendiu prin perete EI 120; sonde nivel cu transmisie BMS; supape antiretur la racord.`,
       ],
     };
@@ -122,7 +133,8 @@
 
   // ---------- STAȚIE HIDROFOR (booster) ----------
   function hidrofor(p, Qmax_orar_ls) {
-    const cota = p.cotaGeodezica || p.inaltimeUltimPlanseu || 0;
+    // un 0 explicit e o valoare legitimă (rezervor la cota consumatorului) — nu cădem pe înălțimea clădirii
+    const cota = (p.cotaGeodezica != null ? p.cotaGeodezica : p.inaltimeUltimPlanseu) || 0;
     const H = r0(cota + C.presiuneRobinet_mCA + C.pierderiLocale_mCA + C.pierderiLiniare_mCA);
     const Qstatie = r1(Qmax_orar_ls * (1 + C.marjaHidrofor));
     return {

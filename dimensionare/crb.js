@@ -108,7 +108,8 @@
       const sprink = (dim.sisteme || []).find((s) => s.sistem && s.sistem.startsWith("Sprinklere"));
       if (sprink && sprink.capeteTotal) {
         add("Stingere incendiu", "Capete sprinkler montate", sprink.capeteTotal, "buc", preturi.sprinkler_eur_cap);
-        add("Stingere incendiu", "Stații centrale de alarmare sprinklere", Math.max(1, Math.ceil((sprink.capeteTotal * 12) / 1000)), "buc", preturi.statieAlarmare_eur);
+        // SR EN 12845: o stație de control apă-apă deservește până la ~12.000 m² (folosim 9.000 acoperitor)
+        add("Stingere incendiu", "Stații de control sprinklere (ACS)", Math.max(1, Math.ceil((sprink.capeteTotal * 12) / 9000)), "buc", preturi.statieAlarmare_eur);
       }
       const hExt = (dim.sisteme || []).find((s) => s.sistem === "Hidranți exteriori");
       if (hExt && hExt.nrHidranti) add("Stingere incendiu", "Hidranți exteriori", hExt.nrHidranti, "buc", preturi.hidrantExterior_eur_buc);
@@ -132,8 +133,11 @@
 
     // --- Instalații electrice ---
     if (electrice) {
-      if (electrice.trafo) add("Instalații electrice", "Post de transformare", electrice.trafo, "kVA", preturi.postTrafo_eur_kva);
-      if (electrice.ge) add("Instalații electrice", "Grup electrogen (consumatori vitali)", electrice.ge, "kVA", preturi.grupElectrogen_eur_kva);
+      // trafoTotal/geTotal sunt kVA numerice (trafo/ge sunt etichete text, ex. „2 × 800 kVA")
+      const kvaTrafo = electrice.trafoTotal || (typeof electrice.trafo === "number" ? electrice.trafo : 0);
+      const kvaGE = electrice.geTotal || (typeof electrice.ge === "number" ? electrice.ge : 0);
+      if (kvaTrafo) add("Instalații electrice", "Post de transformare", kvaTrafo, "kVA", preturi.postTrafo_eur_kva);
+      if (kvaGE) add("Instalații electrice", "Grup electrogen (consumatori vitali)", kvaGE, "kVA", preturi.grupElectrogen_eur_kva);
       if (arie) add("Instalații electrice", "Tablouri + distribuție electrică (estimare)", arie, "m²", preturi.tablouriRetele_eur_mp);
     }
 
