@@ -381,6 +381,7 @@ img { max-width: 100%; display: block; }
 /* ── Domains ─────────────────────────────────── */
 .domains-section { background: #F6F8FD; }
 .domains-list { list-style: none; border-top: 1px solid var(--hairline); }
+a.domain-row { text-decoration: none; cursor: pointer; }
 .domain-row {
     display: flex; align-items: center; gap: clamp(18px, 3vw, 44px);
     padding: clamp(18px, 2.4vw, 30px) clamp(4px, 1vw, 16px);
@@ -561,6 +562,7 @@ a.info-row:hover strong { color: var(--blue-soft); }
     padding: clamp(40px, 5vw, 68px) var(--pad-x) 0;
 }
 .pf-group.is-hidden { display: none; }
+.pf-group { scroll-margin-top: calc(var(--nav-h) + 72px); }
 .pf-group-head {
     display: flex; align-items: baseline; gap: 16px;
     padding-bottom: 14px; border-bottom: 2px solid var(--ink);
