@@ -1,4 +1,4 @@
-# Reîmprospătarea documentului `tendinte-mep.md`
+# Reîmprospătarea documentelor `tendinte-mep.md` și `noutati-mep.md`
 
 Reîmprospătarea trimestrială e **deja automatizată** printr-un GitHub Action comis în repo
 (`.github/workflows/mep-refresh.yml`). Acest fișier conține (1) **ce trebuie făcut o singură dată**
@@ -33,13 +33,16 @@ Run workflow**.
 
 ## 2. Promptul de reîmprospătare (copiază-l ca atare în sesiunea programată)
 
-> **Context:** Ești într-o sesiune de reîmprospătare a documentului `docs/tendinte-mep.md` din acest repo
-> — un radar tehnologic MEP în limba română, organizat pe rubrici de instalație, cu clasificare
-> ✅ matur / 📈 tendință reală / ⚠️ hype. Documentul e de **uz intern** (SOWILO SRL) — **nu** publica nimic
-> online; la final deschizi doar un **PR draft**.
+> **Context:** Ești într-o sesiune de reîmprospătare a documentelor `docs/tendinte-mep.md` (radar
+> tehnologic MEP, pe rubrici de instalație, cu clasificare ✅ matur / 📈 tendință reală / ⚠️ hype) și
+> `docs/noutati-mep.md` (jurnal de noutăți cu două rubrici: A. legislație & reglementare, B. soluții/
+> materiale/echipamente noi — surse din presa tehnică și forumurile din străinătate), ambele pe
+> specialități. Documentele sunt de **uz intern** (SOWILO SRL) — **nu** publica nimic online; la final
+> deschizi doar un **PR draft**.
 >
 > **Sarcină:**
-> 1. Citește `docs/tendinte-mep.md` ca să înțelegi structura, rubricile și clasificările actuale.
+> 1. Citește `docs/tendinte-mep.md` și `docs/noutati-mep.md` ca să înțelegi structura, rubricile și
+>    clasificările actuale.
 > 2. Pentru **fiecare rubrică** (1–10) și pentru ancorele de reglementare, fă research web pe noutățile
 >    apărute **de la data „Ultima actualizare" din document până azi**. Țintește surse autoritare și
 >    recente: ASHRAE, REHVA, CIBSE, EHPA, Eurovent, producători majori, reglementări UE (EUR-Lex, Comisia
@@ -48,10 +51,14 @@ Run workflow**.
 >    termen în calendar** (vezi secțiunea „Cele mai apropiate declanșatoare de reglementare"): confirmă ce
 >    s-a întâmplat între timp (ex. stadiul transpunerii EPBD în RO, mandatul solar, F-Gas, restricția PFAS,
 >    P118, scheme de finanțare PNRR/Fond Modernizare/Casa Verde, ediții noi de normative/standarde).
-> 4. Actualizează documentul: corectează clasificările care s-au schimbat, adaugă tehnologii/teme noi
->    relevante, actualizează datele de reglementare, **adaugă/actualizează sursele** cu link + an. Păstrează
->    stilul, legenda și structura existente. Marchează explicit ce nu se poate confirma din sursă primară.
-> 5. Schimbă „**Ultima actualizare**" din antet la data curentă.
+> 4. Actualizează ambele documente: în `tendinte-mep.md` corectează clasificările care s-au schimbat și
+>    adaugă tehnologii/teme noi; în `noutati-mep.md` adaugă itemele noi din perioada scursă — rubrica A cu
+>    noutățile legislative RO/UE, rubrica B cu produse/materiale/echipamente noi din presa tehnică și
+>    forumurile din străinătate (ISH, Light+Building, Intersolar, MCE, Interschutz, ACHR News, Cooling Post,
+>    IFSJ, HVAC-Talk, r/HVAC etc.), pe specialități. **Adaugă/actualizează sursele** cu link + an. Păstrează
+>    stilul, legendele și structura existente. Marchează explicit ce nu se poate confirma din sursă primară
+>    și cifrele care vin doar de la producător (⚠️).
+> 5. Schimbă „**Ultima actualizare**" din antetul fiecărui document la data curentă.
 > 6. Adaugă la începutul documentului (sub antet) un mini-**changelog**: „## Modificări față de ediția
 >    anterioară (AAAA-LL-ZZ)" cu 5–15 puncte despre ce s-a schimbat (clasificări mutate, teme noi, termene
 >    de reglementare împlinite). Dacă există deja un changelog de la rularea precedentă, păstrează-l ca
