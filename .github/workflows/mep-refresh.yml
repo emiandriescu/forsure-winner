@@ -39,14 +39,15 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           claude_args: '--max-turns 80 --allowedTools "Read,Edit,Write,Glob,Grep,WebSearch,WebFetch,Bash,Task"'
           prompt: |
-            Ești într-o sesiune automată de reîmprospătare a documentului `docs/tendinte-mep.md`
-            din acest repo — un radar tehnologic MEP în limba română, organizat pe rubrici de
-            instalație, cu clasificare ✅ matur / 📈 tendință reală / ⚠️ hype. Documentul e de uz
-            intern (SOWILO SRL) — NU publica nimic online; la final deschizi doar un PR DRAFT.
+            Ești într-o sesiune automată de reîmprospătare a documentelor `docs/tendinte-mep.md`
+            (radar tehnologic MEP, clasificare ✅ matur / 📈 tendință / ⚠️ hype) și
+            `docs/noutati-mep.md` (jurnal de noutăți: A. legislație, B. soluții/materiale/
+            echipamente noi), ambele în română, pe specialități. Documentele sunt de uz intern
+            (SOWILO SRL) — NU publica nimic online; la final deschizi doar un PR DRAFT.
 
             Urmează exact instrucțiunile din `docs/REFRESH.md` (secțiunea „Promptul de
             reîmprospătare"). Pe scurt:
-            1. Citește `docs/REFRESH.md` și `docs/tendinte-mep.md`.
+            1. Citește `docs/REFRESH.md`, `docs/tendinte-mep.md` și `docs/noutati-mep.md`.
             2. Pentru fiecare rubrică (1–10) și pentru ancorele de reglementare, fă research web
                (folosește agenți în paralel via Task) pe noutățile apărute de la data „Ultima
                actualizare" din document până azi. Verifică în special elementele marcate *incert*
