@@ -543,4 +543,29 @@
   /* init */
   function renderAll() { fillCompany(); fillAI(); fillPreturi(); renderList(); showList(); }
   renderAll();
+
+  /* Exemplu de calibrare (Hotel Sinaia) — se încarcă DOAR cu linkul special ?exemplu=sinaia.
+     Nu apare în aplicație pentru vizitatorii obișnuiți. */
+  function seedExemplu() {
+    let param = "";
+    try { param = new URLSearchParams(location.search).get("exemplu") || ""; } catch (e) { return; }
+    if (param.toLowerCase() !== "sinaia") return;
+    let p = state.projects.find((x) => /sinaia/i.test(x.name || ""));
+    if (!p) {
+      p = Object.assign(blankProject(), {
+        id: uid(), name: "Hotel **** Sinaia (exemplu)", beneficiar: "Exemplu de calibrare",
+        adresa: "Sinaia, jud. Prahova", functiune: "hotel", data: "Iunie 2026",
+        unitate: 90, secundar: 180, nrNiveluriSupraterane: 4, acNivel: 1525, inaltimeUltimPlanseu: 17,
+        arieDesfasurata: 11300, arieAcoperis: 7500, i_ploaie: 130,
+        nivelStabilitate: "II", parcLocuri: 120, nrNiveluriParcare: 2, parcArie: 5000,
+        volumCompartiment: 35000, saliAglomerate: true, risc: "mediu", officeAre: false,
+        d_mese: 200, d_personal: 60, d_bucatarie: 5, d_piscina: 6, d_spa: 3, d_spalatorie: 8, d_irigatii: 5,
+      });
+      state.projects.push(computeProject(p));
+      save(); renderList();
+      toast("Exemplu Hotel Sinaia încărcat");
+    }
+    openResults(p.id);
+  }
+  seedExemplu();
 })();
