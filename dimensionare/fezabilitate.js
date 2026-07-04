@@ -52,6 +52,7 @@
       <div class="fez-kpi">
         <div class="k"><div class="v">${eur(cost.total)}</div><div class="l">CAPEX total estimat</div></div>
         <div class="k"><div class="v">${eur(cost.perMp)}/m²</div><div class="l">Cost specific</div></div>
+        ${crb && crb.sinteza && crb.sinteza.perUnitate ? `<div class="k"><div class="v">${eur(crb.sinteza.perUnitate)}</div><div class="l">Cost / ${esc(crb.sinteza.unitateLabel)}</div></div>` : ""}
         <div class="k"><div class="v">${eur(cost.opexAnual)}/an</div><div class="l">OPEX (mentenanță)</div></div>
         <div class="k"><div class="v">${eur(garantie)}</div><div class="l">Garanție racordare electrică</div></div>
       </div>

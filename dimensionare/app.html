@@ -44,10 +44,13 @@
           <div class="res-actions">
             <button class="btn btn-ghost btn-sm" id="btn-edit">Editează datele</button>
             <button class="btn btn-ghost btn-sm" id="btn-ai-narativ">✨ Adaugă narativ (AI)</button>
+            <button class="btn btn-ghost btn-sm" id="btn-ai-verifica">🔍 Verificare AI</button>
             <button class="btn btn-ghost btn-sm" id="btn-fezabilitate">Pagină fezabilitate (Go/No-go)</button>
             <button class="btn btn-ghost btn-sm" id="btn-export-deviz">⬇ Export deviz (Excel)</button>
             <button class="btn btn-accent" id="btn-pdf">Generează memoriu PDF</button>
+            <select id="cmp-select" class="cmp-select"><option value="">⇄ Compară cu…</option></select>
           </div>
+          <div id="cmp-area" hidden></div>
           <div id="res-body"></div>
         </div>
       </section>
@@ -161,6 +164,7 @@
       </div>
       <p class="muted" style="margin-top:10px">💡 Câmpurile goale primesc valori implicite. AI poate propune ipoteze pentru câmpurile lipsă — de confirmat de proiectant.</p>
       <div id="ai-ipoteze-note" class="ai-note" hidden></div>
+      <div id="live-preview" class="live-preview" hidden></div>
       <menu class="modal-actions">
         <button type="button" id="proj-cancel" class="btn btn-ghost">Anulează</button>
         <button type="button" id="btn-ai-ipoteze" class="btn btn-ghost">✨ Propune ipoteze (AI)</button>

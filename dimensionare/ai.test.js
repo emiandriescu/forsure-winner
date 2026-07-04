@@ -21,6 +21,17 @@ ok("redactare FĂRĂ temperature", reqR.temperature === undefined, String(reqR.t
 ok("redactare schema cere descriere/solutii/concluzii",
   ["descriere", "solutii", "concluzii"].every((k) => reqR.output_config.format.schema.properties[k]), "ok");
 
+// ---- Verificare AI (revizie) ----
+const reqV = AI.revizieRequest({ date_introduse: { unitate: 90 }, rezultate: { apa: { dn: "DN 100" } } });
+eq("revizie model = claude-opus-4-8", reqV.model, "claude-opus-4-8");
+ok("revizie thinking adaptive, FĂRĂ budget_tokens", reqV.thinking.type === "adaptive" && !reqV.thinking.budget_tokens, "ok");
+ok("revizie FĂRĂ temperature", reqV.temperature === undefined, String(reqV.temperature));
+ok("revizie schema cere scor+verdict+probleme",
+  ["scor", "verdict", "probleme"].every((k) => reqV.output_config.format.schema.properties[k]), "ok");
+ok("revizie include datele în prompt", reqV.messages[0].content.includes('"unitate": 90'), "ok");
+ok("REVIZIE_SCHEMA additionalProperties:false peste tot",
+  AI.REVIZIE_SCHEMA.additionalProperties === false && AI.REVIZIE_SCHEMA.properties.probleme.items.additionalProperties === false, "ok");
+
 // ---- Schemele sunt valide pentru structured outputs (additionalProperties:false) ----
 ok("IPOTEZE_SCHEMA additionalProperties:false", AI.IPOTEZE_SCHEMA.additionalProperties === false, "ok");
 ok("REDACTARE_SCHEMA additionalProperties:false", AI.REDACTARE_SCHEMA.additionalProperties === false, "ok");

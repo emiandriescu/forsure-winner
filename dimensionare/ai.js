@@ -38,6 +38,31 @@
     additionalProperties: false,
   };
 
+  const REVIZIE_SCHEMA = {
+    type: "object",
+    properties: {
+      scor: { type: "integer", description: "0-100 — completitudinea și coerența datelor de intrare (100 = gata de trimis)" },
+      verdict: { type: "string", description: "o frază de sinteză a stării proiectului" },
+      probleme: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            zona: { type: "string", description: "câmpul/zona vizată (ex. volumCompartiment, dotări, parcaj)" },
+            tip: { type: "string", enum: ["lipsa", "atipic", "inconsistenta", "recomandare"] },
+            descriere: { type: "string", description: "ce e în neregulă, concret" },
+            sugestie: { type: "string", description: "ce să facă proiectantul" },
+            severitate: { type: "string", enum: ["mare", "medie", "mica"] },
+          },
+          required: ["zona", "tip", "descriere", "sugestie", "severitate"],
+          additionalProperties: false,
+        },
+      },
+    },
+    required: ["scor", "verdict", "probleme"],
+    additionalProperties: false,
+  };
+
   const REDACTARE_SCHEMA = {
     type: "object",
     properties: {
@@ -119,6 +144,29 @@
       system: SYS_IPOTEZE,
       output_config: { format: { type: "json_schema", schema: IPOTEZE_SCHEMA } },
       messages: [{ role: "user", content: ipotezeUserText(known, candidates || CANDIDATE_FIELDS) }],
+    };
+  }
+
+  const SYS_REVIZIE =
+    "Ești verificator senior de proiecte de instalații în România. Primești datele de intrare ale unui proiect de " +
+    "predimensionare și cifrele rezultate. Cauți: (1) câmpuri lipsă sau lăsate pe valori implicite care ar trebui precizate; " +
+    "(2) valori ATIPICE pentru tipul și mărimea clădirii (ex. arie prea mică pentru numărul de camere, parcaj disproporționat); " +
+    "(3) INCONSISTENȚE între câmpuri (ex. arie desfășurată ≠ arie/nivel × niveluri, persoane vs. camere, înălțime vs. niveluri); " +
+    "(4) riscuri de respingere la avizare. NU recalculezi și NU modifici cifrele — semnalezi doar probleme de date de intrare. " +
+    "Scorul reflectă completitudinea și coerența datelor (100 = gata de trimis). Fii concret și scurt.";
+
+  function revizieRequest(payload) {
+    return {
+      model: MODEL,
+      max_tokens: 4096,
+      thinking: { type: "adaptive" },
+      system: SYS_REVIZIE,
+      output_config: { format: { type: "json_schema", schema: REVIZIE_SCHEMA } },
+      messages: [{
+        role: "user",
+        content: "Datele proiectului (introduse + rezultate calculate) — JSON:\n" + JSON.stringify(payload, null, 2) +
+          "\n\nRevizuiește datele de intrare: lipsuri, valori atipice, inconsistențe, riscuri de avizare. Dă scorul și lista de probleme.",
+      }],
     };
   }
 
@@ -221,10 +269,15 @@
     return extractJSON(msg);
   }
 
+  async function revizuieste(payload) {
+    const msg = await callAnthropic(revizieRequest(payload));
+    return extractJSON(msg);
+  }
+
   const api = {
-    MODEL, PROXY_DEFAULT, CANDIDATE_FIELDS, IPOTEZE_SCHEMA, REDACTARE_SCHEMA,
-    ipotezeRequest, redactareRequest, computedSummary, mergeIpoteze, extractJSON,
-    proposeIpoteze, redacteaza, configured,
+    MODEL, PROXY_DEFAULT, CANDIDATE_FIELDS, IPOTEZE_SCHEMA, REDACTARE_SCHEMA, REVIZIE_SCHEMA,
+    ipotezeRequest, redactareRequest, revizieRequest, computedSummary, mergeIpoteze, extractJSON,
+    proposeIpoteze, redacteaza, revizuieste, configured,
   };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.AI = api;

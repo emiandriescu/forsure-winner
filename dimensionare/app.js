@@ -163,6 +163,7 @@
         <div class="card-actions">
           <button class="btn btn-ghost btn-sm" data-open="${p.id}">Deschide</button>
           <button class="btn btn-ghost btn-sm" data-pdf="${p.id}">PDF</button>
+          <button class="btn btn-ghost btn-sm" data-dup="${p.id}">⧉ Scenariu</button>
           <button class="btn-danger" data-del="${p.id}">Șterge</button></div>`;
       list.appendChild(card);
     });
@@ -186,7 +187,7 @@
     pform.elements.saliAglomerate.value = String(p.saliAglomerate !== false && p.saliAglomerate !== "false");
     pform.elements.officeAre.value = String(p.officeAre === true || p.officeAre === "true");
     const note = $("#ai-ipoteze-note"); if (note) { note.hidden = true; note.innerHTML = ""; }
-    onFunctiuneChange(); toggleOffice();
+    onFunctiuneChange(); toggleOffice(); livePreview();
     modal.showModal();
   }
 
@@ -265,6 +266,29 @@
     return p;
   }
 
+  /* ---------- PREVIEW LIVE (recalculare în timp ce tastezi) ---------- */
+  let lpTimer = null;
+  function livePreview() {
+    clearTimeout(lpTimer);
+    lpTimer = setTimeout(() => {
+      const box = $("#live-preview"); if (!box) return;
+      try {
+        const p = computeProject(readProjectForm()); // copie proaspătă — nu atinge proiectul salvat
+        const sint = p.crb && p.crb.sinteza;
+        const rac = p.racordare;
+        box.hidden = false;
+        box.innerHTML = `<span class="lp-l">⚡ Estimare live:</span>
+          <b>${eur(p.crb.cost.total)}</b> CAPEX · <b>${eur(p.crb.cost.perMp)}/m²</b>
+          ${sint && sint.perUnitate ? ` · <b>${eur(sint.perUnitate)}</b>/${esc(sint.unitateLabel)}` : ""}
+          · rezervor incendiu <b>${p.dim.rezervor.adoptat} m³</b>
+          · Pa <b>${p.electrice ? p.electrice.Pa : 0} kW</b>
+          ${rac ? ` · racordare: <b class="lvl-txt-${esc(rac.verdict)}">${(rac.verdict || "").toUpperCase()}</b>` : ""}`;
+      } catch (e) { box.hidden = true; }
+    }, 250);
+  }
+  pform.addEventListener("input", livePreview);
+  pform.addEventListener("change", livePreview);
+
   pform.elements.functiune.addEventListener("change", onFunctiuneChange);
   pform.elements.officeAre.addEventListener("change", toggleOffice);
   $("#proj-cancel").addEventListener("click", () => modal.close());
@@ -292,7 +316,65 @@
     $("#res-title").textContent = p.name;
     $("#res-sub").textContent = [p.functiune, p.beneficiar, p.adresa].filter(Boolean).join(" · ");
     $("#res-body").innerHTML = renderResults(p);
+    fillCmpSelect(p);
     showResults();
+  }
+
+  /* ---------- COMPARAȚIE DE SCENARII (A vs B) ---------- */
+  function fillCmpSelect(p) {
+    const sel = $("#cmp-select"); if (!sel) return;
+    const others = state.projects.filter((x) => x.id !== p.id);
+    sel.innerHTML = `<option value="">⇄ Compară cu…</option>` +
+      others.map((x) => `<option value="${esc(x.id)}">${esc(x.name)}</option>`).join("");
+    sel.value = "";
+    const area = $("#cmp-area"); area.hidden = true; area.innerHTML = "";
+  }
+
+  // specificația indicatorilor comparați: eticheta + extractor + format
+  const CMP_SPEC = [
+    { grup: "Cost", label: "CAPEX total", get: (p) => p.crb.cost.total, fmt: "eur" },
+    { grup: "Cost", label: "Cost specific", get: (p) => p.crb.cost.perMp, fmt: "eur_mp" },
+    { grup: "Cost", label: "Cost / unitate", get: (p) => p.crb.sinteza.perUnitate, fmt: "eur" },
+    { grup: "Cost", label: "OPEX anual", get: (p) => p.crb.cost.opexAnual, fmt: "eur" },
+    { grup: "PSI", label: "Rezervor incendiu", get: (p) => p.dim.rezervor.adoptat, fmt: "m3" },
+    { grup: "Apă", label: "Rezervor consum", get: (p) => p.apa && p.apa.rezervor.adoptat, fmt: "mc" },
+    { grup: "Apă", label: "Qmax orar", get: (p) => p.apa && p.apa.debite.Qmax_orar_ls, fmt: "ls" },
+    { grup: "Apă", label: "Branșament", get: (p) => p.apa && p.apa.debite.dn, fmt: "text" },
+    { grup: "Electrice", label: "Putere absorbită Pa", get: (p) => p.electrice && p.electrice.Pa, fmt: "kw" },
+    { grup: "Electrice", label: "Post trafo", get: (p) => p.electrice && p.electrice.trafo, fmt: "text" },
+    { grup: "Electrice", label: "Grup electrogen", get: (p) => p.electrice && p.electrice.ge, fmt: "text" },
+    { grup: "Electrice", label: "Garanție racordare", get: (p) => p.racordare && p.racordare.garantieElectric, fmt: "eur" },
+    { grup: "Gaze", label: "Debit solicitat", get: (p) => p.gaze && p.gaze.q_solicitat, fmt: "mch" },
+    { grup: "Gaze", label: "PRM", get: (p) => p.gaze && (p.gaze.prmLabel || p.gaze.prm), fmt: "text" },
+    { grup: "Racordare", label: "Verdict risc", get: (p) => p.racordare && p.racordare.verdict, fmt: "text" },
+  ];
+  const CMP_UNIT = { eur: " €", eur_mp: " €/m²", m3: " m³", mc: " mc", ls: " l/s", kw: " kW", mch: " mc/h", text: "" };
+
+  function renderCompare(a, b) {
+    ensureComputed(a); ensureComputed(b);
+    const fmtV = (v, f) => v == null ? "—" : (f === "text" ? esc(String(v)) : Number(v).toLocaleString("ro-RO") + CMP_UNIT[f]);
+    let lastGrup = "";
+    const rows = CMP_SPEC.map((s) => {
+      let va, vb;
+      try { va = s.get(a); } catch (e) { va = null; }
+      try { vb = s.get(b); } catch (e) { vb = null; }
+      if (va == null && vb == null) return "";
+      let delta = "";
+      if (s.fmt !== "text" && typeof va === "number" && typeof vb === "number" && va !== vb) {
+        const d = vb - va;
+        delta = `<span class="cmp-delta ${d > 0 ? "up" : "down"}">${d > 0 ? "+" : "−"}${Math.abs(d).toLocaleString("ro-RO")}${CMP_UNIT[s.fmt]}</span>`;
+      } else if (s.fmt === "text" && va !== vb) delta = `<span class="cmp-delta up">≠</span>`;
+      const grupCell = s.grup !== lastGrup ? `<td class="cmp-grup">${esc(s.grup)}</td>` : `<td></td>`;
+      lastGrup = s.grup;
+      return `<tr>${grupCell}<td>${esc(s.label)}</td><td class="num">${fmtV(va, s.fmt)}</td><td class="num">${fmtV(vb, s.fmt)}</td><td class="num">${delta}</td></tr>`;
+    }).join("");
+    return `<div class="cmp-box">
+      <div class="cmp-head"><b>⇄ Comparație scenarii</b>
+        <button class="btn btn-ghost btn-sm" id="cmp-close">× Închide</button></div>
+      <table class="risc-mat cmp-t"><thead><tr><th></th><th>Indicator</th><th class="num">A: ${esc(a.name)}</th><th class="num">B: ${esc(b.name)}</th><th class="num">Δ (B−A)</th></tr></thead>
+        <tbody>${rows}</tbody></table>
+      <p class="muted" style="margin:6px 0 0">Diferențele pozitive (roșu) = scenariul B costă/cere mai mult; negative (verde) = mai puțin.</p>
+    </div>`;
   }
 
   function renderApa(apa) {
@@ -353,11 +435,13 @@
   const capLbl = { "scăzut": "SCĂZUT", "moderat": "MODERAT", "ridicat": "RIDICAT", "critic": "CRITIC" };
   function renderRacordare(rac) {
     if (!rac) return "";
-    const rows = rac.utilitati.map((u) =>
-      `<tr><td><b>${esc(u.utilitate)}</b><br/><span class="muted">${esc(u.document)}</span></td>
+    const rows = rac.utilitati.map((u) => {
+      const links = (u.linkuri || []).map((l) => `<a href="${esc(l.url)}" target="_blank" rel="noopener" class="op-link">${esc(l.nume)} ↗</a>`).join(" · ");
+      return `<tr><td><b>${esc(u.utilitate)}</b><br/><span class="muted">${esc(u.document)}</span>${links ? `<br/>${links}` : ""}</td>
         <td>${esc(u.solicitare)}</td><td>${esc(u.cost)}</td>
         <td class="lvl lvl-${esc(u.nivel)}">${capLbl[u.nivel] || esc(u.nivel)}</td>
-        <td>${esc(u.termen)}</td></tr>`).join("");
+        <td>${esc(u.termen)}</td></tr>`;
+    }).join("");
     return `<h2>Racordare la utilități — solicitări către operatori</h2>
       <div class="bignum">
         <div class="b"><div class="v">${capLbl[rac.verdict] || esc(rac.verdict)}</div><div class="l">Verdict racordare (risc max.)</div></div>
@@ -404,6 +488,7 @@
     const sinteza = `<div class="bignum">
       <div class="b"><div class="v">${eur(crb.cost.total)}</div><div class="l">CAPEX total</div></div>
       <div class="b"><div class="v">${eur(crb.cost.perMp)}/m²</div><div class="l">Cost specific</div></div>
+      ${sint.perUnitate ? `<div class="b"><div class="v">${eur(sint.perUnitate)}</div><div class="l">Cost / ${esc(sint.unitateLabel)}</div></div>` : ""}
       <div class="b"><div class="v">${eur(crb.cost.opexAnual)}/an</div><div class="l">OPEX (mentenanță)</div></div>
       ${sint.specialitatePrincipala ? `<div class="b"><div class="v">${sint.specialitatePrincipala.pct}%</div><div class="l">${esc(sint.specialitatePrincipala.specialitate)}</div></div>` : ""}
     </div>`;
@@ -420,6 +505,7 @@
       <p>${esc(p.aiText.concluzii || "")}</p></div>` : "";
 
     return `${big}
+      ${renderAiReview(p.aiReview)}
       ${aiBlock}
       ${renderRacordare(p.racordare)}
       ${renderApa(p.apa)}
@@ -484,6 +570,42 @@
     finally { btn.disabled = false; btn.textContent = old; }
   }
 
+  /* ---------- AI: verificare proiect (scor de completitudine + probleme) ---------- */
+  async function aiVerifica() {
+    if (typeof AI === "undefined") return;
+    if (!AI.configured()) { toast("Setează proxy-ul sau cheia AI în „Firma mea”."); return; }
+    const p = state.projects.find((x) => x.id === currentId); if (!p) return;
+    ensureComputed(p);
+    const btn = $("#btn-ai-verifica"); const old = btn.textContent; btn.disabled = true; btn.textContent = "Se verifică…";
+    try {
+      const date = {};
+      ["name", "functiune", "unitate", "secundar", "nrNiveluriSupraterane", "acNivel", "inaltimeUltimPlanseu",
+        "arieDesfasurata", "arieAcoperis", "i_ploaie", "nivelStabilitate", "parcLocuri", "nrNiveluriParcare",
+        "parcArie", "volumCompartiment", "saliAglomerate", "risc", "officeAre", "officeArie", "officePersoane",
+        "d_mese", "d_personal", "d_bucatarie", "d_piscina", "d_spa", "d_spalatorie", "d_irigatii"]
+        .forEach((k) => { date[k] = p[k]; });
+      p.aiReview = await AI.revizuieste({ date_introduse: date, rezultate: AI.computedSummary(p) });
+      save();
+      $("#res-body").innerHTML = renderResults(p);
+      toast(`Verificare AI: scor ${p.aiReview.scor}/100`);
+    } catch (e) { toast("Eroare AI: " + (e && e.message || e)); }
+    finally { btn.disabled = false; btn.textContent = old; }
+  }
+
+  function renderAiReview(r) {
+    if (!r) return "";
+    const cls = r.scor >= 80 ? "ok" : r.scor >= 60 ? "warn" : "bad";
+    const sevLbl = { mare: "MARE", medie: "MEDIE", mica: "MICĂ" };
+    const tipLbl = { lipsa: "lipsă", atipic: "atipic", inconsistenta: "inconsistență", recomandare: "recomandare" };
+    const rows = (r.probleme || []).map((x) =>
+      `<tr><td>${esc(x.zona)}</td><td>${esc(tipLbl[x.tip] || x.tip)}</td><td>${esc(x.descriere)}<br/><span class="muted">→ ${esc(x.sugestie)}</span></td><td class="rev-sev rev-${esc(x.severitate)}">${sevLbl[x.severitate] || esc(x.severitate)}</td></tr>`).join("");
+    return `<div class="ai-review">
+      <div class="rev-head"><span class="rev-scor rev-scor-${cls}">${r.scor}<small>/100</small></span>
+        <div><b>🔍 Verificare AI — pregătirea proiectului</b><br/><span class="muted">${esc(r.verdict || "")}</span></div></div>
+      ${rows ? `<table class="risc-mat"><thead><tr><th>Zonă</th><th>Tip</th><th>Problemă / sugestie</th><th>Sev.</th></tr></thead><tbody>${rows}</tbody></table>` : `<p class="muted">Nicio problemă semnalată.</p>`}
+    </div>`;
+  }
+
   function printMemoriu(p) {
     ensureComputed(p);
     $("#print-view").innerHTML = MEMORIU.buildMemoriu({ company: state.company, project: p, dim: p.dim, crb: p.crb, apa: p.apa, canalizare: p.canalizare, electrice: p.electrice, gaze: p.gaze, sisteme: p.sisteme, aiText: p.aiText });
@@ -517,12 +639,32 @@
   $("#btn-pdf").addEventListener("click", () => { const p = state.projects.find((x) => x.id === currentId); if (p) printMemoriu(p); });
   $("#btn-ai-ipoteze").addEventListener("click", aiPropuneIpoteze);
   $("#btn-ai-narativ").addEventListener("click", aiNarativ);
+  $("#btn-ai-verifica").addEventListener("click", aiVerifica);
+  $("#cmp-select").addEventListener("change", () => {
+    const area = $("#cmp-area");
+    const otherId = $("#cmp-select").value;
+    if (!otherId) { area.hidden = true; area.innerHTML = ""; return; }
+    const a = state.projects.find((x) => x.id === currentId);
+    const b = state.projects.find((x) => x.id === otherId);
+    if (!a || !b) return;
+    area.innerHTML = renderCompare(a, b);
+    area.hidden = false;
+    $("#cmp-close").addEventListener("click", () => { area.hidden = true; area.innerHTML = ""; $("#cmp-select").value = ""; });
+  });
   $("#btn-fezabilitate").addEventListener("click", () => { const p = state.projects.find((x) => x.id === currentId); if (p) printFezabilitate(p); });
   $("#btn-export-deviz").addEventListener("click", () => { const p = state.projects.find((x) => x.id === currentId); if (p) exportDeviz(p); });
   $("#proj-list").addEventListener("click", (e) => {
     const t = e.target.dataset;
     if (t.open) openResults(t.open);
     else if (t.pdf) printMemoriu(state.projects.find((x) => x.id === t.pdf));
+    else if (t.dup) {
+      const src = state.projects.find((x) => x.id === t.dup); if (!src) return;
+      const copy = JSON.parse(JSON.stringify(src));
+      copy.id = uid(); copy.name = src.name + " — scenariu B"; delete copy.aiReview; delete copy.aiText;
+      state.projects.push(computeProject(copy)); save(); renderList();
+      toast("Scenariu duplicat — editează-l, apoi compară-le");
+      openProjectForm(copy);
+    }
     else if (t.del && confirm("Ștergi acest proiect?")) { state.projects = state.projects.filter((x) => x.id !== t.del); save(); renderList(); }
   });
   document.addEventListener("click", (e) => { if (e.target.dataset.action === "new") openProjectForm(null); });

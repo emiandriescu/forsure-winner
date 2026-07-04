@@ -232,18 +232,25 @@
   }
 
   // ---------- Sinteză ----------
-  function sinteza(cost) {
+  const UNITATE_LABEL = { turism: "cameră", rezidential: "apartament", spital: "pat" };
+  function sinteza(cost, profile) {
     const principal = cost.grupuri.slice().sort((a, b) => b.total - a.total)[0] || null;
+    // cost pe unitate (€/cameră, €/apartament, €/pat) — limbajul dezvoltatorului/băncii
+    let perUnitate = null, unitateLabel = null;
+    const nrUnitati = profile && profile.valoareUnit > 0 ? profile.valoareUnit : 0;
+    const lbl = profile && UNITATE_LABEL[profile.tip];
+    if (nrUnitati && lbl && cost.total) { perUnitate = Math.round(cost.total / nrUnitati); unitateLabel = lbl; }
     return {
       capex: cost.total, capexPerMp: cost.perMp, opexAnual: cost.opexAnual,
       nrSpecialitati: cost.grupuri.length,
+      perUnitate, unitateLabel,
       specialitatePrincipala: principal ? { specialitate: principal.specialitate, total: principal.total, pct: principal.pct } : null,
     };
   }
 
   function analizaExtinsa(bundle, preturi) {
     const cost = estimareCost(bundle, preturi);
-    return { cost, risc: matriceRisc(bundle), beneficiu: beneficii(bundle), sinteza: sinteza(cost) };
+    return { cost, risc: matriceRisc(bundle), beneficiu: beneficii(bundle), sinteza: sinteza(cost, bundle.profile) };
   }
 
   const api = { PRETURI, PRETURI_META, mergePreturi, GRUPURI, nivelRisc, estimareCost, matriceRisc, beneficii, sinteza, analizaExtinsa };

@@ -62,6 +62,11 @@ ok("beneficii nevide", a.beneficiu.length >= 4, a.beneficiu.length);
 ok("beneficiu recuperare ≥75% cuantificat", a.beneficiu.some((b) => /recuperare ≥ 75/.test(b.cuantificare || "")), "ok");
 ok("beneficiu grup electrogen prezent", a.beneficiu.some((b) => /grup electrogen/i.test(b.text)), "ok");
 
+// --- Cost pe unitate (limbajul dezvoltatorului) ---
+eq("sinteză: cost/cameră = total/90", a.sinteza.perUnitate, Math.round(a.cost.total / 90));
+eq("sinteză: eticheta unității = cameră", a.sinteza.unitateLabel, "cameră");
+ok("fără unități → perUnitate null", CRB.analizaExtinsa({ profile: { tip: "birouri", valoareUnit: 0 }, dim: null }).sinteza.perUnitate === null, "ok");
+
 // --- CATALOG editabil ---
 ok("PRETURI_META acoperă toate cheile din PRETURI",
   Object.keys(CRB.PRETURI).every((k) => CRB.PRETURI_META.some((m) => m.key === k)) &&

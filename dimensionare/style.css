@@ -150,7 +150,7 @@ h1{font-size:1.45rem;margin:0 0 2px}h2{font-size:1.15rem;margin:0 0 12px}h3{font
 .fez-verdict.lvl-moderat{background:#fefce8;border-color:#fde68a}.fez-verdict.lvl-moderat .fez-verd-v{color:#a16207}
 .fez-verdict.lvl-ridicat{background:#fff7ed;border-color:#fed7aa}.fez-verdict.lvl-ridicat .fez-verd-v{color:#c2410c}
 .fez-verdict.lvl-critic{background:#fef2f2;border-color:#fecaca}.fez-verdict.lvl-critic .fez-verd-v{color:#b91c1c}
-.fez-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:8px 0}
+.fez-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin:8px 0}
 .fez-kpi .k{background:#f7f5fb;border:1px solid #ede9fe;border-radius:8px;padding:8px;text-align:center}
 .fez-kpi .v{font-size:16px;font-weight:700;color:#4c1d95}
 .fez-kpi .l{font-size:10px;color:#555;margin-top:2px}
@@ -163,3 +163,36 @@ h1{font-size:1.45rem;margin:0 0 2px}h2{font-size:1.15rem;margin:0 0 12px}h3{font
 .fez-2col{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
 .fez-tl{margin:6px 0;padding-left:16px;font-size:11.5px}.fez-tl li{margin:3px 0}
 .fez-foot{margin-top:14px;font-size:10px;color:#777;border-top:1px solid #e5e7eb;padding-top:8px}
+
+/* ----- Preview live în formular ----- */
+.live-preview{margin:10px 0 0;padding:10px 14px;border:1px solid var(--line);background:var(--panel-2);border-radius:10px;font-size:.86rem;color:var(--muted);line-height:1.6}
+.live-preview b{color:var(--accent)}
+.live-preview .lp-l{font-weight:700;color:var(--text)}
+.lvl-txt-scăzut{color:#4ade80!important}.lvl-txt-moderat{color:#fbbf24!important}.lvl-txt-ridicat{color:#fb923c!important}.lvl-txt-critic{color:#f87171!important}
+.op-link{color:var(--accent);font-size:.8rem;text-decoration:none}.op-link:hover{text-decoration:underline}
+
+/* ----- Verificare AI (scor + probleme) ----- */
+.ai-review{margin:0 0 20px;padding:14px 16px;border:1px solid var(--line);background:var(--panel);border-radius:12px}
+.rev-head{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.rev-scor{font-size:1.9rem;font-weight:800;padding:6px 14px;border-radius:10px}
+.rev-scor small{font-size:.85rem;font-weight:600;opacity:.7}
+.rev-scor-ok{color:#4ade80;background:rgba(74,222,128,.1)}
+.rev-scor-warn{color:#fbbf24;background:rgba(251,191,36,.1)}
+.rev-scor-bad{color:#f87171;background:rgba(248,113,113,.1)}
+.rev-sev{font-weight:700;text-align:center;white-space:nowrap}
+.rev-mare{color:#f87171}.rev-medie{color:#fbbf24}.rev-mica{color:#94a0b8}
+
+/* ----- Comparație scenarii ----- */
+.cmp-select{background:var(--panel-2);border:1px solid var(--line);border-radius:9px;color:var(--text);padding:8px 12px;font-size:.86rem;font-family:inherit;font-weight:600;cursor:pointer}
+.cmp-select:focus{outline:none;border-color:var(--primary)}
+.cmp-box{margin:0 0 22px;padding:14px 16px;border:1px solid var(--accent);background:var(--panel);border-radius:12px}
+.cmp-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.cmp-t td.num,.cmp-t th.num{text-align:right;white-space:nowrap}
+.cmp-grup{font-weight:700;color:var(--accent);white-space:nowrap}
+.cmp-delta{font-weight:700}.cmp-delta.up{color:#f87171}.cmp-delta.down{color:#4ade80}
+/* header-ele tabelelor .risc-mat în aplicație (temă închisă) — contrast corect;
+   în documentele de print (.doc/.fez) rămân pe stilul lor deschis */
+#app .risc-mat th{background:var(--panel-2);color:var(--muted)}
+#app .risc-mat td{border-color:var(--line)}
+#app .lvl-scăzut{background:rgba(74,222,128,.08)}#app .lvl-moderat{background:rgba(251,191,36,.08)}
+#app .lvl-ridicat{background:rgba(251,146,60,.08)}#app .lvl-critic{background:rgba(248,113,113,.08)}

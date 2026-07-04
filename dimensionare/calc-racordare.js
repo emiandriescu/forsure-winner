@@ -17,6 +17,28 @@
     gaz_mch_presiune: 100,        // debit mare → presiune medie / stație de reglare
   };
 
+  // Tarif ANRE de emitere ATR, pe benzi de putere aparentă (lei, fără TVA)
+  function tarifATR(kva) {
+    if (kva <= 30) return 70;
+    if (kva <= 100) return 160;
+    return 215;
+  }
+
+  // Portalurile operatorilor (depind de zonă — linkurile principale, orientativ)
+  const PORTALURI = {
+    electric: [
+      { nume: "Rețele Electrice (ex-E-Distribuție)", url: "https://www.reteleelectrice.ro" },
+      { nume: "DEER (Distribuție Energie Electrică România)", url: "https://www.distributie-energie.ro" },
+    ],
+    gaz: [
+      { nume: "Distrigaz Sud Rețele", url: "https://www.distrigazsud-retele.ro" },
+      { nume: "Delgaz Grid", url: "https://delgaz.ro" },
+    ],
+    apa: [{ nume: "operatorul local apă-canal (ex. Apa Nova — București)", url: "https://www.apanovabucuresti.ro" }],
+    canal: [],
+    isu: [{ nume: "IGSU — avizare/autorizare", url: "https://www.igsu.ro" }],
+  };
+
   const nivelDin = (val, atentie, ridicat) => (val >= ridicat ? "ridicat" : val >= atentie ? "moderat" : "scăzut");
 
   function dimensionareRacordare(bundle = {}) {
@@ -28,15 +50,16 @@
       const putere = electrice.Pa || 0;           // putere absorbită ≈ putere de racordare solicitată
       const pi = electrice.Pi || 0, s = electrice.S || 0;
       const garantie = r0(putere * C.garantie_eur_kw);
+      const atr_lei = tarifATR(s);
       const nivel = nivelDin(s, C.electric_kva_atentie, C.electric_kva_mt);
       const mt = s >= C.electric_kva_mt;
       util.push({
         cheie: "electric", utilitate: "Energie electrică", operator: "Operator de distribuție (ex. Distribuție Energie / rețele locale)",
         document: "Aviz tehnic de racordare (ATR)", nivel,
         solicitare: `Putere de racordare ≈ ${putere} kW (Pi ${pi} kW · S ${s} kVA)${mt ? " — racordare la medie tensiune, post propriu de transformare" : ""}.`,
-        cost: `Garanție de racordare ≈ ${garantie.toLocaleString("ro-RO")} € (${C.garantie_eur_kw} €/kW, ANRE)${mt ? "; posibilă întărire de rețea — de confirmat" : ""}.`,
+        cost: `Garanție de racordare ≈ ${garantie.toLocaleString("ro-RO")} € (${C.garantie_eur_kw} €/kW, ANRE) + tarif emitere ATR ${atr_lei} lei (bandă ${s <= 30 ? "≤ 30" : s <= 100 ? "30–100" : "> 100"} kVA)${mt ? "; posibilă întărire de rețea — de confirmat" : ""}.`,
         termen: "ATR emis în max 30 zile calendaristice de la dosar complet; contract de racordare semnat în 12 luni.",
-        valoare: garantie,
+        valoare: garantie, atr_lei, linkuri: PORTALURI.electric,
       });
     }
 
@@ -49,7 +72,7 @@
         solicitare: `Debit de calcul Qmax orar ≈ ${apa.debite.Qmax_orar_mc || 0} mc/h (${ls} l/s), branșament ${apa.debite.dn || "—"}, presiune ≥ ${apa.debite.presiune_bar || 2.5} bar.`,
         cost: "Cost branșament — de ofertat de operator/executant autorizat.",
         termen: "Avizul definitiv se emite pe proiectul de execuție al branșamentului.",
-        valoare: 0,
+        valoare: 0, linkuri: PORTALURI.apa,
       });
     }
 
@@ -63,7 +86,7 @@
         solicitare: `Debit menajer ≈ ${men} l/s${pluv ? ` + pluvial ≈ ${pluv} l/s` : ""}, racord ${canalizare.menajera.dn}.${(canalizare.separatoare && canalizare.separatoare.length) ? " Separatoare obligatorii înainte de racord." : ""}`,
         cost: "Cost racord — de ofertat de operator/executant autorizat.",
         termen: "Se corelează cu avizul de apă și cu descărcarea pluvială aprobată.",
-        valoare: 0,
+        valoare: 0, linkuri: PORTALURI.canal,
       });
     }
 
@@ -78,7 +101,7 @@
         solicitare: `Debit solicitat ≈ ${q} mc/h (calcul: ${gaze.q || 0} mc/h), PRM ${gaze.prmLabel || gaze.prm || "—"} mc/h${presiuneMedie ? " — probabil presiune medie, stație de reglare-măsurare dedicată" : ""}.`,
         cost: "Cost racord + PRM — de ofertat de operator.",
         termen: "Operatorul analizează în max 30 zile lucrătoare; racordare completă tipic ~3–4 luni.",
-        valoare: 0,
+        valoare: 0, linkuri: PORTALURI.gaz,
       });
     }
 
@@ -95,7 +118,7 @@
         : "Probabil neobligatoriu — de verificat încadrarea în HG 571/2016 pentru clădirea concretă.",
       cost: "Onorariu scenariu + taxă ISU — de ofertat.",
       termen: "Aviz în 15 zile lucrătoare; autorizație în 30 zile după controlul la fața locului.",
-      valoare: 0,
+      valoare: 0, linkuri: PORTALURI.isu,
     });
 
     // --- Sinteză / semafor general + termen critic ---
@@ -115,7 +138,7 @@
       nota: "Estimări preliminare (faza DTAC), sub responsabilitatea proiectantului; capacitățile și costurile de racordare se confirmă cu operatorii." };
   }
 
-  const api = { C, dimensionareRacordare };
+  const api = { C, tarifATR, PORTALURI, dimensionareRacordare };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.RACORDARE = api;
 })(typeof globalThis !== "undefined" ? globalThis : this);

@@ -55,5 +55,13 @@ const mic = RAC.dimensionareRacordare({
 ok("clădire mică: electric risc scăzut (S 65 kVA)", mic.utilitati.find((u) => u.cheie === "electric").nivel === "scăzut", "ok");
 ok("clădire mică: ISU probabil neobligatoriu", /neobligatoriu/.test(mic.utilitati.find((u) => u.cheie === "isu").solicitare), "ok");
 
+// --- Tarif ATR pe benzi + linkuri portale ---
+eq("tarif ATR ≤30 kVA = 70 lei", RAC.tarifATR(25), 70);
+eq("tarif ATR 30-100 kVA = 160 lei", RAC.tarifATR(80), 160);
+eq("tarif ATR >100 kVA = 215 lei", RAC.tarifATR(1142), 215);
+eq("electric hotel: atr_lei = 215 (S 1142 kVA)", el.atr_lei, 215);
+ok("electric: linkuri portale operatori prezente", el.linkuri && el.linkuri.length >= 2 && /reteleelectrice/.test(el.linkuri[0].url), "ok");
+ok("costul menționează tariful ATR", /tarif emitere ATR 215 lei/.test(el.cost), "ok");
+
 console.log(`\n${pass} trecute, ${fail} eșuate`);
 process.exit(fail ? 1 : 0);

@@ -15,6 +15,10 @@ Modulul curent: **Stingere incendiu** (sprinklere, hidranți interiori/exteriori
 - **Catalog de prețuri editabil** (tab „Firma mea") — ajustezi tarifele la valorile tale; se aplică tuturor proiectelor și se salvează în browser (`sowilo_preturi`).
 - **Racordare la utilități + pagină de fezabilitate (Go/No-go)** — din debitele/puterile calculate: ce se solicită fiecărui operator (ATR, avize apă-canal, cerere gaz, ISU), semafor de risc de capacitate, termene-capcană și estimarea garanției de racordare electrică (30 €/kW). Pagina de fezabilitate = un PDF de o pagină, bancabil, pentru dezvoltator/investitor.
 - **Export deviz + cantități (Excel/CSV)** — devizul pe specialități + solicitările de racordare, exportabile pentru licitație/ofertare (CSV cu `;` și BOM UTF-8, se deschide direct în Excel RO).
+- **Verificare AI a proiectului** — scor de completitudine 0–100 + listă de probleme (lipsuri, valori atipice, inconsistențe) cu sugestii, înainte de a trimite memoriul.
+- **Comparație de scenarii A/B** — duplici un proiect ca scenariu („⧉ Scenariu"), îl modifici, apoi le compari side-by-side (CAPEX, €/m², kW, debite, verdict racordare) cu delte colorate.
+- **Estimare live în formular** — CAPEX/€-per-m²/rezervor/kW se recalculează în timp ce tastezi.
+- **Racordare cu tarif ATR pe benzi** (70/160/215 lei) + linkuri directe către portalurile operatorilor; **cost pe unitate** (€/cameră, €/apartament, €/pat) în sinteză și în pagina de fezabilitate.
 - **Memoriu tehnic PDF** (print-to-PDF, diacritice perfecte), cu logo și atestate.
 - **Export/Import** JSON.
 
@@ -71,16 +75,16 @@ Toate specialitățile MEP sunt acum implementate, același tipar determinist (c
 
 Stingere ✓ · **Apă ✓** · **Canalizare ✓** · **Electrice ✓** · **Gaze ✓** · **Termice/HVAC ✓** · **Ventilație ✓** · **Detecție incendiu ✓** · **Desfumare ✓** — compuse într-un memoriu unic de racordare utilități + dimensionare instalații.
 
-Toate testele de regresie (145 verificări) trec:
+Toate testele de regresie (160 verificări) trec:
 
 ```
 node dimensionare/calc-stingere.test.js   # 32/32 — sprinklere, hidranți, rezervor 210 m³ + P3/P4, clădire înaltă 120 min, gating obligativitate
 node dimensionare/calc-apa.test.js        # 17/17 — Qzi,med 74,5; Qmax,orar 8,7 mc/h; rezervor 110 mc; hidrofor 57 mCA + spital 325 l/pat
 node dimensionare/calc-utilitati.test.js  #  9/9  — canalizare, electrice (trafo 1250, GE 550 kVA), gaze (PRM 200)
 node dimensionare/calc-sisteme.test.js    #  9/9  — termice 904/600 kW, ventilație 5400 mc/h, detecție, desfumare 72000 mc/h
-node dimensionare/ai.test.js              # 27/27 — strat AI: cereri valide (opus-4-8, fără temperature/budget_tokens), merge ipoteze, rezumat determinist
-node dimensionare/crb.test.js             # 25/25 — cost extins (8 specialități, €/m², OPEX), matrice de risc, catalog editabil
-node dimensionare/calc-racordare.test.js  # 13/13 — solicitări operatori, garanție electrică 31.530 €, risc capacitate, ISU
+node dimensionare/ai.test.js              # 33/33 — strat AI: cereri valide (opus-4-8, fără temperature/budget_tokens), merge ipoteze, rezumat determinist
+node dimensionare/crb.test.js             # 28/28 — cost extins (8 specialități, €/m², OPEX), matrice de risc, catalog editabil
+node dimensionare/calc-racordare.test.js  # 19/19 — solicitări operatori, garanție electrică 31.530 €, risc capacitate, ISU
 node dimensionare/export.test.js          # 13/13 — export CSV (deviz+racordare) + pagină de fezabilitate Go/No-go
 ```
 
