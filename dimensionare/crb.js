@@ -19,14 +19,11 @@
     // Apă rece
     rezervorConsum_eur_mc: 300,       // rezervor de consum, €/m³
     hidrofor_eur: 9000,               // stație de hidrofor
-    reteleApa_eur_mp: 6,              // distribuție apă rece, €/m² desfășurat
     // Canalizare
     separator_eur: 4000,              // separator (hidrocarburi / grăsimi)
-    reteleCanalizare_eur_mp: 7,       // canalizare menajeră + pluvială, €/m²
     // Instalații electrice
     postTrafo_eur_kva: 45,            // post de transformare, €/kVA
     grupElectrogen_eur_kva: 220,      // grup electrogen, €/kVA
-    tablouriRetele_eur_mp: 22,        // tablouri + distribuție, €/m²
     // Termice & gaze
     centralaTermica_eur_kw: 95,       // centrală termică pe gaz, €/kW
     chiller_eur_kw: 320,              // chiller/pompă de căldură, €/kW frig
@@ -36,10 +33,29 @@
     ventilatieParcaj_eur_mc_h: 1.2,   // ventilație parcaj (jet/extract), € per mc/h
     // Detecție incendiu
     detectieCentrala_eur: 6000,       // centrală adresabilă
-    detectie_eur_mp: 9,              // detectoare + cablare, €/m²
     // Desfumare
     ventilatorF400_eur_buc: 5500,     // ventilator F400/120 (~30.000 mc/h)
     presurizare_eur_buc: 7000,        // ventilator presurizare casă de scară
+    // Distribuții / cantități de execuție (conducte, cablu, aparataje, tubulatură...) — montate
+    conductaApa_eur_ml: 18,           // conductă apă rece+caldă (PPR/PEX izolat), €/ml
+    setBaie_eur: 900,                 // set obiecte sanitare / cameră-apartament (vas, lavoar, cadă/duș, baterii)
+    conductaCanal_eur_ml: 16,         // conductă canalizare (PP/PVC), €/ml
+    conductaTermica_eur_ml: 22,       // conductă distribuție termică izolată, €/ml
+    corpIncalzire_eur_buc: 280,       // radiator / ventiloconvector montat
+    conductaGaz_eur_ml: 20,           // conductă gaz interioară + fitinguri, €/ml
+    cablu_eur_ml: 4.5,                // cablu electric (medie toate circuitele), €/ml
+    tablou_eur_buc: 2200,             // tablou electric echipat
+    aparataj_eur_buc: 22,             // aparataj (priză/întrerupător) montat
+    corpIluminat_eur_buc: 55,         // corp de iluminat montat
+    tubulatura_eur_mp: 45,            // tubulatură ventilație (tablă zincată), €/m² suprafață
+    grila_eur_buc: 65,                // grilă/anemostat montat
+    jetFan_eur_buc: 1400,             // ventilator de impuls parcaj (jet-fan)
+    tubulaturaEI_eur_mp: 90,          // tubulatură desfumare EI, €/m² suprafață
+    voletDesfumare_eur_buc: 550,      // volet/grilă de desfumare
+    detector_eur_buc: 55,             // detector (optic/multicriterial) montat
+    cabluDetectie_eur_ml: 3.5,        // cablu detecție (JE-H(St)H), €/ml
+    butonSirena_eur_buc: 120,         // buton manual / sirenă
+    teavaPSI_eur_ml: 32,              // țeavă oțel zincat PSI (montată, vopsită), €/ml
     // OPEX (mentenanță anuală, % din CAPEX)
     mentenantaPSI_pct: 0.02,          // PSI (stingere/detecție/desfumare)
     mentenantaInst_pct: 0.015,        // restul instalațiilor
@@ -50,26 +66,41 @@
     { key: "rezervorBeton_eur_mc", grup: "Stingere incendiu", eticheta: "Rezervor incendiu (beton)", unit: "€/m³" },
     { key: "grupPompare_eur", grup: "Stingere incendiu", eticheta: "Grup de pompare", unit: "€" },
     { key: "sprinkler_eur_cap", grup: "Stingere incendiu", eticheta: "Cap sprinkler montat", unit: "€/buc" },
+    { key: "teavaPSI_eur_ml", grup: "Stingere incendiu", eticheta: "Țeavă oțel PSI (montată)", unit: "€/ml" },
     { key: "hidrantInterior_eur_buc", grup: "Stingere incendiu", eticheta: "Cutie hidrant interior", unit: "€/buc" },
     { key: "hidrantExterior_eur_buc", grup: "Stingere incendiu", eticheta: "Hidrant exterior", unit: "€/buc" },
     { key: "statieAlarmare_eur", grup: "Stingere incendiu", eticheta: "Stație alarmare sprinklere", unit: "€/buc" },
     { key: "rezervorConsum_eur_mc", grup: "Apă rece", eticheta: "Rezervor de consum", unit: "€/m³" },
     { key: "hidrofor_eur", grup: "Apă rece", eticheta: "Stație de hidrofor", unit: "€" },
-    { key: "reteleApa_eur_mp", grup: "Apă rece", eticheta: "Rețele apă rece", unit: "€/m²" },
+    { key: "conductaApa_eur_ml", grup: "Apă rece", eticheta: "Conductă apă (montată)", unit: "€/ml" },
+    { key: "setBaie_eur", grup: "Apă rece", eticheta: "Set obiecte sanitare", unit: "€/buc" },
     { key: "separator_eur", grup: "Canalizare", eticheta: "Separator", unit: "€/buc" },
-    { key: "reteleCanalizare_eur_mp", grup: "Canalizare", eticheta: "Rețele canalizare", unit: "€/m²" },
+    { key: "conductaCanal_eur_ml", grup: "Canalizare", eticheta: "Conductă canalizare (montată)", unit: "€/ml" },
     { key: "postTrafo_eur_kva", grup: "Instalații electrice", eticheta: "Post de transformare", unit: "€/kVA" },
     { key: "grupElectrogen_eur_kva", grup: "Instalații electrice", eticheta: "Grup electrogen", unit: "€/kVA" },
-    { key: "tablouriRetele_eur_mp", grup: "Instalații electrice", eticheta: "Tablouri + distribuție", unit: "€/m²" },
+    { key: "cablu_eur_ml", grup: "Instalații electrice", eticheta: "Cablu (pozat)", unit: "€/ml" },
+    { key: "tablou_eur_buc", grup: "Instalații electrice", eticheta: "Tablou electric echipat", unit: "€/buc" },
+    { key: "aparataj_eur_buc", grup: "Instalații electrice", eticheta: "Aparataj (priză/întrerupător)", unit: "€/buc" },
+    { key: "corpIluminat_eur_buc", grup: "Instalații electrice", eticheta: "Corp de iluminat", unit: "€/buc" },
     { key: "centralaTermica_eur_kw", grup: "Termice & gaze", eticheta: "Centrală termică gaz", unit: "€/kW" },
     { key: "chiller_eur_kw", grup: "Termice & gaze", eticheta: "Chiller / pompă de căldură", unit: "€/kW frig" },
+    { key: "conductaTermica_eur_ml", grup: "Termice & gaze", eticheta: "Conductă termică (montată)", unit: "€/ml" },
+    { key: "corpIncalzire_eur_buc", grup: "Termice & gaze", eticheta: "Corp încălzire (radiator/VCV)", unit: "€/buc" },
+    { key: "conductaGaz_eur_ml", grup: "Termice & gaze", eticheta: "Conductă gaz (montată)", unit: "€/ml" },
     { key: "prm_eur", grup: "Termice & gaze", eticheta: "Post reglare gaz (PRM)", unit: "€" },
     { key: "cta_eur_mc_h", grup: "Ventilație/climatizare", eticheta: "CTA cu recuperare", unit: "€/(mc/h)" },
     { key: "ventilatieParcaj_eur_mc_h", grup: "Ventilație/climatizare", eticheta: "Ventilație parcaj", unit: "€/(mc/h)" },
+    { key: "tubulatura_eur_mp", grup: "Ventilație/climatizare", eticheta: "Tubulatură ventilație", unit: "€/m²" },
+    { key: "grila_eur_buc", grup: "Ventilație/climatizare", eticheta: "Grilă / anemostat", unit: "€/buc" },
+    { key: "jetFan_eur_buc", grup: "Ventilație/climatizare", eticheta: "Ventilator impuls parcaj (jet-fan)", unit: "€/buc" },
     { key: "detectieCentrala_eur", grup: "Detecție incendiu", eticheta: "Centrală adresabilă", unit: "€" },
-    { key: "detectie_eur_mp", grup: "Detecție incendiu", eticheta: "Detectoare + cablare", unit: "€/m²" },
+    { key: "detector_eur_buc", grup: "Detecție incendiu", eticheta: "Detector montat", unit: "€/buc" },
+    { key: "cabluDetectie_eur_ml", grup: "Detecție incendiu", eticheta: "Cablu detecție (pozat)", unit: "€/ml" },
+    { key: "butonSirena_eur_buc", grup: "Detecție incendiu", eticheta: "Buton manual / sirenă", unit: "€/buc" },
     { key: "ventilatorF400_eur_buc", grup: "Desfumare", eticheta: "Ventilator F400/120", unit: "€/buc" },
     { key: "presurizare_eur_buc", grup: "Desfumare", eticheta: "Ventilator presurizare", unit: "€/buc" },
+    { key: "tubulaturaEI_eur_mp", grup: "Desfumare", eticheta: "Tubulatură desfumare EI", unit: "€/m²" },
+    { key: "voletDesfumare_eur_buc", grup: "Desfumare", eticheta: "Volet / grilă desfumare", unit: "€/buc" },
     { key: "mentenantaPSI_pct", grup: "OPEX (mentenanță anuală)", eticheta: "Mentenanță PSI", unit: "%/an", pct: true },
     { key: "mentenantaInst_pct", grup: "OPEX (mentenanță anuală)", eticheta: "Mentenanță instalații", unit: "%/an", pct: true },
   ];
@@ -117,55 +148,53 @@
       if (nrHidrInt) add("Stingere incendiu", "Cutii hidranți interiori (estimare)", nrHidrInt, "buc", preturi.hidrantInterior_eur_buc);
     }
 
-    // --- Apă rece ---
+    // --- Apă rece (echipamente) ---
     if (apa) {
       if (apa.rezervor) add("Apă rece", "Rezervor de consum", apa.rezervor.adoptat, "m³", preturi.rezervorConsum_eur_mc);
       add("Apă rece", "Stație de hidrofor", 1, "buc", preturi.hidrofor_eur);
-      if (arie) add("Apă rece", "Rețele distribuție apă rece (estimare)", arie, "m²", preturi.reteleApa_eur_mp);
     }
 
-    // --- Canalizare ---
+    // --- Canalizare (echipamente) ---
     if (canalizare) {
       const nrSep = (canalizare.separatoare && canalizare.separatoare.length) || 0;
       if (nrSep) add("Canalizare", "Separatoare (hidrocarburi/grăsimi)", nrSep, "buc", preturi.separator_eur);
-      if (arie) add("Canalizare", "Rețele canalizare menajeră + pluvială (estimare)", arie, "m²", preturi.reteleCanalizare_eur_mp);
     }
 
-    // --- Instalații electrice ---
+    // --- Instalații electrice (echipamente) ---
     if (electrice) {
       // trafoTotal/geTotal sunt kVA numerice (trafo/ge sunt etichete text, ex. „2 × 800 kVA")
       const kvaTrafo = electrice.trafoTotal || (typeof electrice.trafo === "number" ? electrice.trafo : 0);
       const kvaGE = electrice.geTotal || (typeof electrice.ge === "number" ? electrice.ge : 0);
       if (kvaTrafo) add("Instalații electrice", "Post de transformare", kvaTrafo, "kVA", preturi.postTrafo_eur_kva);
       if (kvaGE) add("Instalații electrice", "Grup electrogen (consumatori vitali)", kvaGE, "kVA", preturi.grupElectrogen_eur_kva);
-      if (arie) add("Instalații electrice", "Tablouri + distribuție electrică (estimare)", arie, "m²", preturi.tablouriRetele_eur_mp);
     }
 
-    // --- Termice & gaze ---
+    // --- Termice & gaze (echipamente) ---
     if (sisteme && sisteme.termice) {
       add("Termice & gaze", "Centrală termică pe gaz (cazane condensare)", sisteme.termice.Pinc, "kW", preturi.centralaTermica_eur_kw);
       add("Termice & gaze", "Chiller / pompă de căldură", sisteme.termice.Prac, "kW frig", preturi.chiller_eur_kw);
     }
     if (gaze) add("Termice & gaze", "Post reglare-măsurare gaz (PRM)", 1, "buc", preturi.prm_eur);
 
-    // --- Ventilație / climatizare ---
+    // --- Ventilație / climatizare (echipamente) ---
     if (sisteme && sisteme.ventilatie) {
       add("Ventilație/climatizare", "CTA aer proaspăt cu recuperare", sisteme.ventilatie.aerCamere, "mc/h", preturi.cta_eur_mc_h);
       if (sisteme.ventilatie.aerParcaj) add("Ventilație/climatizare", "Ventilație parcaj (sonde CO)", sisteme.ventilatie.aerParcaj, "mc/h", preturi.ventilatieParcaj_eur_mc_h);
     }
 
-    // --- Detecție incendiu ---
-    if (sisteme && sisteme.detectie) {
-      add("Detecție incendiu", "Centrală adresabilă + bucle", 1, "buc", preturi.detectieCentrala_eur);
-      if (arie) add("Detecție incendiu", "Detectoare + cablare (estimare)", arie, "m²", preturi.detectie_eur_mp);
-    }
+    // --- Detecție incendiu (echipamente) ---
+    if (sisteme && sisteme.detectie) add("Detecție incendiu", "Centrală adresabilă + bucle", 1, "buc", preturi.detectieCentrala_eur);
 
-    // --- Desfumare ---
+    // --- Desfumare (echipamente) ---
     if (sisteme && sisteme.desfumare && sisteme.desfumare.necesar) {
       const d = sisteme.desfumare;
       add("Desfumare", "Ventilatoare desfumare F400/120", Math.max(1, Math.ceil(d.Qparcaj / 30000)), "buc", preturi.ventilatorF400_eur_buc);
       add("Desfumare", "Ventilatoare presurizare case de scară", Math.max(1, Math.round(d.Qpresurizare / 12000)), "buc", preturi.presurizare_eur_buc);
     }
+
+    // --- Cantități de distribuție (conducte, cablu, aparataje, tubulatură, grile, detectoare...) ---
+    const CANT = (root.CANTITATI) || (typeof require !== "undefined" ? require("./calc-cantitati.js") : null);
+    if (CANT) CANT.cantitati(bundle).forEach((it) => add(it.specialitate, it.eticheta, it.qty, it.unit, preturi[it.pretKey]));
 
     // Grupare pe specialitate
     const total = lines.reduce((s, l) => s + l.total, 0);
