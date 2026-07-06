@@ -31,17 +31,25 @@ const racordare = RAC.dimensionareRacordare({ electrice, apa, canalizare, gaze, 
 const p = { name: "Hotel Sinaia", beneficiar: "X", adresa: "Sinaia", functiune: "hotel", data: "Iunie 2026",
   dim, apa, canalizare, electrice, gaze, sisteme, crb, racordare };
 
-// ---- EXPORT CSV ----
+// ---- EXPORT XLS (tabel Excel formatat, pe capitole) ----
+const xls = EXPORTCSV.buildExportXLS(p);
+ok("XLS e tabel HTML (deschide în Excel)", xls.includes("<table") && xls.includes("</table>"), "ok");
+ok("XLS are titlul devizului", /deviz estimativ pe specialități/i.test(xls), "ok");
+ok("XLS grupează pe capitole (specialități)", xls.includes("Termice &amp; gaze") || xls.includes("Termice & gaze"), "ok");
+ok("XLS are subcapitole (echipamente + armături + distribuție)",
+  xls.includes("Echipamente principale") && xls.includes("Armături și accesorii") && /Distribuție/.test(xls), "ok");
+ok("XLS itemizează țeava pe diametre (DN)", /DN50|DN40|DN65/.test(xls), "ok");
+ok("XLS are subtotaluri de subcapitol (clasa sub)", /class="sub"/.test(xls), "ok");
+ok("XLS are TOTAL CAPEX cu valoarea corectă", xls.includes(crb.cost.total.toLocaleString("ro-RO")), crb.cost.total);
+ok("XLS conține solicitările de racordare", /Solicitări de racordare/.test(xls), "ok");
+
+// ---- EXPORT CSV (compatibilitate) ----
 const csv = EXPORTCSV.buildExportCSV(p);
-ok("CSV are secțiunea de deviz", csv.includes("DEVIZ ESTIMATIV PE SPECIALITĂȚI"), "ok");
-ok("CSV are secțiunea de racordare", csv.includes("SOLICITĂRI DE RACORDARE"), "ok");
-ok("CSV conține un rând de rezervor incendiu", /Rezervor de incendiu/.test(csv), "ok");
+ok("CSV are antet pe capitole/subcapitole", csv.includes("Capitol") && csv.includes("Subcapitol"), "ok");
+ok("CSV conține poziții reprezentative din deviz",
+  ["Centrală termică", "Corpuri de încălzire", "Stație de hidrofor", "Rezervor de incendiu"].every((s) => csv.includes(s)), "ok");
 ok("CSV are TOTAL CAPEX cu valoarea corectă", csv.includes(String(crb.cost.total)), crb.cost.total);
-ok("CSV folosește ; ca delimitator", csv.split("\n")[1].includes(";"), "ok");
-ok("CSV formatează zecimalele cu virgulă (RO Excel)",
-  csv.includes("Cost specific (€/m²)"), "ok");
-const nLinesDeviz = crb.cost.lines.length;
-ok("CSV conține toate liniile de deviz", crb.cost.lines.every((l) => csv.includes(l.eticheta)), nLinesDeviz + " linii");
+ok("CSV folosește ; ca delimitator", csv.includes("Capitol;Subcapitol;"), "ok");
 
 // ---- PAGINĂ FEZABILITATE ----
 const fez = FEZ.buildFezabilitate({ company: { name: "SOWILO SRL", atestate: ["IDSAI"], proiectant: "ing. X" }, project: p, dim, crb, racordare });

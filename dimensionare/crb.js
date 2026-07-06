@@ -56,6 +56,28 @@
     cabluDetectie_eur_ml: 3.5,        // cablu detecție (JE-H(St)H), €/ml
     butonSirena_eur_buc: 120,         // buton manual / sirenă
     teavaPSI_eur_ml: 32,              // țeavă oțel zincat PSI (montată, vopsită), €/ml
+    // Echipamente auxiliare termice / apă
+    puffer_eur_buc: 2500,             // puffer / rezervor tampon
+    butelieEgalizare_eur_buc: 900,    // butelie de egalizare a presiunilor
+    distribuitorColector_eur_buc: 1800, // distribuitor / colector
+    vasExpansiune_eur_buc: 650,       // vas de expansiune cu membrană
+    pompaCirculatie_eur_buc: 1200,    // pompă de circulație cu turație variabilă
+    boilerACM_eur_buc: 3500,          // preparare apă caldă (boiler/schimbător) / stație pompare ape uzate
+    dedurizator_eur_buc: 2500,        // stație de dedurizare / tratare
+    ups_eur_buc: 4000,                // UPS consumatori critici
+    // Armături și accesorii
+    robinetSferic_eur_buc: 35,        // robinet sferic de izolare
+    robinetSertar_eur_buc: 150,       // robinet cu sertar / fluture / cu flanșe (DN mari)
+    clapetaSens_eur_buc: 90,          // clapetă de sens / antiretur
+    filtruY_eur_buc: 70,              // filtru Y / separator de impurități
+    mansonAntivibrant_eur_buc: 45,    // manșon antivibrant
+    reductorPresiune_eur_buc: 160,    // reductor de presiune
+    sifonPardoseala_eur_buc: 40,      // sifon de pardoseală
+    clapetaReglaj_eur_buc: 60,        // clapetă de reglaj debit aer
+    clapetaAntifoc_eur_buc: 180,      // clapetă antifoc (rezistentă la foc)
+    // Distribuție — accesorii de pozare
+    jgheabCablu_eur_ml: 12,           // jgheab / pat de cablu metalic, €/ml
+    tubProtectie_eur_ml: 3,           // tub de protecție / copex, €/ml
     // OPEX (mentenanță anuală, % din CAPEX)
     mentenantaPSI_pct: 0.02,          // PSI (stingere/detecție/desfumare)
     mentenantaInst_pct: 0.015,        // restul instalațiilor
@@ -101,6 +123,25 @@
     { key: "presurizare_eur_buc", grup: "Desfumare", eticheta: "Ventilator presurizare", unit: "€/buc" },
     { key: "tubulaturaEI_eur_mp", grup: "Desfumare", eticheta: "Tubulatură desfumare EI", unit: "€/m²" },
     { key: "voletDesfumare_eur_buc", grup: "Desfumare", eticheta: "Volet / grilă desfumare", unit: "€/buc" },
+    { key: "puffer_eur_buc", grup: "Termice & gaze", eticheta: "Puffer / rezervor tampon", unit: "€/buc" },
+    { key: "butelieEgalizare_eur_buc", grup: "Termice & gaze", eticheta: "Butelie de egalizare", unit: "€/buc" },
+    { key: "distribuitorColector_eur_buc", grup: "Termice & gaze", eticheta: "Distribuitor / colector", unit: "€/buc" },
+    { key: "vasExpansiune_eur_buc", grup: "Termice & gaze", eticheta: "Vas de expansiune", unit: "€/buc" },
+    { key: "pompaCirculatie_eur_buc", grup: "Termice & gaze", eticheta: "Pompă de circulație", unit: "€/buc" },
+    { key: "boilerACM_eur_buc", grup: "Apă rece", eticheta: "Boiler ACM / stație pompare uzate", unit: "€/buc" },
+    { key: "dedurizator_eur_buc", grup: "Apă rece", eticheta: "Stație de dedurizare", unit: "€/buc" },
+    { key: "reductorPresiune_eur_buc", grup: "Apă rece", eticheta: "Reductor de presiune", unit: "€/buc" },
+    { key: "sifonPardoseala_eur_buc", grup: "Canalizare", eticheta: "Sifon de pardoseală", unit: "€/buc" },
+    { key: "ups_eur_buc", grup: "Instalații electrice", eticheta: "UPS (consumatori critici)", unit: "€/buc" },
+    { key: "jgheabCablu_eur_ml", grup: "Instalații electrice", eticheta: "Jgheab / pat de cablu", unit: "€/ml" },
+    { key: "tubProtectie_eur_ml", grup: "Instalații electrice", eticheta: "Tub de protecție / copex", unit: "€/ml" },
+    { key: "clapetaReglaj_eur_buc", grup: "Ventilație/climatizare", eticheta: "Clapetă de reglaj", unit: "€/buc" },
+    { key: "clapetaAntifoc_eur_buc", grup: "Ventilație/climatizare", eticheta: "Clapetă antifoc", unit: "€/buc" },
+    { key: "robinetSferic_eur_buc", grup: "Armături & accesorii (comun)", eticheta: "Robinet sferic de izolare", unit: "€/buc" },
+    { key: "robinetSertar_eur_buc", grup: "Armături & accesorii (comun)", eticheta: "Robinet cu sertar / fluture", unit: "€/buc" },
+    { key: "clapetaSens_eur_buc", grup: "Armături & accesorii (comun)", eticheta: "Clapetă de sens / antiretur", unit: "€/buc" },
+    { key: "filtruY_eur_buc", grup: "Armături & accesorii (comun)", eticheta: "Filtru Y / dezaerator", unit: "€/buc" },
+    { key: "mansonAntivibrant_eur_buc", grup: "Armături & accesorii (comun)", eticheta: "Manșon antivibrant", unit: "€/buc" },
     { key: "mentenantaPSI_pct", grup: "OPEX (mentenanță anuală)", eticheta: "Mentenanță PSI", unit: "%/an", pct: true },
     { key: "mentenantaInst_pct", grup: "OPEX (mentenanță anuală)", eticheta: "Mentenanță instalații", unit: "%/an", pct: true },
   ];
@@ -124,83 +165,19 @@
   }
 
   // ---------- COST extins (toate specialitățile) ----------
+  // Devizul detaliat (capitole × subcapitole × poziții) e produs de deviz.js;
+  // aici doar grupăm pe specialitate + calculăm OPEX/€ pe m².
   function estimareCost(bundle, preturi = PRETURI) {
-    const { dim, apa, canalizare, electrice, gaze, sisteme, profile } = bundle;
-    const arie = arieDesf(profile);
-    const lines = [];
-    const add = (specialitate, eticheta, qty, unit, pretUnit) => {
-      if (qty > 0 && pretUnit > 0) lines.push({ specialitate, eticheta, qty: r0(qty * 100) / 100, unit, pretUnit, total: r0(qty * pretUnit) });
-    };
+    const arie = arieDesf(bundle.profile);
+    const DEVIZ = root.DEVIZ || (typeof require !== "undefined" ? require("./deviz.js") : null);
+    const dz = DEVIZ ? DEVIZ.construieste(bundle, preturi) : { capitole: [], lines: [], total: 0 };
+    const lines = dz.lines;
+    const total = dz.total;
 
-    // --- Stingere incendiu ---
-    if (dim) {
-      if (dim.rezervor) add("Stingere incendiu", "Rezervor de incendiu (beton armat)", dim.rezervor.adoptat, "m³", preturi.rezervorBeton_eur_mc);
-      add("Stingere incendiu", "Grup de pompare incendiu (atestat IGSU)", 1, "buc", preturi.grupPompare_eur);
-      const sprink = (dim.sisteme || []).find((s) => s.sistem && s.sistem.startsWith("Sprinklere"));
-      if (sprink && sprink.capeteTotal) {
-        add("Stingere incendiu", "Capete sprinkler montate", sprink.capeteTotal, "buc", preturi.sprinkler_eur_cap);
-        // SR EN 12845: o stație de control apă-apă deservește până la ~12.000 m² (folosim 9.000 acoperitor)
-        add("Stingere incendiu", "Stații de control sprinklere (ACS)", Math.max(1, Math.ceil((sprink.capeteTotal * 12) / 9000)), "buc", preturi.statieAlarmare_eur);
-      }
-      const hExt = (dim.sisteme || []).find((s) => s.sistem === "Hidranți exteriori");
-      if (hExt && hExt.nrHidranti) add("Stingere incendiu", "Hidranți exteriori", hExt.nrHidranti, "buc", preturi.hidrantExterior_eur_buc);
-      const nrHidrInt = arie ? Math.max(2, Math.round(arie / 250)) : 0;
-      if (nrHidrInt) add("Stingere incendiu", "Cutii hidranți interiori (estimare)", nrHidrInt, "buc", preturi.hidrantInterior_eur_buc);
-    }
-
-    // --- Apă rece (echipamente) ---
-    if (apa) {
-      if (apa.rezervor) add("Apă rece", "Rezervor de consum", apa.rezervor.adoptat, "m³", preturi.rezervorConsum_eur_mc);
-      add("Apă rece", "Stație de hidrofor", 1, "buc", preturi.hidrofor_eur);
-    }
-
-    // --- Canalizare (echipamente) ---
-    if (canalizare) {
-      const nrSep = (canalizare.separatoare && canalizare.separatoare.length) || 0;
-      if (nrSep) add("Canalizare", "Separatoare (hidrocarburi/grăsimi)", nrSep, "buc", preturi.separator_eur);
-    }
-
-    // --- Instalații electrice (echipamente) ---
-    if (electrice) {
-      // trafoTotal/geTotal sunt kVA numerice (trafo/ge sunt etichete text, ex. „2 × 800 kVA")
-      const kvaTrafo = electrice.trafoTotal || (typeof electrice.trafo === "number" ? electrice.trafo : 0);
-      const kvaGE = electrice.geTotal || (typeof electrice.ge === "number" ? electrice.ge : 0);
-      if (kvaTrafo) add("Instalații electrice", "Post de transformare", kvaTrafo, "kVA", preturi.postTrafo_eur_kva);
-      if (kvaGE) add("Instalații electrice", "Grup electrogen (consumatori vitali)", kvaGE, "kVA", preturi.grupElectrogen_eur_kva);
-    }
-
-    // --- Termice & gaze (echipamente) ---
-    if (sisteme && sisteme.termice) {
-      add("Termice & gaze", "Centrală termică pe gaz (cazane condensare)", sisteme.termice.Pinc, "kW", preturi.centralaTermica_eur_kw);
-      add("Termice & gaze", "Chiller / pompă de căldură", sisteme.termice.Prac, "kW frig", preturi.chiller_eur_kw);
-    }
-    if (gaze) add("Termice & gaze", "Post reglare-măsurare gaz (PRM)", 1, "buc", preturi.prm_eur);
-
-    // --- Ventilație / climatizare (echipamente) ---
-    if (sisteme && sisteme.ventilatie) {
-      add("Ventilație/climatizare", "CTA aer proaspăt cu recuperare", sisteme.ventilatie.aerCamere, "mc/h", preturi.cta_eur_mc_h);
-      if (sisteme.ventilatie.aerParcaj) add("Ventilație/climatizare", "Ventilație parcaj (sonde CO)", sisteme.ventilatie.aerParcaj, "mc/h", preturi.ventilatieParcaj_eur_mc_h);
-    }
-
-    // --- Detecție incendiu (echipamente) ---
-    if (sisteme && sisteme.detectie) add("Detecție incendiu", "Centrală adresabilă + bucle", 1, "buc", preturi.detectieCentrala_eur);
-
-    // --- Desfumare (echipamente) ---
-    if (sisteme && sisteme.desfumare && sisteme.desfumare.necesar) {
-      const d = sisteme.desfumare;
-      add("Desfumare", "Ventilatoare desfumare F400/120", Math.max(1, Math.ceil(d.Qparcaj / 30000)), "buc", preturi.ventilatorF400_eur_buc);
-      add("Desfumare", "Ventilatoare presurizare case de scară", Math.max(1, Math.round(d.Qpresurizare / 12000)), "buc", preturi.presurizare_eur_buc);
-    }
-
-    // --- Cantități de distribuție (conducte, cablu, aparataje, tubulatură, grile, detectoare...) ---
-    const CANT = (root.CANTITATI) || (typeof require !== "undefined" ? require("./calc-cantitati.js") : null);
-    if (CANT) CANT.cantitati(bundle).forEach((it) => add(it.specialitate, it.eticheta, it.qty, it.unit, preturi[it.pretKey]));
-
-    // Grupare pe specialitate
-    const total = lines.reduce((s, l) => s + l.total, 0);
+    // Grupare pe specialitate (pentru grafice, sinteză, memoriu)
     const grupuri = GRUPURI.map((g) => {
       const t = lines.filter((l) => l.specialitate === g).reduce((s, l) => s + l.total, 0);
-      return { specialitate: g, total: t, pct: total ? Math.round((t / total) * 100) : 0 };
+      return { specialitate: g, total: r0(t), pct: total ? Math.round((t / total) * 100) : 0 };
     }).filter((g) => g.total > 0);
 
     // OPEX orientativ (mentenanță anuală)
@@ -209,7 +186,7 @@
     const opexAnual = r0(capexPSI * preturi.mentenantaPSI_pct + capexInst * preturi.mentenantaInst_pct);
     const perMp = arie ? r0(total / arie) : 0;
 
-    return { lines, grupuri, total: r0(total), perMp, opexAnual, arie, moneda: "EUR" };
+    return { lines, capitole: dz.capitole, grupuri, total: r0(total), perMp, opexAnual, arie, moneda: "EUR" };
   }
 
   // ---------- RISC: matrice probabilitate × impact ----------

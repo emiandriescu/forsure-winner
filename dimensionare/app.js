@@ -483,11 +483,24 @@
       <div class="b"><div class="v">${eur(crb.cost.total)}</div><div class="l">Cost estimat (CAPEX)</div></div>
     </div>`;
 
-    const costRows = crb.cost.grupuri.map((g) => {
-      const ls = crb.cost.lines.filter((l) => l.specialitate === g.specialitate);
-      return `<tr class="grp"><td>${esc(g.specialitate)}</td><td></td><td></td><td class="num">${eur(g.total)} · ${g.pct}%</td></tr>` +
-        ls.map((l) => `<tr><td style="padding-left:16px">${esc(l.eticheta)}</td><td class="num">${l.qty} ${esc(l.unit)}</td><td class="num">${eur(l.pretUnit)}</td><td class="num">${eur(l.total)}</td></tr>`).join("");
-    }).join("");
+    const qfmt = (n) => Number(n).toLocaleString("ro-RO", { maximumFractionDigits: 2 });
+    let costRows;
+    if (crb.cost.capitole && crb.cost.capitole.length) {
+      const pct = (t) => crb.cost.total ? Math.round((t / crb.cost.total) * 100) : 0;
+      costRows = crb.cost.capitole.map((cap) =>
+        `<tr class="grp"><td>${esc(cap.specialitate)}</td><td></td><td></td><td class="num">${eur(cap.total)} · ${pct(cap.total)}%</td></tr>` +
+        cap.subcapitole.map((sub) =>
+          `<tr class="subgrp"><td>${esc(sub.nume)}</td><td></td><td></td><td class="num">${eur(sub.subtotal)}</td></tr>` +
+          sub.pozitii.map((it) => `<tr><td style="padding-left:26px">${esc(it.denumire)}</td><td class="num">${qfmt(it.cant)} ${esc(it.um)}</td><td class="num">${eur(it.pu)}</td><td class="num">${eur(it.total)}</td></tr>`).join("")
+        ).join("")
+      ).join("");
+    } else {
+      costRows = crb.cost.grupuri.map((g) => {
+        const ls = crb.cost.lines.filter((l) => l.specialitate === g.specialitate);
+        return `<tr class="grp"><td>${esc(g.specialitate)}</td><td></td><td></td><td class="num">${eur(g.total)} · ${g.pct}%</td></tr>` +
+          ls.map((l) => `<tr><td style="padding-left:16px">${esc(l.eticheta)}</td><td class="num">${l.qty} ${esc(l.unit)}</td><td class="num">${eur(l.pretUnit)}</td><td class="num">${eur(l.total)}</td></tr>`).join("");
+      }).join("");
+    }
     const cost = `<table class="crb-cost"><thead><tr><th>Specialitate / element</th><th class="num">Cant.</th><th class="num">Preț unitar</th><th class="num">Total</th></tr></thead>
       <tbody>${costRows}<tr class="grand"><td>TOTAL CAPEX</td><td></td><td></td><td class="num">${eur(crb.cost.total)}</td></tr></tbody></table>`;
 
@@ -636,12 +649,12 @@
   function exportDeviz(p) {
     ensureComputed(p);
     if (typeof EXPORTCSV === "undefined") return;
-    const csv = "﻿" + EXPORTCSV.buildExportCSV(p); // BOM UTF-8 pentru diacritice în Excel
-    const b = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const html = "﻿" + EXPORTCSV.buildExportXLS(p); // BOM UTF-8 pentru diacritice în Excel
+    const b = new Blob([html], { type: "application/vnd.ms-excel;charset=utf-8;" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(b);
-    a.download = "deviz-" + (p.name || "proiect").replace(/[^\w\-]+/g, "_") + ".csv";
-    a.click(); URL.revokeObjectURL(a.href); toast("Deviz exportat (CSV pentru Excel)");
+    a.download = "deviz-" + (p.name || "proiect").replace(/[^\w\-]+/g, "_") + ".xls";
+    a.click(); URL.revokeObjectURL(a.href); toast("Deviz exportat (Excel)");
   }
 
   /* events */

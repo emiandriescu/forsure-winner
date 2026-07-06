@@ -14,8 +14,8 @@ Modulul curent: **Stingere incendiu** (sprinklere, hidranți interiori/exteriori
 - **Cost · Risc · Beneficiu extins** — CAPEX pe toate specialitățile (grupat pe trade), cost specific €/m², OPEX (mentenanță) anual, matrice de risc (probabilitate × impact → nivel + măsură) și beneficii cuantificate.
 - **Catalog de prețuri editabil** (tab „Firma mea") — ajustezi tarifele la valorile tale; se aplică tuturor proiectelor și se salvează în browser (`sowilo_preturi`).
 - **Racordare la utilități + pagină de fezabilitate (Go/No-go)** — din debitele/puterile calculate: ce se solicită fiecărui operator (ATR, avize apă-canal, cerere gaz, ISU), semafor de risc de capacitate, termene-capcană și estimarea garanției de racordare electrică (30 €/kW). Pagina de fezabilitate = un PDF de o pagină, bancabil, pentru dezvoltator/investitor.
-- **Deviz detaliat cu cantități de execuție** — pe lângă echipamentele mari, devizul conține acum conducte, cablu, tubulatură, corpuri de încălzire, aparataje, corpuri de iluminat, tablouri, grile, ventilatoare de parcaj, detectoare, țeavă PSI și obiecte sanitare (~38 poziții pe un hotel), fiecare cu preț editabil în catalog.
-- **Export deviz + cantități (Excel/CSV)** — devizul pe specialități + solicitările de racordare, exportabile pentru licitație/ofertare (CSV cu `;` și BOM UTF-8, se deschide direct în Excel RO).
+- **Deviz structurat pe capitole (antemăsurătoare)** — fiecare specialitate e împărțită în trei subcapitole: *Echipamente principale* (surse, agregate, tablouri, puffer, distribuitor/colector, vase de expansiune, pompe…), *Armături și accesorii* (filtre Y, clapete de sens, manșoane antivibrante, robineți sferici / cu sertar, reductoare…) și *Distribuție* — țeavă/tubulatură/cablu **pe diametre**, cu fitinguri + izolație + suporți de susținere + corpuri terminale. ~100 de poziții numerotate (1.2.3) cu subtotaluri pe subcapitol și capitol. Prețul „montat" per ml se descompune pe componente astfel încât totalul rămâne calibrat (~156 €/m² pe hotel), dar devizul e itemizat ca o antemăsurătoare reală.
+- **Export deviz (Excel)** — devizul structurat + solicitările de racordare, exportate ca **tabel Excel formatat** (`.xls` — capitole/subcapitole colorate, coloane corecte, subtotaluri), care se deschide curat în Excel fără ghicit de separator. Se păstrează și un export CSV pe capitole/subcapitole pentru compatibilitate.
 - **Verificare AI a proiectului** — scor de completitudine 0–100 + listă de probleme (lipsuri, valori atipice, inconsistențe) cu sugestii, înainte de a trimite memoriul.
 - **Comparație de scenarii A/B** — duplici un proiect ca scenariu („⧉ Scenariu"), îl modifici, apoi le compari side-by-side (CAPEX, €/m², kW, debite, verdict racordare) cu delte colorate.
 - **Grafice ale rezultatelor (SVG, fără librării)** — repartiția CAPEX pe specialități (bare), consumul de apă pe consumatori (bare), matricea de risc (heatmap probabilitate × impact) și curba caracteristică a grupului de pompare (H–Q, cu punctele de funcționare). Reprezentarea grafică face rezultatele imediat lizibile pentru dezvoltator/investitor.
@@ -48,7 +48,8 @@ Toate cele 15 verificări trec: sprinklere 15 l/s & rezervă 54 m³, hidranți i
 | `calc-canalizare.js` · `calc-electrice.js` · `calc-gaze.js` (+ `calc-utilitati.test.js`) | canalizare menajeră/pluvială, energie electrică (trafo + GE), gaze naturale |
 | `calc-sisteme.js` (+ `.test.js`) | termice, ventilație/climatizare, detecție incendiu, desfumare |
 | `calc-racordare.js` (+ `.test.js`) | solicitări de racordare (ATR/apă-canal/gaz/ISU), risc de capacitate, garanție electrică |
-| `calc-cantitati.js` (+ `.test.js`) | **cantități de distribuție** (conducte, cablu, aparataje, corpuri, tubulatură, grile, detectoare, țeavă PSI, obiecte sanitare) — antemăsurătoare estimativă |
+| `calc-cantitati.js` (+ `.test.js`) | indici de derivare (K) + cantități de bază pe m² — reutilizați de devizul structurat |
+| `deviz.js` (+ `.test.js`) | **deviz structurat** (capitole × subcapitole × poziții) — echipamente / armături / distribuție pe diametre, fitinguri, izolație, suporți |
 | `charts.js` (+ `.test.js`) | **grafice SVG** (fără librării) — CAPEX pe specialități, consum apă, matrice de risc, curbă pompă H–Q; funcții pure refolosibile |
 | `fezabilitate.js` · `export.js` (+ `export.test.js`) | pagină Go/No-go (PDF) · export deviz + cantități (CSV/Excel) |
 | `normative.js` | normative curente + praguri de obligativitate |
@@ -79,7 +80,7 @@ Toate specialitățile MEP sunt acum implementate, același tipar determinist (c
 
 Stingere ✓ · **Apă ✓** · **Canalizare ✓** · **Electrice ✓** · **Gaze ✓** · **Termice/HVAC ✓** · **Ventilație ✓** · **Detecție incendiu ✓** · **Desfumare ✓** — compuse într-un memoriu unic de racordare utilități + dimensionare instalații.
 
-Toate testele de regresie (198 verificări) trec:
+Toate testele de regresie (228 verificări) trec:
 
 ```
 node dimensionare/calc-stingere.test.js   # 32/32 — sprinklere, hidranți, rezervor 210 m³ + P3/P4, clădire înaltă 120 min, gating obligativitate
@@ -89,8 +90,9 @@ node dimensionare/calc-sisteme.test.js    #  9/9  — termice 904/600 kW, ventil
 node dimensionare/ai.test.js              # 33/33 — strat AI: cereri valide (opus-4-8, fără temperature/budget_tokens), merge ipoteze, rezumat determinist
 node dimensionare/crb.test.js             # 28/28 — cost extins (8 specialități, €/m², OPEX), matrice de risc, catalog editabil
 node dimensionare/calc-cantitati.test.js  # 25/25 — cantități de distribuție (conducte/cablu/aparataje/tubulatură/detectoare/țeavă), integrate în CAPEX
+node dimensionare/deviz.test.js           # 25/25 — deviz structurat (echipamente/armături/țeavă pe diametre), coerența sumelor, calibrare 156 €/m²
 node dimensionare/calc-racordare.test.js  # 19/19 — solicitări operatori, garanție electrică 31.530 €, risc capacitate, ISU
-node dimensionare/export.test.js          # 13/13 — export CSV (deviz+racordare) + pagină de fezabilitate Go/No-go
+node dimensionare/export.test.js          # 18/18 — export Excel structurat (.xls, capitole/subcapitole) + CSV + pagină de fezabilitate
 node dimensionare/charts.test.js          # 13/13 — grafice SVG valide (CAPEX, consum apă, matrice risc, curbă pompă H–Q)
 ```
 
