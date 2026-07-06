@@ -171,6 +171,12 @@ h1{font-size:1.45rem;margin:0 0 2px}h2{font-size:1.15rem;margin:0 0 12px}h3{font
 .lvl-txt-scăzut{color:#4ade80!important}.lvl-txt-moderat{color:#fbbf24!important}.lvl-txt-ridicat{color:#fb923c!important}.lvl-txt-critic{color:#f87171!important}
 .op-link{color:var(--accent);font-size:.8rem;text-decoration:none}.op-link:hover{text-decoration:underline}
 
+/* ----- Grafice (SVG) ----- */
+.chart-wrap{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:6px 0 18px}
+.chart-wrap .chart-title{font-size:.9rem;font-weight:700;color:var(--text);margin:0 0 4px}
+.chart-wrap .chart-sub{font-size:.78rem;color:var(--muted);margin:0 0 10px}
+.chart-wrap svg.chart{display:block;max-width:100%;height:auto}
+
 /* ----- Verificare AI (scor + probleme) ----- */
 .ai-review{margin:0 0 20px;padding:14px 16px;border:1px solid var(--line);background:var(--panel);border-radius:12px}
 .rev-head{display:flex;align-items:center;gap:14px;margin-bottom:8px}

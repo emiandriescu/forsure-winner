@@ -377,6 +377,12 @@
     </div>`;
   }
 
+  const CH = (typeof CHARTS !== "undefined") ? CHARTS : (typeof require !== "undefined" ? null : null);
+  function chartBox(title, sub, svg) {
+    if (!svg) return "";
+    return `<div class="chart-wrap"><p class="chart-title">${esc(title)}</p>${sub ? `<p class="chart-sub">${esc(sub)}</p>` : ""}${svg}</div>`;
+  }
+
   function renderApa(apa) {
     if (!apa) return "";
     const d = apa.debite, rez = apa.rezervor, st = apa.statie;
@@ -389,6 +395,7 @@
       </div>
       <table class="crb-cost"><thead><tr><th>Consumator</th><th class="num">Cantitate</th><th class="num">Consum specific</th><th class="num">Q</th></tr></thead>
         <tbody>${cons}<tr class="grand"><td>Q zilnic mediu</td><td></td><td></td><td class="num">${d.Qzi_med} mc/zi</td></tr></tbody></table>
+      ${CH ? chartBox("Consum de apă pe consumatori", "Repartiția debitului zilnic mediu (mc/zi)", CH.chartConsumApa(d.consumatori)) : ""}
       <div class="sys-card"><h4>Debite de calcul <span class="nrm">(${esc(d.normativ)})</span></h4>
         <p class="params">Qzi,med = ${d.Qzi_med} mc/zi · Qmax,zi = ${d.Qmax_zi} mc/zi · Qmax,orar = ${d.Qmax_orar_mc} mc/h (${d.Qmax_orar_ls} l/s)</p>
         <ul>${d.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ul></div>
@@ -520,11 +527,16 @@
         <ul>${dim.rezervor.steps.map((st) => `<li>${esc(st)}</li>`).join("")}</ul></div>
       <h2>Grup de pompare</h2>
       <div class="sys-card"><ul>${dim.pompare.steps.map((st) => `<li>${esc(st)}</li>`).join("")}</ul></div>
+      ${CH ? chartBox("Curbă caracteristică grup de pompare (H–Q)", "Punctul de funcționare al fiecărei pompe pe curba caracteristică estimată", CH.chartPompa(dim.pompare)) : ""}
       <h2>Cost · Risc · Beneficiu (toate specialitățile)</h2>
       ${sinteza}
-      <h3 style="margin:8px 0">Cost (CAPEX orientativ, pe specialități)</h3>${cost}
+      <h3 style="margin:8px 0">Cost (CAPEX orientativ, pe specialități)</h3>
+      ${CH ? chartBox("Repartiția CAPEX pe specialități", `Total ${eur(crb.cost.total)} · ${eur(crb.cost.perMp)}/m²`, CH.chartCapex(crb.cost.grupuri)) : ""}
+      ${cost}
       <p class="muted" style="margin:6px 0">OPEX estimat ≈ ${eur(crb.cost.opexAnual)}/an (mentenanță). Prețurile sunt orientative — se ajustează la faza de ofertare.</p>
-      <h3 style="margin:14px 0 4px">Matrice de risc (probabilitate × impact)</h3>${riscTbl}
+      <h3 style="margin:14px 0 4px">Matrice de risc (probabilitate × impact)</h3>
+      ${CH && typeof CRB !== "undefined" ? chartBox("Matrice de risc", "Numărul de riscuri identificate în fiecare celulă probabilitate × impact", CH.chartRiscMatrix(crb.risc, CRB.nivelRisc)) : ""}
+      ${riscTbl}
       <h3 style="margin:14px 0 4px">Beneficii</h3>${benef}`;
   }
 
