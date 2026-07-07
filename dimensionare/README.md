@@ -14,7 +14,8 @@ Modulul curent: **Stingere incendiu** (sprinklere, hidranți interiori/exteriori
 - **Cost · Risc · Beneficiu extins** — CAPEX pe toate specialitățile (grupat pe trade), cost specific €/m², OPEX (mentenanță) anual, matrice de risc (probabilitate × impact → nivel + măsură) și beneficii cuantificate.
 - **Catalog de prețuri editabil** (tab „Firma mea") — ajustezi tarifele la valorile tale; se aplică tuturor proiectelor și se salvează în browser (`sowilo_preturi`).
 - **Racordare la utilități + pagină de fezabilitate (Go/No-go)** — din debitele/puterile calculate: ce se solicită fiecărui operator (ATR, avize apă-canal, cerere gaz, ISU), semafor de risc de capacitate, termene-capcană și estimarea garanției de racordare electrică (30 €/kW). Pagina de fezabilitate = un PDF de o pagină, bancabil, pentru dezvoltator/investitor.
-- **Deviz structurat pe capitole (antemăsurătoare)** — fiecare specialitate e împărțită în trei subcapitole: *Echipamente principale* (surse, agregate, tablouri, puffer, distribuitor/colector, vase de expansiune, pompe…), *Armături și accesorii* (filtre Y, clapete de sens, manșoane antivibrante, robineți sferici / cu sertar, reductoare…) și *Distribuție* — țeavă/tubulatură/cablu **pe diametre**, cu fitinguri + izolație + suporți de susținere + corpuri terminale. ~100 de poziții numerotate (1.2.3) cu subtotaluri pe subcapitol și capitol. Prețul „montat" per ml se descompune pe componente astfel încât totalul rămâne calibrat (~156 €/m² pe hotel), dar devizul e itemizat ca o antemăsurătoare reală.
+- **Deviz structurat pe capitole (antemăsurătoare)** — fiecare specialitate e împărțită în trei subcapitole: *Echipamente principale* (surse, agregate, tablouri, puffer, distribuitor/colector, vase de expansiune, pompe…), *Armături și accesorii* (filtre Y, clapete de sens, manșoane antivibrante, robineți sferici / cu sertar, reductoare…) și *Distribuție* — țeavă/tubulatură/cablu **pe diametre**, cu fitinguri + izolație + suporți de susținere + corpuri terminale. ~135 de poziții numerotate (1.2.3) cu subtotaluri pe subcapitol și capitol. Prețul „montat" per ml se descompune pe componente astfel încât totalul rămâne calibrat (~161 €/m² pe hotel), dar devizul e itemizat ca o antemăsurătoare reală.
+- **Rețele exterioare + terasamente** — capitole separate pentru branșamente și racorduri la rețelele publice: *apă* (cămin de branșament cu vane, conducte PEHD pe diametre), *canalizare menajeră/pluvială* (cămine de vizitare, guri de scurgere, colectoare PVC-KG), *electrice* (cablu de energie pozat îngropat, cămine de tragere, priză de pământ), *incendiu* (hidranți exteriori, vane, inel de conducte). La fiecare, **săpături și terasamente** (săpătură, pat de nisip, umplutură compactată, evacuare pământ) cu cantități estimate din amprenta clădirii + distanța la racord (implicit 40 m — se confirmă pe planul de situație la PT).
 - **Export deviz (Excel)** — devizul structurat + solicitările de racordare, exportate ca **tabel Excel formatat** (`.xls` — capitole/subcapitole colorate, coloane corecte, subtotaluri), care se deschide curat în Excel fără ghicit de separator. Se păstrează și un export CSV pe capitole/subcapitole pentru compatibilitate.
 - **Verificare AI a proiectului** — scor de completitudine 0–100 + listă de probleme (lipsuri, valori atipice, inconsistențe) cu sugestii, înainte de a trimite memoriul.
 - **Comparație de scenarii A/B** — duplici un proiect ca scenariu („⧉ Scenariu"), îl modifici, apoi le compari side-by-side (CAPEX, €/m², kW, debite, verdict racordare) cu delte colorate.
@@ -80,7 +81,7 @@ Toate specialitățile MEP sunt acum implementate, același tipar determinist (c
 
 Stingere ✓ · **Apă ✓** · **Canalizare ✓** · **Electrice ✓** · **Gaze ✓** · **Termice/HVAC ✓** · **Ventilație ✓** · **Detecție incendiu ✓** · **Desfumare ✓** — compuse într-un memoriu unic de racordare utilități + dimensionare instalații.
 
-Toate testele de regresie (228 verificări) trec:
+Toate testele de regresie (240 verificări) trec:
 
 ```
 node dimensionare/calc-stingere.test.js   # 32/32 — sprinklere, hidranți, rezervor 210 m³ + P3/P4, clădire înaltă 120 min, gating obligativitate
@@ -90,7 +91,7 @@ node dimensionare/calc-sisteme.test.js    #  9/9  — termice 904/600 kW, ventil
 node dimensionare/ai.test.js              # 33/33 — strat AI: cereri valide (opus-4-8, fără temperature/budget_tokens), merge ipoteze, rezumat determinist
 node dimensionare/crb.test.js             # 28/28 — cost extins (8 specialități, €/m², OPEX), matrice de risc, catalog editabil
 node dimensionare/calc-cantitati.test.js  # 25/25 — cantități de distribuție (conducte/cablu/aparataje/tubulatură/detectoare/țeavă), integrate în CAPEX
-node dimensionare/deviz.test.js           # 25/25 — deviz structurat (echipamente/armături/țeavă pe diametre), coerența sumelor, calibrare 156 €/m²
+node dimensionare/deviz.test.js           # 37/37 — deviz structurat (echipamente/armături/țeavă pe diametre) + rețele exterioare & terasamente, coerența sumelor, calibrare 161 €/m²
 node dimensionare/calc-racordare.test.js  # 19/19 — solicitări operatori, garanție electrică 31.530 €, risc capacitate, ISU
 node dimensionare/export.test.js          # 18/18 — export Excel structurat (.xls, capitole/subcapitole) + CSV + pagină de fezabilitate
 node dimensionare/charts.test.js          # 13/13 — grafice SVG valide (CAPEX, consum apă, matrice risc, curbă pompă H–Q)

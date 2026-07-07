@@ -66,6 +66,27 @@ ok("Canalizare: țeavă PP/PVC pe diametre", pozOf(cap("Canalizare")).some((it) 
 ok("Electrice: cablu + jgheaburi + tuburi", has(pozOf(cap("Instalații electrice")), "jgheab") && has(pozOf(cap("Instalații electrice")), "tuburi"), "ok");
 ok("Stingere: rețea țeavă PSI pe diametre", pozOf(cap("Stingere incendiu")).some((it) => /PSI DN/.test(it.denumire)), "ok");
 
+// ---- rețele exterioare (branșamente + cămine + terasamente) ----
+const extApa = cap("Rețele exterioare — apă"), extApaP = pozOf(extApa);
+ok("există capitol Rețele exterioare — apă", !!extApa, "ok");
+ok("Apă ext: cămin de branșament cu vane", has(extApaP, "cămin de branșament") && has(extApaP, "vane"), "ok");
+ok("Apă ext: conductă PEHD pe diametre", extApaP.some((it) => /PEHD.*DN/.test(it.denumire)), "ok");
+const extCan = cap("Rețele exterioare — canalizare"), extCanP = pozOf(extCan);
+ok("Canal ext: cămine menajeră + pluvială", has(extCanP, "cămine de vizitare menajeră") && has(extCanP, "pluvială"), "ok");
+ok("Canal ext: guri de scurgere", has(extCanP, "guri de scurgere"), "ok");
+ok("Canal ext: colectoare menajer + pluvial", extCanP.some((it) => /menajer PVC/.test(it.denumire)) && extCanP.some((it) => /pluvial PVC/.test(it.denumire)), "ok");
+const extEl = pozOf(cap("Rețele exterioare — electrice"));
+ok("Electric ext: cablu pozat îngropat", has(extEl, "cablu de energie pozat îngropat"), "ok");
+ok("Electric ext: cămine de tragere", has(extEl, "cămine de tragere"), "ok");
+const extInc = pozOf(cap("Rețele exterioare — incendiu"));
+ok("Incendiu ext: hidranți exteriori (mutați din interior)", has(extInc, "hidranți exteriori"), "ok");
+ok("hidranții exteriori NU se dublează în interior", !has(pozOf(cap("Stingere incendiu")), "hidranți exteriori"), "ok");
+// terasamente la TOATE rețelele exterioare
+const extCaps = ["Rețele exterioare — apă", "Rețele exterioare — canalizare", "Rețele exterioare — electrice", "Rețele exterioare — incendiu"];
+ok("terasamente (săpătură) la fiecare rețea exterioară",
+  extCaps.every((n) => cap(n) && subOf(cap(n)).some((s) => /terasamente/i.test(s)) && has(pozOf(cap(n)), "săpătură")), "ok");
+ok("terasamente conțin evacuarea pământului în exces", extCaps.every((n) => has(pozOf(cap(n)), "transport pământ")), "ok");
+
 // ---- coerența sumelor: poziții → subtotal → capitol → total ----
 let okSub = true, okCap = true;
 dz.capitole.forEach((c) => {
@@ -77,9 +98,9 @@ ok("total capitol = Σ subcapitole", okCap, "ok");
 ok("total deviz = Σ capitole", dz.total === dz.capitole.reduce((a, c) => a + c.total, 0), dz.total);
 ok("lines (plat) = Σ poziții din capitole", dz.lines.length === dz.capitole.reduce((a, c) => a + pozOf(c).length, 0), dz.lines.length + " linii");
 
-// ---- calibrare: totalul rămâne în ordinul de mărime realist (~140–170 €/m²) ----
+// ---- calibrare: totalul rămâne în ordinul de mărime realist (cu rețele exterioare) ----
 const perMp = dz.total / 11300;
-ok("cost specific realist (120–180 €/m²)", perMp >= 120 && perMp <= 180, Math.round(perMp) + " €/m²");
+ok("cost specific realist (120–200 €/m²)", perMp >= 120 && perMp <= 200, Math.round(perMp) + " €/m²");
 
 // ---- robustețe ----
 ok("bundle gol → fără capitole, fără eroare", DEVIZ.construieste({}, preturi).capitole.length === 0, "ok");

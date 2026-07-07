@@ -78,6 +78,21 @@
     // Distribuție — accesorii de pozare
     jgheabCablu_eur_ml: 12,           // jgheab / pat de cablu metalic, €/ml
     tubProtectie_eur_ml: 3,           // tub de protecție / copex, €/ml
+    // Rețele exterioare (branșamente + racorduri la rețelele publice)
+    conductaExtApa_eur_ml: 28,        // conductă exterioară PEHD apă (în șanț), €/ml
+    caminBransament_eur_buc: 1800,    // cămin de branșament apă (vane, contor, clapetă)
+    vanaIngropata_eur_buc: 350,       // vană îngropată de secționare
+    conductaExtCanal_eur_ml: 30,      // colector exterior PVC-KG canalizare, €/ml
+    caminCanal_eur_buc: 900,          // cămin de vizitare canalizare (capac carosabil)
+    guraScurgere_eur_buc: 250,        // gură de scurgere / receptor pluvial
+    cabluIngropat_eur_ml: 18,         // cablu energie pozat îngropat (+ pat nisip, bandă), €/ml
+    caminTragere_eur_buc: 600,        // cămin de tragere cablu
+    prizaPamant_eur_buc: 1500,        // priză de pământ exterioară (electrozi + centură)
+    // Terasamente (săpături, umpluturi, evacuare) — €/m³
+    sapatura_eur_mc: 9,               // săpătură șanț (mecanizat + manual, sprijiniri)
+    patNisip_eur_mc: 35,              // pat de nisip + strat de protecție
+    umplutura_eur_mc: 7,              // umplutură compactată în straturi
+    evacuarePamant_eur_mc: 12,        // încărcare + transport pământ în exces
     // OPEX (mentenanță anuală, % din CAPEX)
     mentenantaPSI_pct: 0.02,          // PSI (stingere/detecție/desfumare)
     mentenantaInst_pct: 0.015,        // restul instalațiilor
@@ -142,6 +157,19 @@
     { key: "clapetaSens_eur_buc", grup: "Armături & accesorii (comun)", eticheta: "Clapetă de sens / antiretur", unit: "€/buc" },
     { key: "filtruY_eur_buc", grup: "Armături & accesorii (comun)", eticheta: "Filtru Y / dezaerator", unit: "€/buc" },
     { key: "mansonAntivibrant_eur_buc", grup: "Armături & accesorii (comun)", eticheta: "Manșon antivibrant", unit: "€/buc" },
+    { key: "conductaExtApa_eur_ml", grup: "Rețele exterioare", eticheta: "Conductă exterioară apă (PEHD)", unit: "€/ml" },
+    { key: "caminBransament_eur_buc", grup: "Rețele exterioare", eticheta: "Cămin de branșament apă", unit: "€/buc" },
+    { key: "vanaIngropata_eur_buc", grup: "Rețele exterioare", eticheta: "Vană îngropată", unit: "€/buc" },
+    { key: "conductaExtCanal_eur_ml", grup: "Rețele exterioare", eticheta: "Colector exterior canalizare (PVC-KG)", unit: "€/ml" },
+    { key: "caminCanal_eur_buc", grup: "Rețele exterioare", eticheta: "Cămin de vizitare canalizare", unit: "€/buc" },
+    { key: "guraScurgere_eur_buc", grup: "Rețele exterioare", eticheta: "Gură de scurgere / receptor pluvial", unit: "€/buc" },
+    { key: "cabluIngropat_eur_ml", grup: "Rețele exterioare", eticheta: "Cablu de energie pozat îngropat", unit: "€/ml" },
+    { key: "caminTragere_eur_buc", grup: "Rețele exterioare", eticheta: "Cămin de tragere cablu", unit: "€/buc" },
+    { key: "prizaPamant_eur_buc", grup: "Rețele exterioare", eticheta: "Priză de pământ exterioară", unit: "€/buc" },
+    { key: "sapatura_eur_mc", grup: "Terasamente", eticheta: "Săpătură șanț", unit: "€/m³" },
+    { key: "patNisip_eur_mc", grup: "Terasamente", eticheta: "Pat de nisip + protecție", unit: "€/m³" },
+    { key: "umplutura_eur_mc", grup: "Terasamente", eticheta: "Umplutură compactată", unit: "€/m³" },
+    { key: "evacuarePamant_eur_mc", grup: "Terasamente", eticheta: "Evacuare pământ în exces", unit: "€/m³" },
     { key: "mentenantaPSI_pct", grup: "OPEX (mentenanță anuală)", eticheta: "Mentenanță PSI", unit: "%/an", pct: true },
     { key: "mentenantaInst_pct", grup: "OPEX (mentenanță anuală)", eticheta: "Mentenanță instalații", unit: "%/an", pct: true },
   ];
@@ -157,8 +185,9 @@
   }
 
   const GRUPURI = ["Stingere incendiu", "Apă rece", "Canalizare", "Instalații electrice",
-    "Termice & gaze", "Ventilație/climatizare", "Detecție incendiu", "Desfumare"];
-  const GRUPURI_PSI = ["Stingere incendiu", "Detecție incendiu", "Desfumare"];
+    "Termice & gaze", "Ventilație/climatizare", "Detecție incendiu", "Desfumare",
+    "Rețele exterioare — apă", "Rețele exterioare — canalizare", "Rețele exterioare — electrice", "Rețele exterioare — incendiu"];
+  const GRUPURI_PSI = ["Stingere incendiu", "Detecție incendiu", "Desfumare", "Rețele exterioare — incendiu"];
 
   function arieDesf(profile) {
     return (profile && (profile.arieDesfasurata || (profile.acNivel || 0) * (profile.nrNiveluriSupraterane || 0))) || 0;

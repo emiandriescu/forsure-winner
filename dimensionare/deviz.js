@@ -222,7 +222,7 @@
       if (sprink && sprink.capeteTotal) api.poz("Stații de control sprinklere (ACS)", "buc", Math.max(1, Math.ceil((sprink.capeteTotal * 12) / 9000)), P.statieAlarmare_eur);
       api.sub("Armături și hidranți");
       if (nrHidrInt) api.poz("Cutii hidranți interiori echipate", "buc", nrHidrInt, P.hidrantInterior_eur_buc);
-      if (hExt && hExt.nrHidranti) api.poz("Hidranți exteriori", "buc", hExt.nrHidranti, P.hidrantExterior_eur_buc);
+      // hidranții EXTERIORI apar în capitolul „Rețele exterioare — incendiu"
       api.poz("Vane de sectorizare / robineți", "buc", (nrHidrInt || 0) + 6, P.robinetSertar_eur_buc)
         .poz("Clapete de sens / reținere", "buc", 4, P.clapetaSens_eur_buc);
       // rețea PSI pe diametre
@@ -231,6 +231,83 @@
       api.sub("Distribuție (rețea țeavă oțel PSI)");
       distributie(api, P.teavaPSI_eur_ml, mlPSI, BENZI_OTEL, { eticheta: "Țeavă oțel zincat PSI", pipe: 0.55, fitinguri: 0.2, izolatie: 0, suporti: 0.25 });
       if (sprink && sprink.capeteTotal) api.poz("Capete sprinkler montate", "buc", sprink.capeteTotal, P.sprinkler_eur_cap);
+    }
+
+    // ================= REȚELE EXTERIOARE (branșamente, cămine, terasamente) =================
+    // Cantități ESTIMATE — lipsesc datele de amplasament (distanțe la rețelele publice,
+    // trasee pe sit). Se derivă din amprenta clădirii + o distanță implicită la racord
+    // (profile.distantaRacord, implicit 40 m). Se confirmă pe planul de situație la PT.
+    const footprint = profile.acNivel || (arie / (profile.nrNiveluriSupraterane || 1)) || 0;
+    if (footprint > 0) {
+      const perim = 4 * Math.sqrt(footprint);       // perimetru aproximativ al clădirii
+      const Lrac = profile.distantaRacord || 40;     // distanța la rețeaua publică (implicit)
+      const BX_APA = [{ dn: "DN110", frac: 0.5, f: 1.3 }, { dn: "DN75", frac: 0.5, f: 0.75 }];
+      const BX_CAN = [{ dn: "DN200", frac: 0.5, f: 1.25 }, { dn: "DN160", frac: 0.5, f: 0.8 }];
+      // terasamente pe un tronson: L (ml), lățime w (m), adâncime h (m)
+      function terasamente(api, L, w, h) {
+        const V = L * w * h;
+        api.poz("Săpătură șanț (mecanizat + manual, sprijiniri)", "m³", V, P.sapatura_eur_mc)
+          .poz("Pat de nisip + strat de protecție", "m³", L * w * 0.25, P.patNisip_eur_mc)
+          .poz("Umplutură compactată în straturi", "m³", V * 0.7, P.umplutura_eur_mc)
+          .poz("Încărcare + transport pământ în exces", "m³", V * 0.3, P.evacuarePamant_eur_mc);
+      }
+
+      // ---- Rețele exterioare — apă ----
+      if (apa) {
+        const { api } = capitol("Rețele exterioare — apă");
+        const L = Lrac + 0.4 * perim;
+        api.sub("Cămine și armături")
+          .poz("Cămin de branșament (vane, contor, clapetă de reținere)", "buc", 1, P.caminBransament_eur_buc)
+          .poz("Vane îngropate de secționare", "buc", 2, P.vanaIngropata_eur_buc);
+        api.sub("Conducte");
+        BX_APA.forEach((b) => api.poz(`Conductă PEHD PN10 apă ${b.dn} (în șanț)`, "ml", L * b.frac, P.conductaExtApa_eur_ml * b.f));
+        api.sub("Săpături și terasamente"); terasamente(api, L, 0.6, 1.2);
+      }
+
+      // ---- Rețele exterioare — canalizare (menajeră + pluvială) ----
+      if (canalizare) {
+        const { api } = capitol("Rețele exterioare — canalizare");
+        const Lm = Lrac + 0.6 * perim;                  // colector menajer
+        const Lp = 0.8 * perim;                          // colector pluvial
+        const platforme = footprint * 0.6;               // platforme/alei exterioare
+        api.sub("Cămine și guri de scurgere")
+          .poz("Cămine de vizitare menajeră (capac carosabil)", "buc", Math.max(2, cInt(Lm / 25)), P.caminCanal_eur_buc)
+          .poz("Cămine de vizitare pluvială", "buc", Math.max(2, cInt(Lp / 30)), P.caminCanal_eur_buc)
+          .poz("Guri de scurgere / receptoare pluviale", "buc", Math.max(3, cInt(platforme / 300)), P.guraScurgere_eur_buc);
+        api.sub("Conducte");
+        BX_CAN.forEach((b) => api.poz(`Colector menajer PVC-KG ${b.dn}`, "ml", Lm * b.frac, P.conductaExtCanal_eur_ml * b.f));
+        BX_CAN.forEach((b) => api.poz(`Colector pluvial PVC-KG ${b.dn}`, "ml", Lp * b.frac, P.conductaExtCanal_eur_ml * b.f));
+        api.sub("Săpături și terasamente"); terasamente(api, Lm + Lp, 0.8, 1.5);
+      }
+
+      // ---- Rețele exterioare — electrice (branșament îngropat) ----
+      if (electrice) {
+        const { api } = capitol("Rețele exterioare — electrice");
+        const L = Lrac + 0.3 * perim;
+        api.sub("Cămine și prize de pământ")
+          .poz("Cămine de tragere cablu", "buc", Math.max(1, cInt(L / 40)), P.caminTragere_eur_buc)
+          .poz("Priză de pământ exterioară (electrozi + centură)", "buc", 1, P.prizaPamant_eur_buc);
+        api.sub("Cabluri")
+          .poz("Cablu de energie pozat îngropat (pat nisip + bandă + plăci avertizoare)", "ml", L, P.cabluIngropat_eur_ml);
+        api.sub("Săpături și terasamente"); terasamente(api, L, 0.4, 0.8);
+      }
+
+      // ---- Rețele exterioare — incendiu (hidranți exteriori + inel) ----
+      if (dim) {
+        const hExt = (dim.sisteme || []).find((s) => s.sistem === "Hidranți exteriori");
+        const nrH = (hExt && hExt.necesar && hExt.nrHidranti) ? hExt.nrHidranti : (footprint > 2000 ? 2 : 0);
+        if (nrH > 0) {
+          const { api } = capitol("Rețele exterioare — incendiu");
+          const L = perim + Lrac;
+          api.sub("Hidranți și armături")
+            .poz("Hidranți exteriori (subterani / supraterani)", "buc", nrH, P.hidrantExterior_eur_buc)
+            .poz("Vane îngropate de secționare", "buc", cInt(nrH / 2) + 1, P.vanaIngropata_eur_buc)
+            .poz("Cămine de vane", "buc", Math.max(1, cInt(nrH / 2)), P.caminCanal_eur_buc);
+          api.sub("Conducte");
+          BX_APA.forEach((b) => api.poz(`Inel exterior hidranți — conductă ${b.dn}`, "ml", L * b.frac, P.conductaExtApa_eur_ml * b.f));
+          api.sub("Săpături și terasamente"); terasamente(api, L, 0.6, 1.2);
+        }
+      }
     }
 
     // curăță subcapitolele goale și capitolele fără poziții
