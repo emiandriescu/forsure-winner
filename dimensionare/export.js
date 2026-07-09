@@ -52,6 +52,17 @@
       push('<tr><td colspan="6"></td></tr>');
       push(`<tr>${td("Cost specific (€/m²)", "k")}<td colspan="4"></td><td class="n">${nf(cost.perMp)}</td></tr>`);
       push(`<tr>${td("OPEX mentenanță (€/an)", "k")}<td colspan="4"></td><td class="n">${nf(cost.opexAnual)}</td></tr>`);
+    } else if (cost.lines && cost.lines.length) {
+      // fallback (proiect vechi, fără capitole): grupare simplă pe specialitate
+      head();
+      const specs = [];
+      cost.lines.forEach((l) => { if (!specs.includes(l.specialitate)) specs.push(l.specialitate); });
+      specs.forEach((sp, si) => {
+        const ls = cost.lines.filter((l) => l.specialitate === sp);
+        push(`<tr class="cap"><td>${si + 1}.</td><td colspan="4">${esc(sp)}</td><td class="n">${nf(ls.reduce((s, l) => s + l.total, 0))}</td></tr>`);
+        ls.forEach((l, ii) => push(`<tr><td class="ix">${si + 1}.${ii + 1}</td>${td(l.eticheta)}${td(l.unit)}<td class="n">${nf2(l.qty)}</td><td class="n">${nf2(l.pretUnit)}</td><td class="n">${nf(l.total)}</td></tr>`));
+      });
+      push(`<tr class="tot"><td colspan="5">TOTAL CAPEX (€)</td><td class="n">${nf(cost.total)}</td></tr>`);
     }
 
     // Solicitări de racordare (tabel separat, jos)

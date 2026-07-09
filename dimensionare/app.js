@@ -306,7 +306,8 @@
   // recalculează proiectul dacă lipsește orice parte a schemei curente (proiect vechi din
   // localStorage sau import de backup dintr-o versiune anterioară) — calculul e determinist și ieftin
   function ensureComputed(p) {
-    const stale = !p.dim || !p.crb || !p.crb.sinteza || !p.crb.cost || !p.crb.cost.grupuri || !p.racordare || !p.sisteme;
+    const c = p.crb && p.crb.cost;
+    const stale = !p.dim || !p.crb || !p.crb.sinteza || !c || !c.grupuri || !c.capitole || !c.capitole.length || !p.racordare || !p.sisteme;
     if (stale) { computeProject(p); save(); }
     return p;
   }
