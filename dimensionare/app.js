@@ -173,7 +173,7 @@
     return { id: "", name: "", beneficiar: "", adresa: "", functiune: "hotel", data: "",
       unitate: "", secundar: "", nrNiveluriSupraterane: "", acNivel: "", inaltimeUltimPlanseu: "",
       arieDesfasurata: "", arieAcoperis: "", i_ploaie: "",
-      nivelStabilitate: "II", parcLocuri: "", nrNiveluriParcare: "", parcArie: "", volumCompartiment: "",
+      nivelStabilitate: "II", parcLocuri: "", nrNiveluriParcare: "", parcArie: "", distantaRacord: "", volumCompartiment: "",
       saliAglomerate: "true", risc: "mediu", officeAre: "false", officeArie: "", officePersoane: "",
       d_mese: "", d_personal: "", d_bucatarie: "", d_piscina: "", d_spa: "", d_spalatorie: "", d_irigatii: "" };
   }
@@ -182,7 +182,7 @@
     p = p || blankProject();
     $("#proj-modal-title").textContent = p.id ? "Editează proiect" : "Proiect nou";
     pform.elements.id.value = p.id;
-    ["name","beneficiar","adresa","functiune","data","unitate","secundar","nrNiveluriSupraterane","acNivel","inaltimeUltimPlanseu","arieDesfasurata","arieAcoperis","i_ploaie","nivelStabilitate","parcLocuri","nrNiveluriParcare","parcArie","volumCompartiment","risc","officeArie","officePersoane","d_mese","d_personal","d_bucatarie","d_piscina","d_spa","d_spalatorie","d_irigatii"]
+    ["name","beneficiar","adresa","functiune","data","unitate","secundar","nrNiveluriSupraterane","acNivel","inaltimeUltimPlanseu","arieDesfasurata","arieAcoperis","i_ploaie","nivelStabilitate","parcLocuri","nrNiveluriParcare","parcArie","distantaRacord","volumCompartiment","risc","officeArie","officePersoane","d_mese","d_personal","d_bucatarie","d_piscina","d_spa","d_spalatorie","d_irigatii"]
       .forEach((k) => { if (pform.elements[k]) pform.elements[k].value = p[k] != null ? p[k] : ""; });
     pform.elements.saliAglomerate.value = String(p.saliAglomerate !== false && p.saliAglomerate !== "false");
     pform.elements.officeAre.value = String(p.officeAre === true || p.officeAre === "true");
@@ -201,7 +201,7 @@
       acNivel: num("acNivel"), inaltimeUltimPlanseu: num("inaltimeUltimPlanseu"),
       arieDesfasurata: num("arieDesfasurata"), arieAcoperis: num("arieAcoperis"), i_ploaie: num("i_ploaie"),
       nivelStabilitate: g("nivelStabilitate"), parcLocuri: num("parcLocuri"), nrNiveluriParcare: num("nrNiveluriParcare"),
-      parcArie: num("parcArie"), volumCompartiment: num("volumCompartiment") || 30000,
+      parcArie: num("parcArie"), distantaRacord: num("distantaRacord"), volumCompartiment: num("volumCompartiment") || 30000,
       saliAglomerate: g("saliAglomerate") === "true", risc: g("risc"),
       officeAre: g("officeAre") === "true", officeArie: num("officeArie"), officePersoane: num("officePersoane"),
       d_mese: g("d_mese"), d_personal: g("d_personal"), d_bucatarie: g("d_bucatarie"), d_piscina: g("d_piscina"),
@@ -247,6 +247,7 @@
       cotaGeodezica: p.inaltimeUltimPlanseu || 0,
       saliAglomerate, nivelStabilitate: p.nivelStabilitate, volumCompartiment: p.volumCompartiment, risc,
       office, dotari,
+      distantaRacord: p.distantaRacord || 0,
       parcaj: { locuri: p.parcLocuri || 0, arieProtejata: p.parcArie || 0, nrNiveluri: p.nrNiveluriParcare || 0 },
     };
   }
