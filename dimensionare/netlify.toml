@@ -1,0 +1,9 @@
+# Configurare Netlify pentru SOWILO Dimensionare.
+# Drag & drop folderul „dimensionare" pe Netlify (sau conectează repo-ul, base = dimensionare).
+# Apoi: Site settings → Environment variables → ANTHROPIC_API_KEY = sk-ant-...
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
