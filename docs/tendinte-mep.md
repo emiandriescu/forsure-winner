@@ -1,11 +1,26 @@
 # Tendințe tehnologice în instalațiile MEP — radar SOWILO
 
-> **Ultima actualizare:** 28 iunie 2026
+> **Ultima actualizare:** 29 iunie 2026
 > **Scop:** un document de referință intern, actualizat periodic, care separă tendințele
 > reale din instalații (mecanice, electrice, sanitare + securitate la incendiu) de soluțiile
 > mature care merită adoptate acum și de cele aflate doar în zona de „hype". Accent pe piața
 > din România și pe tipurile de proiecte SOWILO (birouri, rezidențial, monumente, retail,
 > industrial, depozite, spitale, învățământ).
+
+## Modificări față de ediția anterioară (2026-06-28)
+
+1. **§1 Electrice — EV / V2G:** actualizat cadrul AFIR/ISO 15118: deadline 8 ian. 2026 pentru ISO 15118-2 (Plug & Charge de bază) a trecut; ISO 15118-20 (V2G bidirecțional complet, TLS 1.3) devine obligatoriu pentru **toate stațiile Mode 3 publice și private din 1 ian. 2027** (AFIR).
+2. **§3 HVAC — pompe de căldură:** adăugat: piața EU Q1 2026 **+17%** față de Q1 2025 (pv-magazine, mai 2026); driver: scumpirea energiei pe gaz.
+3. **§5 Stingere — FK-5-1-12 / PFAS:** corectat calendarul restricției REACH: decizia Comisiei Europene este realist **2028–2029** (nu 2027); consultarea publică SEAC s-a închis 25 mai 2026, opinie finală SEAC așteptată finele 2026; derogarea propusă SEAC pentru agenți de stingere clean: **~12–14 ani** de la adoptare (~2038).
+4. **§5 Stingere — NFPA 855 ediția 2026:** adăugate detalii noi: LSFT (testare la scară mare) devine **cerință obligatorie** (nu recomandare), HMA (Hazard Mitigation Analysis) implicit pentru majoritatea instalațiilor, **inginer de protecție la incendiu înregistrat** obligatoriu pentru evaluarea riscului BESS; chimii noi (iron-air, nickel-hydrogen, zinc-bromide) incluse explicit.
+5. **§7 BMS — BACnet/SC:** notat că **BACCARI** (BACnet Certificate Authority Reference Implementation, open-source) a fost lansat public Q1 2026, simplificând onboardingul certificatelor și reducând bariera de deployment.
+6. **§9 Decarbonizare — WLC:** adăugat: metodologia de calcul GWP pe ciclu de viață formalizată prin **Regulamentul Delegat (UE) 2026/52**, intrat în vigoare 24 mai 2026 (implementează Art. 7 EPBD).
+7. **§10.3 Finanțare — PNRR:** actualizat: Cererea de plată 4 (2,62 mld. EUR) aprobată ECOFIN **4 iun. 2026**; rata absorbție urcă la **~61%** (cumulat ~12,97 mld. EUR). Penalizările sectorului educație reduse de la ~1,7 mld. la **~718 mln. EUR**; termen 31 aug. 2026 FERM, confirmat de CE.
+8. **§10.3 Finanțare — Casa Verde Baterii:** adăugat risc nou: APCE a semnalat posibil litigiu din cauza restricției „fabricat/asamblat în Europa" (12 iun. 2026); buget 400 mln. lei aprobat oficial 21 mai 2026, ghid nepublicat încă.
+9. **§10.3 Finanțare — PK1 (Fondul de Modernizare):** adăugate detalii din ghidurile actualizate 23 iun. 2026: grant max **10 mln. EUR/proiect**, stocare obligatorie min. 2 ore la putere nominală, capacitate minimă 200 kW, sesiune estimată T3 2026.
+10. **§10.4 Transpunere EPBD — CCR:** actualizat: CCR a **respins** sesizarea prezidențială (**29 apr. 2026**); legea de aprobare a OG 16/2025 este **constituțională** cu amendamentul parlamentar (derogare 2 ani subvenții centrale individuale gaz, <50 utilizatori).
+
+---
 
 ## Cum citești acest document (legendă)
 
@@ -76,8 +91,11 @@ repetăm în fiecare rubrică:
   > pe soare"). Rapoartele sunt contradictorii — tratează stocarea ca **stimulată, nu obligatorie
   > legal**, până la confirmarea juridică.
 - **Încărcare EV + management dinamic al sarcinii (DLM)**: AC/DC matur și acum cerut de
-  reglementare (AFIR, ISO 15118-20 din vara 2025). DLM este valoarea reală de inginerie — evită
-  supradimensionarea branșamentului și e deseori elementul critic de proiectare.
+  reglementare (AFIR). **ISO 15118-2** (Plug & Charge de bază) a devenit obligatoriu pentru stații
+  AC publice noi/renovate din **8 ian. 2026**; **ISO 15118-20** (V2G bidirecțional complet, TLS 1.3)
+  va fi obligatoriu pentru toate stațiile Mode 3 publice și private din **1 ian. 2027**. DLM este
+  valoarea reală de inginerie — evită supradimensionarea branșamentului și e deseori elementul critic
+  de proiectare.
 
 ### Tendințe reale, de adoptat selectiv (📈)
 - **Iluminat human-centric / tunable-white**: tehnologia (CCT reglabil + control) e matură;
@@ -91,6 +109,8 @@ repetăm în fiecare rubrică:
   Cifrele de piață sunt inconsistente între consultanți (*incerte*). Niciun semnal specific RO.
 - **V2G / încărcare bidirecțională**: emergent, nu matur — afirmațiile de „comercializare
   completă 2025" sunt parțial hype. Proiectează pentru **pregătire V2G**, nu miza pe venituri.
+  Termenul AFIR pentru ISO 15118-20 (1 ian. 2027) va accelera adoptarea hardware, dar funcționalitatea
+  bidirecțională efectivă rămâne în fază de pilot în UE în 2026.
 - **Întrerupătoare cu semiconductor (SSCB)**: se livrează deja (Siemens SENTRON 3QD2, apr. 2026;
   Infineon SiC), dar aproape exclusiv în nișe DC/data-center. Cost ~2,5–3× față de cele clasice;
   MCB/MCCB rămân alegerea rațională pentru distribuția AC obișnuită. **Standard dedicat în lucru**
@@ -220,8 +240,9 @@ confirmat local). Pragurile EPBD/BACS împing direct KNX/DALI-2 și monitorizare
   **monoblocul R-290 de temperatură înaltă (75–80 °C)** pentru înlocuirea cazanelor în retrofit
   (Carrier 61AQ până la 75 °C la −7 °C, funcționare până la −25 °C; Daikin modular R-290). Banda de
   75–80 °C lasă **caloriferele existente pe loc** — pârghie concretă pentru fondul comercial vechi din
-  RO. Piața UE a scăzut ~23% în 2024, apoi a revenit la ~10% creștere în 2025 — dar e elastică la
-  subvenții, nu un breakthrough tehnologic. Eficiența scade ~10–25% sub −10 °C → proiectează **bivalent/
+  RO. Piața UE a scăzut ~23% în 2024, a revenit la **~10% creștere în 2025** (IIR, mar. 2026),
+  iar Q1 2026 a înregistrat **+17%** față de Q1 2025 (EHPA/pv-magazine, mai 2026; driver: scumpirea
+  gazului) — dar piața e elastică la subvenții și prețul energiei, nu un breakthrough tehnologic. Eficiența scade ~10–25% sub −10 °C → proiectează **bivalent/
   backup** pentru iernile continentale RO; planifică în jurul **deficitului acut de instalatori**.
 - **DOAS (aer proaspăt dedicat)**: decuplează ventilarea de sarcina senzibilă, evită supraventilarea.
   Cel mai bun caz e cuplat cu terminale radiante/grinzi reci (aer primar cu punct de rouă jos →
@@ -340,8 +361,11 @@ lista de monitorizare (⚠️)** — eficacitate bună în lab, dar întrebări 
   pentru mediu cu O₂ redus, ROI doar pentru active de mare valoare. Acoperit de **EN 16750** / CEN/TR 16832.
   > ⚠️ **De verificat:** tratarea explicită în P118/2-2013 a sistemelor permanente de reducere a oxigenului
   > nu a fost confirmată — probabil necesită acceptare ISU / echivalență inginerească. Confirmă înainte de a specifica.
-- **Stingere baterii litiu / ESS**: cea mai dinamică zonă. **NFPA 855 (ediția 2026)** e referința actuală
-  (aliniere cu detecția NFPA 72, teste la scară mare LSFT, acoperire pentru chimii non-litiu). **Limitare
+- **Stingere baterii litiu / ESS**: cea mai dinamică zonă. **NFPA 855 (ediția 2026)** e referința actuală.
+  Modificări majore față de ediția 2023: **LSFT (Large-Scale Fire Testing) devine cerință obligatorie**
+  (nu recomandare); **HMA (Hazard Mitigation Analysis) implicit** pentru majoritatea instalațiilor;
+  **inginer de protecție la incendiu înregistrat** obligatoriu pentru evaluarea riscului BESS; chimii
+  noi (iron-air, nickel-hydrogen, zinc-bromide, lithium metal) incluse explicit. **Limitare
   de comunicat:** odată pornit ambalajul termic într-o celulă, **niciun sistem de stingere nu îl oprește**
   — stingerea/apa țintesc propagarea, răcirea și protecția unităților adiacente, nu ambalajul termic în
   sine. Prevenția exploziei (ventilare de deflagrație NFPA 68/69, detecție gaze) e la fel de importantă.
@@ -353,9 +377,12 @@ lista de monitorizare (⚠️)** — eficacitate bună în lab, dar întrebări 
   traiectoria legală/de aprovizionare e problema. **3M a oprit toată producția de PFAS la final 2025**
   (inclusiv Novec 1230 de marcă); FK-5-1-12 continuă prin producători generici, dar ancora de aprovizionare
   a dispărut. **FK-5-1-12 este clasificat PFAS de UE** → în scopul restricției REACH. Ultimele etape ECHA
-  (2026) susțin o restricție PFAS la nivel UE cu derogări țintite (propunere de tranziție 18 luni + derogare
-  12 ani pentru agenți de stingere „curați" fără alternative). **Decizie a Comisiei realist în 2027**
-  (*timing incert, inferat*). **Ghid practic:** utilizabil azi și o derogare de 12 ani cumpără timp mediu,
+  (2026) susțin o restricție PFAS la nivel UE cu derogări țintite. **Calendar actualizat:**
+  consultarea publică pe opinia SEAC s-a **închis 25 mai 2026**; opinia finală SEAC așteptată
+  **finele 2026**; propunere Comisie ca amendament REACH ~**2027–2028**; adoptare finală realistă
+  ~**2028–2029**. Derogarea propusă de SEAC pentru agenți de stingere clean (fără alternative
+  tehnice): **~12–14 ani** de la adoptare (~2038). **Ghid practic:** utilizabil azi și o derogare
+  de 12–14 ani cumpără timp mediu,
   dar fiecare specificație nouă în UE poartă povară de conformitate (planuri de management, monitorizare),
   risc de preț/aprovizionare și expunere reputațională. Pentru active noi de lungă durată, preferă gaz inert
   sau ceață de apă; dacă alegi FK-5-1-12, documentează rațiunea („fără alternativă compatibilă cu activul")
@@ -450,8 +477,10 @@ lista de monitorizare (⚠️)** — eficacitate bună în lab, dar întrebări 
 
 ### Tendințe reale, de adoptat selectiv (📈)
 - **BACnet/SC (Secure Connect)**: TLS 1.3, răspunsul corect pentru integrare securizată NIS2/CRA, dar
-  onboarding de certificate și tooling imatur fac deployment-ul complex. Specifică pentru proiecte noi/
-  securizate; bugetează efortul de punere în funcțiune. Va deveni implicit.
+  onboarding de certificate și tooling în curs de maturizare fac deployment-ul complex. **Noutate Q1 2026:**
+  **BACCARI** (BACnet Certificate Authority Reference Implementation, open-source, BACnet International)
+  a fost lansat public, oferind un CA de referință standardizat interoperabil — reduce semnificativ bariera
+  de onboarding. Specifică pentru proiecte noi/securizate; bugetează efortul de punere în funcțiune. Va deveni implicit.
 - **Thread / LoRaWAN**: LoRaWAN e bun pentru **retrofit** wireless ieftin (sub-contorizare, prezență), dar
   latența de ordinul minutelor → nepotrivit pentru bucle de control; suplimentează cablatul, nu îl înlocui.
   Thread e o plasă IP de putere mică credibilă (legată de Matter), încă de nișă în comercial.
@@ -555,9 +584,12 @@ lista de monitorizare (⚠️)** — eficacitate bună în lab, dar întrebări 
   la proiectare. Procentul „X% din ciclul de viață" e orientativ (depinde de mixul de rețea/tip de clădire).
 - **Carbon pe tot ciclul de viață (WLC)**: nu e speculație — e cerință UE cu date fixe. **GWP pe ciclu de viață
   calculat și raportat în EPC pentru clădiri noi >1.000 m² din 2028, toate din 2030** (EPBD Art. 7, metodologie
-  EN 15978 + Level(s) Ind. 1.2). Până în 2027 statele membre trebuie să dezvolte o foaie de parcurs pentru valori-
-  limită. **Postura corectă: construiește capabilitatea LCA acum** (software, date EPD, personal instruit) —
-  decalajul de competențe e problema reală, nu reglementarea. *Datele EPD sunt slabe în RO — gol de acoperit.*
+  EN 15978 + Level(s) Ind. 1.2). **Noutate:** metodologia de calcul a fost formalizată prin **Regulamentul
+  Delegat (UE) 2026/52**, publicat în Jurnalul Oficial și intrat în vigoare **24 mai 2026** — cadrul UE pentru
+  calculul național al GWP pe ciclu de viață al clădirilor noi e acum operațional, nu doar promis. Până în 2027
+  statele membre trebuie să dezvolte o foaie de parcurs pentru valori-limită. **Postura corectă: construiește
+  capabilitatea LCA acum** (software, date EPD, personal instruit) — decalajul de competențe e problema reală,
+  nu reglementarea. *Datele EPD sunt slabe în RO — gol de acoperit.*
 - **Electrificarea clădirilor / eliminarea cazanelor fosile**: direcție blocată în lege UE — **fără subvenții
   pentru cazane fosile standalone din 1 ian 2025**, țintă de eliminare ~2040, interdicție de cazane noi pe gaz
   în clădiri publice din 2028. Sistemele hibride (pompă de căldură + cazan) rămân eligibile la subvenție — carve-
@@ -636,15 +668,23 @@ presurizare), EN 12845 (sprinklere, +A1:2020), EN 378 (frig/pompe de căldură),
 
 - **Fondul pentru Modernizare** — canalul cel mai robust și activ. România a primit ~**1,24 mld €** (cea mai
   mare cotă) în dec. 2025. Rulat prin „Programe-cheie" (Ministerul Energiei): **PK1** (RES + stocare — ghiduri
-  pentru **entități publice** actualizate 23 iun 2026, ~500 mn €, până la 10 mn €/proiect — **OPEN**); **PK5**
-  (termoficare + cogenerare, 590 mn € — OPEN/UPCOMING); **PK7** (eficiență energetică industrială, 150 mn €).
-  Plus o schemă nouă de **stocare standalone 150 mn €** (aprobată CE ~mar 2026 — UPCOMING).
-- **PNRR** — renegociat 2025: redus la **21,41 mld €**, **termen-limită dur 31 aug 2026** pentru investițiile
-  rămase (risc ridicat de penalizări). **C5 „Valul Renovării"** (rezidențial + clădiri publice): **CLOSED** la
-  aplicări, în implementare/plată. **C16 REPowerEU** (vouchere PV+stocare gospodării): în implementare, sub țintă.
+  pentru **entități publice** actualizate 23 iun 2026: două ghiduri — solar+stocare integrată și
+  stocare standalone, buget total ~500 mn €, grant max **10 mn €/proiect**, capacitate min. **200 kW**,
+  stocare obligatorie min. **2 ore** la putere nominală, sesiune estimată **T3 2026** — **OPEN/UPCOMING**);
+  **PK5** (termoficare + cogenerare, 590 mn € — OPEN/UPCOMING); **PK7** (eficiență energetică
+  industrială, 150 mn €). Plus o schemă nouă de **stocare standalone 150 mn €** (aprobată CE ~mar 2026 — UPCOMING).
+- **PNRR** — renegociat 2025: 21,41 mld €, **termen-limită dur 31 aug 2026** (FERM, neextensibil — confirmat
+  de CE). **Actualizare iun. 2026:** Cererea de plată 4 (2,62 mld. EUR) aprobată ECOFIN **4 iun. 2026**;
+  rata de absorbție urcă la **~61%** (~12,97 mld. EUR cumulat). Penalizările sectorului educație reduse de
+  la ~1,7 mld. la **~718 mln. EUR** prin eliminarea proiectelor neeligibile. **C5 „Valul Renovării"**
+  (rezidențial + clădiri publice): **CLOSED** la aplicări, în implementare/plată. **C16 REPowerEU**
+  (vouchere PV+stocare gospodării): în implementare, sub țintă.
 - **Casa Verde Fotovoltaice** (PV nou gospodării, AFM): **ELIMINATĂ** din bugetul AFM 2026 (fără sesiune 2025).
-  Înlocuită de **Casa Verde Baterii** (stocare pentru prosumatori **existenți**): ~400 mn lei (~80 mn €) —
-  **UPCOMING**, înscrieri după publicarea Ghidului în MO (estimat **iul.–aug. 2026**). *(pv-magazine, 18 mai 2026,
+  Înlocuită de **Casa Verde Baterii** (stocare pentru prosumatori **existenți**): ~400 mn lei (~80 mn €)
+  — **UPCOMING**. Buget aprobat oficial de AFM: **21 mai 2026**. Ghid **nepublicat** la 29 iun. 2026
+  (estimat iul.–aug. 2026). ⚠️ **Risc nou:** Asociația Prosumatorilor (APCE, 12 iun. 2026) a semnalat
+  un posibil litigiu de blocare din cauza restricției „fabricat/asamblat în Europa" din ghid —
+  considerată incompatibilă cu legislația UE privind piața internă. *(pv-magazine, 18 mai 2026,
   confirmă mutarea „de la solar la stocare".)*
 - **Electric Up 2** (IMM/HoReCa — PV+încărcare EV+stocare, până la 150k €/beneficiar): **CLOSED**, în
   evaluare/contractare (596 mn lei alocați pentru plăți, iun 2026).
@@ -656,9 +696,12 @@ presurizare), EN 12845 (sprinklere, +A1:2020), EN 378 (frig/pompe de căldură),
 
 - **Transpunere parțială.** România a transpus **doar Art. 17(15)** (eliminarea subvențiilor pentru cazane
   fosile standalone) prin **OG 16/2025** (MO 787/22.08.2025), ca răspuns la o scrisoare de punere în întârziere
-  din mar 2025. ⚠️ Legea de aprobare a OG 16/2025 e **contestată la CCR** (sesizare prezidențială ~apr 2026)
-  pentru amendamente care ar prelungi sprijinul pentru cazane fosile — fără decizie finală confirmată.
-- **Corpul principal al EPBD reformat (Directiva (UE) 2024/1275): NU e confirmat transpus** la 28 iun 2026
+  din mar 2025. **Actualizare:** CCR a **respins** sesizarea prezidențială (**29 apr. 2026**); legea de
+  aprobare a OG 16/2025 este **constituțională** cu amendamentul parlamentar — acesta permite subvenții
+  2 ani în plus pentru centrale individuale pe gaz în clădiri mici (<50 utilizatori). Consecință: această
+  derogare parlamentară rămâne în lege, deși contrazice spiritul Art. 17(15) EPBD și expune România la
+  risc de infringement pentru aplicarea selectivă.
+- **Corpul principal al EPBD reformat (Directiva (UE) 2024/1275): NU e confirmat transpus** la 29 iun 2026
   (termenul de 29 mai 2026 a trecut). Există doar un *proiect* de lege de modificare a Legii 372/2005 (MDLPA).
   **Acesta e cel mai important element incert** — de verificat în Monitorul Oficial / cdep.ro.
 - **Deja în vigoare** (prin Legea 238/2024): **raportul de conformare nZEB** la autorizare + cota de 30% regenerabile.
@@ -708,10 +751,10 @@ presurizare), EN 12845 (sprinklere, +A1:2020), EN 378 (frig/pompe de căldură),
 
 ### Cele mai apropiate declanșatoare de reglementare (de urmărit în calendar)
 - **31 dec 2026** — planuri de management al riscului Legionella (DWD); primul prag al mandatului solar UE (>250 m²).
-- **8 ian 2026** — aplicabilitate CPR (UE) 2024/3110 (marcaj CE detecție/stingere).
-- **2027** — limita F-Gas GWP-150 pentru monobloc; ținte naționale de flexibilitate; MEPS naționale.
-- **2028 / 2030** — ZEB (public / toate); raportare GWP pe ciclu de viață (>1.000 m² / toate).
-- **iul.–aug. 2026** — publicarea Ghidului Casa Verde Baterii (stocare pentru prosumatori existenți); **31 aug 2026** — termen-limită dur PNRR pentru investițiile rămase.
+- **8 ian 2026** ✅ *trecut* — CPR (UE) 2024/3110 intrat în aplicabilitate (marcaj CE detecție/stingere); standardele armonizate existente continuă până la adoptarea hEN-urilor noi.
+- **1 ian 2027** — limita F-Gas GWP-150 pentru monobloc; **ISO 15118-20 obligatoriu** pentru toate stațiile EV Mode 3 publice și private (AFIR); ținte naționale de flexibilitate; MEPS naționale.
+- **2028 / 2030** — ZEB (public / toate); raportare GWP pe ciclu de viață (>1.000 m² / toate; metodologie Reg. Del. 2026/52 disponibilă).
+- **iul.–aug. 2026 (estimat)** — publicarea Ghidului Casa Verde Baterii (atenție: risc de litigiu APCE); **31 aug 2026** — termen-limită dur PNRR (FERM, neextensibil; absorbție 61% la iun. 2026).
 - *(Atenție: „stocare obligatorie prosumatori până în 2027" — Legea 255/2024 — pare abrogată dec. 2024; de confirmat juridic.)*
 
 ---
@@ -747,6 +790,8 @@ Documentul se bazează pe research web din 2025–2026. Sursele cheie, pe rubric
 **Termice / HVAC**
 - Recuperare piață pompe de căldură 2025 — IIR — https://iifiir.org/en/news/european-heat-pump-market-shows-signs-of-recovery-in-2025-after-two-year-decline
 - EHPA Market Report 2025 — https://www.ehpa.org/wp-content/uploads/2025/07/EHPA-Market-Report-2025-executive-summary.pdf
+- IIR: creștere piață pompe căldură EU 2025 +10% — https://iifiir.org/en/news/policy-support-drives-11-growth-in-heat-pump-uptake-across-europe-in-2025
+- Q1 2026 pompe de căldură EU +17% — pv-magazine — https://www.pv-magazine.com/2026/05/04/heat-pump-sales-rise-17-across-europe-in-q1-as-energy-prices-surge/
 - Carrier R-290 HT (61AQ) — https://www.carrier.com/commercial/en/eu/news/news-article/carrier-launches-r-290-high-temperature-heat-pump-for-an-efficient-and-sustainable-future.html
 - F-Gas HFC phase-down — Danfoss — https://www.danfoss.com/en/about-danfoss/our-businesses/cooling/refrigerants-and-energy-efficiency/hfc-phase-down/danfoss-on-f-gas-regulation/
 - Eurovent REC 17-14 (moisture recovery, 2025) — https://www.eurovent.eu/
@@ -764,7 +809,9 @@ Documentul se bazează pe research web din 2025–2026. Sursele cheie, pe rubric
 - P118/3-2015 (detecție) — https://migs.ro/wp-content/uploads/2016/09/P-118-III-2015-Detectie-semnalizare-incendiu.pdf
 
 **Stingere incendiu**
-- ECHA — restricție PFAS REACH (2026) — Arnold & Porter — https://www.arnoldporter.com/en/perspectives/advisories/2026/03/echa-committees-advance-broad-pfas-restriction-under-reach
+- ECHA — restricție PFAS REACH (2026, RAC+SEAC) — Arnold & Porter — https://www.arnoldporter.com/en/perspectives/advisories/2026/03/echa-committees-advance-broad-pfas-restriction-under-reach
+- ECHA PFAS — timeline decizie Comisie ~2028–2029, derogare clean agents ~2038 — H2Compliance — https://h2compliance.com/eu-pfas-restriction-consultation-2026/
+- NFPA 855 ediția 2026 — modificări majore (LSFT obligatoriu, HMA, inginer FP) — Energy-Storage.News — https://www.energy-storage.news/nfpa-855-2026-edition-updates-and-what-they-mean-for-energy-storage-projects/
 - Marioff HI-FOG (water mist, data-center) — https://www.marioff.com/en/fire-protection-on-land/data-centers/
 - NFPA 855 (ediția 2026, BESS) — Energy-Storage.News — https://www.energy-storage.news/nfpa-855-2026-edition-updates-and-what-they-mean-for-energy-storage-projects/
 - WAGNER OxyReduct / hipoxic — Wikipedia — https://en.wikipedia.org/wiki/Hypoxic_air_technology_for_fire_prevention
@@ -780,7 +827,7 @@ Documentul se bazează pe research web din 2025–2026. Sursele cheie, pe rubric
 - EPBD pentru profesioniștii HVAC — REHVA Journal — https://www.rehva.eu/
 - IEC 62443 pentru conformitate NIS2 — DNV — https://www.dnv.com/
 - FDD bazat pe date (LBNL) — https://buildings.lbl.gov/publications/review-data-driven-fault-detection
-- BACnet/SC integrare — Cimetrics / AutomatedBuildings — 2025
+- BACnet/SC — BACCARI open-source CA reference implementation (Q1 2026) — AutomatedBuildings.com — https://www.automatedbuildings.com/2026/02/how-digital-certificates-are-used-in-bacnet-sc/
 
 **Digitalizare**
 - BIM în România (foaie de parcurs) — bimtech.ro ; IJHSA — 2025
@@ -793,6 +840,7 @@ Documentul se bazează pe research web din 2025–2026. Sursele cheie, pe rubric
 - Mandat solar (Art. 10) — BUILD UP — https://build-up.ec.europa.eu/en/news-and-events/news/eu-mandates-solar-energy-buildings-2026
 - RICS WLCA ed. 2 — https://www.rics.org/profession-standards/rics-standards-and-guidance/sector-standards/construction-standards/whole-life-carbon-assessment
 - Cadru de calcul GWP pe ciclu de viață (dec. 2025) — Comisia Europeană — https://energy.ec.europa.eu/news/commission-encourages-low-carbon-construction-materials-calculation-framework-life-cycle-global-2025-12-16_en
+- Reg. Delegat (UE) 2026/52 (calcul GWP ciclu de viață, în vigoare 24 mai 2026) — EUR-Lex — https://eur-lex.europa.eu/eli/reg_del/2026/52/oj
 - IPMVP Core Concepts 2022 — EVO — https://evo-world.org/en/news-media/evo-news/1280-release-of-the-new-ipmvp-core-concepts-2022
 - SRI — Comisia Europeană — https://energy.ec.europa.eu/topics/energy-efficiency/energy-performance-buildings/smart-readiness-indicator_en
 - Transpunere EPBD în RO — energynomics.ro — https://www.energynomics.ro/en/one-year-to-transpose-eu-energy-performance-of-buildings-directive/
@@ -818,6 +866,9 @@ Documentul se bazează pe research web din 2025–2026. Sursele cheie, pe rubric
 - Casa Verde Fotovoltaice eliminată / Baterii — pv-magazine — https://www.pv-magazine.com/2026/05/18/romania-moves-from-solar-to-storage-rebates/ ; abrogare obligație stocare (dec. 2024) — Digi24 — https://www.digi24.ro/.../camera-deputatilor-a-eliminat-obligatia-prosumatorilor-de-a-si-instala-baterii-de-stocare-3042377
 - Geotermal București ~200 mn € — Balkan Green Energy News — https://balkangreenenergynews.com/geothermal-district-heating-investment-worth-eur-200-million-starts-in-bucharest/
 - OG 16/2025 (transpunere Art. 17(15) EPBD) — AAECR — https://aaecr.ro/stiri/ordonanta-nr-16-din-21-august-2025/ ; pachet infringement iun 2026 — Comisia Europeană — https://energy.ec.europa.eu/news/june-infringements-package-key-decisions-energy-2026-06-04_en
+- CCR decizie 29 apr. 2026 (respingere sesizare Nicușor Dan pe OG 16/2025) — CCR comunicat — https://www.ccr.ro/comunicat-de-presa-iv-29-aprilie-2026/
+- ISO 15118-20 obligatoriu stații EV Mode 3 din 1 ian. 2027 (AFIR) — AMPECO — https://www.ampeco.com/guides/iso-15118-complete-guide-for-cpos-and-emsps/
+- Casa Verde Baterii — buget 400 mln. lei aprobat, risc litigiu restricție origine UE — bursa.ro — https://www.bursa.ro/programul-afm-pentru-baterii-din-2026-risca-blocarea-in-instanta-din-cauza-restrictiilor-de-productie-42682952
 
 > **Avertisment general:** mai multe surse instituționale (EUR-Lex, Comisia Europeană, ECHA, REHVA, EHPA,
 > RICS) și surse RO au blocat fetch-ul direct (HTTP 403); o parte din cifre provin din extrase de motor de
